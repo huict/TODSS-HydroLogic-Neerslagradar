@@ -22,6 +22,8 @@ assignees: ''
 <!-- Hoelang denk je nodig te hebben voor het leren van deze skill en wat moet je allenmaal doen hiervoor -->
 - [ ] Tutorials volgen.
 
+## Tutorials
+
 ## Beheersing van de skill
 <!-- Hoe kun je aantonen dat je de skill beheerst -->
 - [ ] Functionaliteit correct uitgewerkt door gebruik van de geleerde skill.
