@@ -6,11 +6,13 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { ViewComponent } from './view/view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    ViewComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
