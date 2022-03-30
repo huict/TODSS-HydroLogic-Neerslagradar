@@ -1,0 +1,39 @@
+﻿/*Component*/
+#main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+#views {
+  flex-grow: 2;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+/*Top bar*/
+#topBar {
+  display: flex;
+  background-color: gray;
+}
+#topBar > * {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+#topBar > #center {
+  flex-grow: 2;
+}
+
+/*Views*/
+#views > * {
+  width: 600px;
+  border: 1px solid #000;
+  flex-grow: 1;
+  min-height: 120px;
+  box-sizing: border-box;
+  margin: 0 5px 10px;
+  justify-content: space-between;
+  text-align: center;
+}
