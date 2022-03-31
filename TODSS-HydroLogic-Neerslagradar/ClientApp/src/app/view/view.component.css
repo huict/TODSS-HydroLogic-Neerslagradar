@@ -1,0 +1,12 @@
+#topBar {
+  display: flex;
+}
+#viewName {
+  flex-grow: 2;
+}
+.bx {
+  height: 30px;
+  width: 30px;
+  margin: 0;
+  padding: 0;
+}

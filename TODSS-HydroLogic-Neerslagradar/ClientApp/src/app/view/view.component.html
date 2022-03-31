@@ -1,3 +1,15 @@
-<div [style.background-color]="color">
-  <p>view works! index:{{index}}</p>
+<div>
+  <div id="topBar" [style.background-color]="color">
+    <div id="viewName">
+      <div *ngIf="name == ''; else elseBlock">View: {{index}}</div>
+      <ng-template #elseBlock>{{name}}</ng-template>
+    </div>
+    <div id="buttons">
+      <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>
+      <button title="remove" class='bx bxs-message-square-x' style='color:#ff6464' (click)="throwRemoveEvent()"></button>
+    </div>
+  </div>
+  <div id="template">
+
+  </div>
 </div>
