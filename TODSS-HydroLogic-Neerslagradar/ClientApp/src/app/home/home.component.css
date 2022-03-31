@@ -25,6 +25,27 @@
 #topBar > #center {
   flex-grow: 2;
 }
+#titleWhole {
+  font-size: larger;
+  display: flex;
+  margin: 0 7px;
+  align-items: center;
+}
+#titleWhole > * {
+  margin: 0;
+}
+.titleBlue {
+  color: #1b6ec2
+}
+.titleGreen {
+  color: #4db038
+}
+.bx {
+  height: 30px;
+  width: 30px;
+  margin: 0;
+  padding: 0;
+}
 
 /*Views*/
 #views > * {
@@ -33,7 +54,7 @@
   flex-grow: 1;
   min-height: 120px;
   box-sizing: border-box;
-  margin: 0 5px 10px;
+  margin: 5px;
   justify-content: space-between;
   text-align: center;
 }
