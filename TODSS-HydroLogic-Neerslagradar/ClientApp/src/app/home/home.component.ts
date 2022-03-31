@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ViewComponent } from "../view/view.component";
 
 @Component({
   selector: 'home',
@@ -6,17 +7,32 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  public views_test: number[] = [];
+  private _views: ViewComponent[] = [];
 
-  constructor() { }
+  constructor() {
+    this.addView();
+  }
 
-  public addViewTest() {
-    let last;
-    if (this.views_test.length == 0) {
-      last = -1;
-    } else {
-      last = this.views_test[this.views_test.length-1]
-    }
-    this.views_test.push(last+1)
+  get views(): ViewComponent[] {
+    return this._views;
+  }
+
+  public addView() {
+    this._views.push(new ViewComponent());
+    this.reIndex();
+  }
+
+  public removeView(index: number) {
+    this._views = this._views.filter((value, i) => index != i);
+    this.reIndex();
+  }
+
+  private reIndex() {
+    this._views.forEach((value, i) => value.index = i);
+  }
+
+  public openSettings() {
+    // TODO display settings
+    console.log("to be implemented")
   }
 }

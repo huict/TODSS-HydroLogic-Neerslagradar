@@ -8,16 +8,17 @@
       </h1>
     </div>
     <div id="center">
-      <button>center</button>
+
     </div>
     <div id="right">
-      <button>settings</button>
+      <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>
+      <button title="add view" class='bx bxs-add-to-queue' style='color:#4db038' (click)="addView()"></button>
     </div>
   </div>
 
   <div id="views">
-    <div *ngFor="let i of views_test">
-      <view [index]="i"></view>
+    <div *ngFor="let i of views">
+      <view [index]="i.index" (removeEvent)="removeView($event)"></view>
     </div>
   </div>
 </div>
