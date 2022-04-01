@@ -7,12 +7,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ViewComponent } from './view/view.component';
+import { TemplateTestComponent } from './templates/template-test/template-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     ViewComponent,
+    TemplateTestComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
