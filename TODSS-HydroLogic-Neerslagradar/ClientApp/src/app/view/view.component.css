@@ -1,8 +1,12 @@
+/*Top bar*/
 #topBar {
   display: flex;
 }
 #viewName {
   flex-grow: 2;
+  align-items: center;
+  display: flex;
+  margin-left: 7px;
 }
 .bx {
   height: 30px;
@@ -10,3 +14,5 @@
   margin: 0;
   padding: 0;
 }
+
+/*Content*/

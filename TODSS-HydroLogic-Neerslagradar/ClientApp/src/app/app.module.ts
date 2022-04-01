@@ -6,7 +6,8 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { ViewComponent } from './view/view.component';
+import { ViewComponent, ViewDirective } from './view/view.component';
+import { TemplateSelectComponent } from './templates/template-select/template-select.component';
 import { TemplateTestComponent } from './templates/template-test/template-test.component';
 
 @NgModule({
@@ -14,6 +15,8 @@ import { TemplateTestComponent } from './templates/template-test/template-test.c
     AppComponent,
     HomeComponent,
     ViewComponent,
+    TemplateSelectComponent,
+    ViewDirective,
     TemplateTestComponent
   ],
   imports: [
