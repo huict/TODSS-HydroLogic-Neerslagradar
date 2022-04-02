@@ -1,3 +1,10 @@
+/*view*/
+#view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 /*Top bar*/
 #topBar {
   display: flex;
@@ -16,3 +23,6 @@
 }
 
 /*Content*/
+#template {
+  flex-grow: 2;
+}
