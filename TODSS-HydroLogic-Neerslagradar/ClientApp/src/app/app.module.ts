@@ -10,6 +10,8 @@ import { HomeComponent } from './home/home.component';
 import { ViewComponent, ViewDirective } from './view/view.component';
 import { TemplateSelectComponent } from './templates/template-select/template-select.component';
 import { TemplateTestComponent } from './templates/template-test/template-test.component';
+import { AnimationMapComponent } from './components/animation-map/animation-map.component';
+import { TemplateFullMapComponent } from './templates/template-full-map/template-full-map.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { TemplateTestComponent } from './templates/template-test/template-test.c
     ViewComponent,
     TemplateSelectComponent,
     ViewDirective,
-    TemplateTestComponent
+    TemplateTestComponent,
+    AnimationMapComponent,
+    TemplateFullMapComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

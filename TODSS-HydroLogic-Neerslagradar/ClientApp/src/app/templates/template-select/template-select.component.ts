@@ -2,6 +2,7 @@ import { Component, Type, Output, EventEmitter } from '@angular/core';
 import { ITemplate } from "../i-template.view";
 import { TemplateTestComponent } from "../template-test/template-test.component";
 import { ITemplateChange } from "../i-template-change.view";
+import { TemplateFullMapComponent } from "../template-full-map/template-full-map.component";
 
 @Component({
   selector: 'app-template-select',
@@ -10,6 +11,7 @@ import { ITemplateChange } from "../i-template-change.view";
 })
 export class TemplateSelectComponent implements ITemplate, ITemplateChange {
   templateTest = TemplateTestComponent;
+  templateFullMap = TemplateFullMapComponent;
   @Output() changeTemplateEvent = new EventEmitter<ITemplate>()
 
   constructor() { }
