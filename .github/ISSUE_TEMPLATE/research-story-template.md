@@ -2,7 +2,7 @@
 name: Research story template
 about: Een template om te gebruiken voor het opstellen van een research story
 title: ''
-labels: ''
+labels: research story
 assignees: ''
 
 ---
