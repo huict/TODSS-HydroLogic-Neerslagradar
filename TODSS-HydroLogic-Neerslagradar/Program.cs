@@ -1,3 +1,5 @@
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,6 +25,10 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
-;
+
+
+var gdal = new GDALProvider();
+
+gdal.loadData();
 
 app.Run();

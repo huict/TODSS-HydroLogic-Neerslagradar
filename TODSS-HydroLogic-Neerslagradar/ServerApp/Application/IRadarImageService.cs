@@ -1,6 +1,7 @@
 ﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 
-public interface RadarImageServiceInterface
+public interface IRadarImageService
 {
+    void loadData();
     
 }
