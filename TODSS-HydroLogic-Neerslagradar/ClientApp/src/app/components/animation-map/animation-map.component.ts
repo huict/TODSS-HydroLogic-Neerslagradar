@@ -9,7 +9,11 @@ import * as L from 'leaflet';
 export class AnimationMapComponent implements OnInit {
   options = {
     layers: [
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 })
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        { maxZoom: 18,
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }
+      )
     ],
     zoom: 7,
     center: L.latLng(52.1009274, 5.6462977)
