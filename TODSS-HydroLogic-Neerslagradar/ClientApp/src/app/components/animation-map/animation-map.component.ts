@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 
 @Component({
@@ -22,7 +23,7 @@ export class AnimationMapComponent implements OnInit {
   private _mySelection: L.Polygon | undefined;
   private _points: L.LatLng[] = [];
 
-  constructor() {
+  constructor(private http: HttpClient) {
   }
 
   onReady(e: any) {
@@ -76,5 +77,14 @@ export class AnimationMapComponent implements OnInit {
 
   get map(): L.Map {
     return <L.Map>this._map;
+  }
+
+  private fetchImage() {
+    // TODO fetch image and set it to temp url
+
+    // TODO get actual coordinates and create bound
+    let bounds = L.latLngBounds([[ 55.39, 0], [ 49.36, 10.85]]);
+    // TODO insert temp url of image
+    L.imageOverlay("https://cdn.discordapp.com/attachments/805785211774304297/960102663096242226/1.png", bounds, {opacity: 0.8}).addTo(this.map);
   }
 }
