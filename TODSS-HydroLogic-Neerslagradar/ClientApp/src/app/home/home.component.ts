@@ -1,16 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViewComponent } from "../view/view.component";
+import { ConfigurationManager } from "../configuration-select/configuration.manager";
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   private _views: ViewComponent[] = [];
+  configId: number | undefined;
 
-  constructor() {
-    this.addView();
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private configManager: ConfigurationManager) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params.hasOwnProperty("config")) {
+        this.configId = params.config;
+        this.loadConfig();
+      }
+    });
   }
 
   get views(): ViewComponent[] {
@@ -34,5 +46,33 @@ export class HomeComponent {
   public openSettings() {
     // TODO display settings
     console.log("to be implemented")
+  }
+
+  private loadConfig() {
+    if (this.configId) {
+      let data = this.configManager.getConfig(this.configId);
+      console.log(data);
+      // TODO load config data
+    }
+  }
+
+  private saveConfig() {
+    let configIdWasSet = true;
+    if (!this.configId) {
+      this.configId = this.configManager.getNewIndex();
+      configIdWasSet = false;
+    }
+
+    // TODO create config data
+    let obj = {name:"test"};
+    this.configManager.saveConfig(this.configId, obj);
+
+    if (!configIdWasSet) {
+      const urlTree = this.router.createUrlTree([], {
+        queryParams: { config: this.configId },
+        queryParamsHandling: "merge",
+        preserveFragment: true });
+      this.router.navigateByUrl(urlTree);
+    }
   }
 }
