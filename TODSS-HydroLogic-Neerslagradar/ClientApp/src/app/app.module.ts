@@ -12,6 +12,7 @@ import { TemplateSelectComponent } from './templates/template-select/template-se
 import { TemplateTestComponent } from './templates/template-test/template-test.component';
 import { AnimationMapComponent } from './components/animation-map/animation-map.component';
 import { TemplateFullMapComponent } from './templates/template-full-map/template-full-map.component';
+import { ConfigurationSelectComponent } from './configuration-select/configuration-select.component';
 
 @NgModule({
   declarations: [
@@ -22,14 +23,18 @@ import { TemplateFullMapComponent } from './templates/template-full-map/template
     ViewDirective,
     TemplateTestComponent,
     AnimationMapComponent,
-    TemplateFullMapComponent
+    TemplateFullMapComponent,
+    ConfigurationSelectComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' }
+      { path: '', redirectTo: '/configurations', pathMatch: 'full' },
+      { path: 'home', component: HomeComponent},
+      { path: 'configurations', component: ConfigurationSelectComponent },
+      { path: '**', redirectTo:'/configurations' }
     ]),
     LeafletModule
   ],
