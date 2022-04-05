@@ -1,5 +1,4 @@
-﻿using MaxRev.Gdal.Core;
-using OSGeo.GDAL;
+﻿using OSGeo.GDAL;
 using OSGeo.OGR;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;

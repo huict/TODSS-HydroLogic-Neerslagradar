@@ -134,6 +134,7 @@ public class TempGDALReadExample
         catch (Exception e)
         {
             Console.WriteLine("Application error: " + e.Message);
+            Console.WriteLine(e);
         }
     }
 
