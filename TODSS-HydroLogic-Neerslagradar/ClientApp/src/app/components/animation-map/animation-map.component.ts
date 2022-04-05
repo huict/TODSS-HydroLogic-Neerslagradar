@@ -28,12 +28,13 @@ export class AnimationMapComponent implements OnInit {
 
   onReady(e: any) {
     this._map = e;
-    // @ts-ignore
-    this._map.on("click", e => {
+    this.map.on("click", e => {
       // @ts-ignore
-      L.popup().setLatLng(e.latlng).setContent("Point set").openOn(this._map);
+      let popup = L.popup().setLatLng(e.latlng).setContent("Point set").openOn(this.map);
       // @ts-ignore
       this.addPoint(e.latlng);
+
+      setInterval(() => popup.remove(), 1500)
     });
   }
 
