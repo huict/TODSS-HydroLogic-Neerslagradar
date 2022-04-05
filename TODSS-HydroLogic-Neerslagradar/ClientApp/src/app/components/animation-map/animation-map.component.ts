@@ -65,13 +65,8 @@ export class AnimationMapComponent implements OnInit {
       }
 
       if (this._mySelection) this._mySelection.remove()
-      this._mySelection = L.polygon([
-        [top, left],
-        [top, right],
-        [bottom, right],
-        [bottom, left]
-        // @ts-ignore
-      ], {fillOpacity: 0}).addTo(this._map);
+      let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);
+      this._mySelection = L.rectangle(bounds, {fillOpacity: 0}).addTo(this.map);
     }
   }
 
