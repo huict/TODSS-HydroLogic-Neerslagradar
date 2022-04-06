@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Directive, ViewContainerRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ViewComponent } from "../view/view.component";
+import { IViewData, ViewComponent } from "../view/view.component";
 import { ConfigurationManager } from "../configuration-select/configuration.manager";
+
+@Directive({
+  selector: '[views]',
+})
+export class ViewDirective {
+  constructor(public viewContainerRef: ViewContainerRef) {}
+}
 
 @Component({
   selector: 'home',
@@ -9,6 +16,7 @@ import { ConfigurationManager } from "../configuration-select/configuration.mana
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  @ViewChild(ViewDirective, {static: true}) viewHost!: ViewDirective
   private _views: ViewComponent[] = [];
   configId: number | undefined;
 
@@ -29,13 +37,22 @@ export class HomeComponent implements OnInit {
     return this._views;
   }
 
-  public addView() {
-    this._views.push(new ViewComponent());
+  public addView(data? : IViewData): ViewComponent {
+    const viewContainerRef = this.viewHost.viewContainerRef;
+    const newView = viewContainerRef.createComponent(ViewComponent).instance;
+    newView.removeEvent.subscribe(event => {
+      newView.removeEvent.unsubscribe();
+      this.removeView(event.valueOf());
+    })
+    this._views.push(newView);
+    if (data) newView.data = data;
     this.reIndex();
+    return newView
   }
 
   public removeView(index: number) {
     this._views = this._views.filter((value, i) => index != i);
+    this.viewHost.viewContainerRef.remove(index);
     this.reIndex();
   }
 
@@ -52,7 +69,9 @@ export class HomeComponent implements OnInit {
     if (this.configId) {
       let data = this.configManager.getConfig(this.configId);
       console.log(data);
-      // TODO load config data
+      for (const viewData of data.views) {
+        this.addView(viewData);
+      }
     }
   }
 
@@ -64,7 +83,7 @@ export class HomeComponent implements OnInit {
     }
 
     // TODO create config data
-    let obj = {name:"test"};
+    let obj = {name:"test", views:[]};
     this.configManager.saveConfig(this.configId, obj);
 
     if (!configIdWasSet) {
@@ -80,4 +99,5 @@ export class HomeComponent implements OnInit {
 // TODO extra onderdelen toevoegen voor een configuratie
 export interface IConfiguration {
   name: string;
+  views: IViewData[];
 }

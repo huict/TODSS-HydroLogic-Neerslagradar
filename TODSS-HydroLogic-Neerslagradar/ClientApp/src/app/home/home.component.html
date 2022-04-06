@@ -17,8 +17,6 @@
   </div>
 
   <div id="views">
-    <div *ngFor="let i of views">
-      <view [index]="i.index" (removeEvent)="removeView($event)"></view>
-    </div>
+    <ng-template views class="views"></ng-template>
   </div>
 </div>

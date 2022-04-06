@@ -6,8 +6,8 @@ import { RouterModule } from '@angular/router';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { ViewComponent, ViewDirective } from './view/view.component';
+import { HomeComponent, ViewDirective } from './home/home.component';
+import { ViewComponent, TemplateDirective } from './view/view.component';
 import { TemplateSelectComponent } from './templates/template-select/template-select.component';
 import { TemplateTestComponent } from './templates/template-test/template-test.component';
 import { AnimationMapComponent } from './components/animation-map/animation-map.component';
@@ -21,6 +21,7 @@ import { ConfigurationSelectComponent } from './configuration-select/configurati
     ViewComponent,
     TemplateSelectComponent,
     ViewDirective,
+    TemplateDirective,
     TemplateTestComponent,
     AnimationMapComponent,
     TemplateFullMapComponent,

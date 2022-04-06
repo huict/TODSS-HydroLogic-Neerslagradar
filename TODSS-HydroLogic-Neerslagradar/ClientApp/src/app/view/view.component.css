@@ -1,3 +1,14 @@
+:host {
+  width: 600px;
+  border: 1px solid #000;
+  flex-grow: 1;
+  min-height: 120px;
+  box-sizing: border-box;
+  margin: 5px;
+  justify-content: space-between;
+  text-align: center;
+}
+
 /*view*/
 #view {
   display: flex;

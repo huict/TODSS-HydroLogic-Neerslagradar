@@ -20,14 +20,32 @@ export class ConfigurationManager {
       return JSON.parse(data);
     } else {
       // TODO return standard configs at first launch
-      return {
+      let standard = {
         0: {
-          name:"empty",
+          name:"compare 2 maps",
+          views:[
+            {
+              name:"Map Utrecht"
+            },
+            {
+              name:"Map Amersfoort"
+            }
+          ],
         },
         1: {
-          name:"compare 2 maps",
+          name:"test",
+          views:[
+            {
+              name:"Nederland"
+            },
+            {
+              name:"Test"
+            }
+          ]
         }
       }
+      // this.saveDataLocal(standard);
+      return standard;
     }
   }
 
@@ -47,7 +65,7 @@ export class ConfigurationManager {
     this.saveDataLocal(data)
   }
 
-  public getConfig(configId: number): object {
+  public getConfig(configId: number): IConfiguration {
     return this.getDataLocal()[configId];
   }
 

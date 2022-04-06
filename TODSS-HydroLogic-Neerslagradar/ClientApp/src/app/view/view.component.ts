@@ -4,9 +4,9 @@ import { ITemplateChange } from "../templates/i-template-change.view";
 import { TemplateSelectComponent } from "../templates/template-select/template-select.component";
 
 @Directive({
-  selector: '[viewTemplate]',
+  selector: '[template]',
 })
-export class ViewDirective {
+export class TemplateDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
@@ -17,17 +17,18 @@ export class ViewDirective {
 })
 export class ViewComponent implements OnInit {
   @Output() removeEvent = new EventEmitter<number>();
-  @ViewChild(ViewDirective, {static: true}) viewHost!: ViewDirective
+  @ViewChild(TemplateDirective, {static: true}) viewHost!: TemplateDirective
 
   private _index: number = 0;
   private _name: string = "";
   private _template: ITemplate = new TemplateSelectComponent();
 
   constructor() {
+    // if (data) this.data = data;
   }
 
   ngOnInit(): void {
-    this.loadView();
+    this.loadTemplate();
   }
 
   get index(): number {
@@ -42,7 +43,7 @@ export class ViewComponent implements OnInit {
     return this._name;
   }
 
-  set name(value: string) {
+  @Input() set name(value: string) {
     this._name = value;
   }
 
@@ -52,14 +53,23 @@ export class ViewComponent implements OnInit {
 
   @Input() set template(value: ITemplate) {
     this._template = value;
-    this.loadView();
+    this.loadTemplate();
+  }
+
+  get data(): IViewData {
+    return {name: this._name}
+  }
+
+  @Input() set data(value: IViewData) {
+    // @ts-ignore
+    this.name = value.name;
   }
 
   public throwRemoveEvent() {
     this.removeEvent.emit(this.index)
   }
 
-  public loadView() {
+  private loadTemplate() {
     const viewContainerRef = this.viewHost.viewContainerRef;
     viewContainerRef.clear();
 
@@ -71,10 +81,6 @@ export class ViewComponent implements OnInit {
         this.template = t;
       })
     }
-
-    // TODO package data
-    // dit is hoe we de data van instantie naar instantie kunnen verplaatsen. (het moet alleen nog gepackaged worden)
-    // componentRef.instance.data = this.template.data;
   }
 
   public openSettings() {
@@ -88,4 +94,8 @@ export class ViewComponent implements OnInit {
     if (this.index == undefined) return "white";
     return this.colors[this.index];
   }
+}
+
+export interface IViewData {
+  name: string
 }
