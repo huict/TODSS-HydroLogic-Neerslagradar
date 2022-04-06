@@ -1,5 +1,6 @@
 ﻿import {Injectable} from "@angular/core";
 import {IConfiguration} from "../home/home.component";
+import {TemplateTranslator} from "../templates/templateTranslator";
 
 interface IConfigContainer {
   [key: number]: IConfiguration;
@@ -12,7 +13,7 @@ interface IConfigContainer {
 export class ConfigurationManager {
   private dataName: string = "configurations";
 
-  constructor() {}
+  constructor(private templateTranslator: TemplateTranslator) {}
 
   private getDataLocal(): IConfigContainer {
     let data = localStorage.getItem(this.dataName);
@@ -25,10 +26,12 @@ export class ConfigurationManager {
           name:"compare 2 maps",
           views:[
             {
-              name:"Map Utrecht"
+              name:"Map Utrecht",
+              templateType: this.templateTranslator.templates.full_map
             },
             {
-              name:"Map Amersfoort"
+              name:"Map Amersfoort",
+              templateType: this.templateTranslator.templates.full_map
             }
           ],
         },
@@ -36,10 +39,16 @@ export class ConfigurationManager {
           name:"test",
           views:[
             {
-              name:"Nederland"
+              name:"Nederland",
+              templateType: this.templateTranslator.templates.full_map
             },
             {
-              name:"Test"
+              name:"Test",
+              templateType: this.templateTranslator.templates.test
+            },
+            {
+              name:"Select",
+              templateType: this.templateTranslator.templates.select
             }
           ]
         }

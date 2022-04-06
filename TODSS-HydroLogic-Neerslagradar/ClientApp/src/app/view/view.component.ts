@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, Directive, ViewContainerRef, Vi
 import { ITemplate } from "../templates/i-template.view";
 import { ITemplateChange } from "../templates/i-template-change.view";
 import { TemplateSelectComponent } from "../templates/template-select/template-select.component";
+import { TemplateTranslator } from "../templates/templateTranslator";
 
 @Directive({
   selector: '[template]',
@@ -23,9 +24,7 @@ export class ViewComponent implements OnInit {
   private _name: string = "";
   private _template: ITemplate = new TemplateSelectComponent();
 
-  constructor() {
-    // if (data) this.data = data;
-  }
+  constructor(private templateTranslator: TemplateTranslator) {}
 
   ngOnInit(): void {
     this.loadTemplate();
@@ -57,12 +56,15 @@ export class ViewComponent implements OnInit {
   }
 
   get data(): IViewData {
-    return {name: this._name}
+    return {
+      name: this.name,
+      templateType: this.template.constructor.name,
+    }
   }
 
   @Input() set data(value: IViewData) {
-    // @ts-ignore
     this.name = value.name;
+    this.template = this.templateTranslator.getTemplate(value.templateType);
   }
 
   public throwRemoveEvent() {
@@ -72,7 +74,6 @@ export class ViewComponent implements OnInit {
   private loadTemplate() {
     const viewContainerRef = this.viewHost.viewContainerRef;
     viewContainerRef.clear();
-
     // @ts-ignore
     const componentRef = viewContainerRef.createComponent<ITemplate>(this.template.constructor);
     if (componentRef.instance.hasOwnProperty("changeTemplateEvent")) {
@@ -97,5 +98,6 @@ export class ViewComponent implements OnInit {
 }
 
 export interface IViewData {
-  name: string
+  name: string,
+  templateType: string,
 }
