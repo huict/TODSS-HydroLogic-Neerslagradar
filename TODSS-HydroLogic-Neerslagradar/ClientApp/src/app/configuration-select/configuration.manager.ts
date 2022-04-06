@@ -1,9 +1,5 @@
 ﻿import {Injectable} from "@angular/core";
-
-// TODO extra onderdelen toevoegen voor een configuratie
-export interface IConfiguration {
-  name: string;
-}
+import {IConfiguration} from "../home/home.component";
 
 interface IConfigContainer {
   [key: number]: IConfiguration;

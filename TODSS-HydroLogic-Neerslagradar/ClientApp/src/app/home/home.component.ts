@@ -76,3 +76,8 @@ export class HomeComponent implements OnInit {
     }
   }
 }
+
+// TODO extra onderdelen toevoegen voor een configuratie
+export interface IConfiguration {
+  name: string;
+}
