@@ -24,11 +24,14 @@ export class ViewComponent implements OnInit {
   private _index: number = 0;
   private _name: string = "";
   private _template: ITemplate = new TemplateSelectComponent();
+  private _skipInit: boolean = false;
 
   constructor(private templateTranslator: TemplateTranslator) {}
 
   ngOnInit(): void {
-    this.loadTemplate();
+    if (!this._skipInit) {
+      this.loadTemplate(this._template);
+    }
   }
 
   get index(): number {
@@ -48,12 +51,12 @@ export class ViewComponent implements OnInit {
   }
 
   get template(): ITemplate {
-    return this._template;
+    return <ITemplate> this._template;
   }
 
   @Input() set template(value: ITemplate) {
-    this._template = value;
-    this.loadTemplate();
+    // this._template = value;
+    this.loadTemplate(value);
   }
 
   get data(): IViewData {
@@ -65,21 +68,24 @@ export class ViewComponent implements OnInit {
   }
 
   @Input() set data(value: IViewData) {
+    this._skipInit = true;
     this.name = value.name;
-    this.template = this.templateTranslator.getTemplate(value.templateType);
+    this.loadTemplate(this.templateTranslator.getTemplate(value.templateType), value.data)
   }
 
   public throwRemoveEvent() {
     this.removeEvent.emit(this.index)
   }
 
-  private loadTemplate() {
+  private loadTemplate(template: ITemplate, data?:any) {
     const viewContainerRef = this.viewHost.viewContainerRef;
     viewContainerRef.clear();
     // @ts-ignore
-    const componentRef = viewContainerRef.createComponent<ITemplate>(this.template.constructor);
-    if (componentRef.instance.hasOwnProperty("changeTemplateEvent")) {
-      let selectComponent:ITemplateChange = <ITemplateChange> componentRef.instance;
+    const component = viewContainerRef.createComponent<ITemplate>(template.constructor).instance;
+    this._template = component;
+    if (data) component.data = data;
+    if (component.hasOwnProperty("changeTemplateEvent")) {
+      let selectComponent:ITemplateChange = <ITemplateChange> component;
       selectComponent.changeTemplateEvent.subscribe(t => {
         this.template = t;
       })

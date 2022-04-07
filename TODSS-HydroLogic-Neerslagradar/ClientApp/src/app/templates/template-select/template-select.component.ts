@@ -21,4 +21,6 @@ export class TemplateSelectComponent implements ITemplateChange {
   }
 
   get data(): any {return {}}
+
+  set data(value: any) {}
 }

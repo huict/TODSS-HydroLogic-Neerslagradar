@@ -38,8 +38,7 @@ export class HomeComponent implements OnInit {
   }
 
   public addView(data? : IViewData): ViewComponent {
-    const viewContainerRef = this.viewHost.viewContainerRef;
-    const newView = viewContainerRef.createComponent(ViewComponent).instance;
+    const newView = this.viewHost.viewContainerRef.createComponent(ViewComponent).instance;
     newView.removeEvent.subscribe(event => {
       newView.removeEvent.unsubscribe();
       this.removeView(event.valueOf());

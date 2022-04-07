@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ICoordinateFilter, ITimeFilter, IWeatherTemplate } from "../i-weather.template";
+import {Component, Input, OnInit} from '@angular/core';
+import {ICoordinateFilter, ITimeFilter, IWeatherTemplate} from "../i-weather.template";
 
 @Component({
   selector: 'template-full-map',
@@ -9,6 +9,7 @@ import { ICoordinateFilter, ITimeFilter, IWeatherTemplate } from "../i-weather.t
 export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   private _coordinatesFilter: ICoordinateFilter | undefined;
   private _timeFilter: ITimeFilter | undefined;
+  private _data: object | undefined;
 
   constructor() { }
 
@@ -16,11 +17,11 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   }
 
   get data(): any {
-    return {}
+    return this._data
   }
 
   set data(value: any) {
-
+    this._data = value;
   }
 
   get coordinatesFilter(): ICoordinateFilter | undefined {
@@ -31,11 +32,19 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
     this._coordinatesFilter = value;
   }
 
+  handleCoordEvent(e: ICoordinateFilter) {
+    this._coordinatesFilter = e;
+  }
+
   get timeFilter(): ITimeFilter | undefined {
     return this._timeFilter;
   }
 
   @Input() set timeFilter(value: ITimeFilter | undefined) {
     this._timeFilter = value;
+  }
+
+  handleTimeEvent(e: ITimeFilter) {
+    this._timeFilter = e;
   }
 }

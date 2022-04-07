@@ -1,1 +1,5 @@
-<animation-map></animation-map>
+<animation-map
+  (changeLocationFilterEvent)="handleCoordEvent($event)"
+  (changeTimeFilterEvent)="handleTimeEvent($event)"
+  [data]="data">
+</animation-map>

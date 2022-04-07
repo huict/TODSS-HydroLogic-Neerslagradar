@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
@@ -26,6 +26,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
   private _map: L.Map | undefined;
   private _mySelection: L.Polygon | undefined;
   private _points: L.LatLng[] = [];
+  private _data:any;
+
+  @Input() set data(value: any) {
+    console.log(value);
+    this._data = value;
+  }
 
   constructor(private http: HttpClient) {
   }
@@ -38,32 +44,22 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
       // @ts-ignore
       this.addPoint(e.latlng);
 
-      setInterval(() => popup.remove(), 1500)
+      setTimeout(() => popup.remove(), 1500)
     });
   }
 
-  addPoint(o: L.LatLng) {
-    this._points.push(o);
+  addPoint(newPoint: L.LatLng) {
+    this._points.push(newPoint);
     if (this._points.length == 3) this._points.shift();
     if (this._points.length == 2) {
-      let top, bottom, left, right;
       let point1 = this._points[0];
       let point2 = this._points[1];
-
-      if (point1.lat > point2.lat) {
-        top = point1.lat;
-        bottom = point2.lat;
-      } else {
-        top = point2.lat;
-        bottom = point1.lat;
-      }
-      if (point1.lng > point2.lng) {
-        left = point2.lng;
-        right = point1.lng;
-      } else {
-        left = point1.lng;
-        right = point2.lng;
-      }
+      let lats = [point1.lat, point2.lat].sort();
+      let lngs = [point1.lng, point2.lng].sort();
+      let bottom = lats[0];
+      let top = lats[1];
+      let left = lngs[0];
+      let right = lngs[1];
 
       if (this._mySelection) this._mySelection.remove()
       let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);

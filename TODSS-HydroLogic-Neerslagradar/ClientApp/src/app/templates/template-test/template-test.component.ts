@@ -14,4 +14,6 @@ export class TemplateTestComponent implements ITemplate {
   get data(): any {
     return {}
   }
+
+  set data(value: any) {}
 }
