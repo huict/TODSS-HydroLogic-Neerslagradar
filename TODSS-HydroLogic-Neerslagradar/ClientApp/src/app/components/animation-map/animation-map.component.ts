@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
@@ -10,7 +10,7 @@ import {LatLng} from "leaflet";
   templateUrl: './animation-map.component.html',
   styleUrls: ['./animation-map.component.css']
 })
-export class AnimationMapComponent implements IChangesCoords, IChangesTime {
+export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDestroy {
   @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
   @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
   @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
@@ -46,6 +46,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
   }
 
   constructor(private http: HttpClient) {
+  }
+
+  ngOnDestroy(): void {
+    this.changeLocationFilterEvent.unsubscribe();
+    this.changeTimeFilterEvent.unsubscribe();
+    this.mapReadyEvent.unsubscribe();
   }
 
   onReady(e: any) {

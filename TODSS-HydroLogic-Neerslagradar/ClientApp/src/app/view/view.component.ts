@@ -1,4 +1,14 @@
-import { Component, Input, Output, EventEmitter, Directive, ViewContainerRef, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  Directive,
+  ViewContainerRef,
+  ViewChild,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 import { ITemplate } from "../templates/i-template.view";
 import { ITemplateChange } from "../templates/i-template-change.view";
 import { TemplateSelectComponent } from "../templates/template-select/template-select.component";
@@ -17,7 +27,7 @@ export class TemplateDirective {
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.css']
 })
-export class ViewComponent implements OnInit {
+export class ViewComponent implements OnInit, OnDestroy {
   @Output() removeEvent = new EventEmitter<number>();
   @ViewChild(TemplateDirective, {static: true}) viewHost!: TemplateDirective
 
@@ -32,6 +42,10 @@ export class ViewComponent implements OnInit {
     if (!this._skipInit) {
       this.loadTemplate(this._template);
     }
+  }
+
+  ngOnDestroy() {
+    this.removeEvent.unsubscribe();
   }
 
   get index(): number {
