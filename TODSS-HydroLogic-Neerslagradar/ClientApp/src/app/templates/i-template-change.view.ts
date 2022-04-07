@@ -5,6 +5,6 @@ import {ITemplate} from "./i-template.view";
 // De verplichte line die wordt bedoeld met deze interface:
 // @Output() changeTemplateEvent = new EventEmitter<ITemplate>();
 
-export interface ITemplateChange {
+export interface ITemplateChange extends ITemplate {
   changeTemplateEvent: EventEmitter<ITemplate>;
 }

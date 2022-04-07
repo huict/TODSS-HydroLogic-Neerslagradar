@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
+import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
+import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
 
 @Component({
   selector: 'animation-map',
   templateUrl: './animation-map.component.html',
   styleUrls: ['./animation-map.component.css']
 })
-export class AnimationMapComponent implements OnInit {
+export class AnimationMapComponent implements IChangesCoords, IChangesTime {
+  @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
+  @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
   options = {
     layers: [
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -38,10 +42,6 @@ export class AnimationMapComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-
-  }
-
   addPoint(o: L.LatLng) {
     this._points.push(o);
     if (this._points.length == 3) this._points.shift();
@@ -68,6 +68,12 @@ export class AnimationMapComponent implements OnInit {
       if (this._mySelection) this._mySelection.remove()
       let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);
       this._mySelection = L.rectangle(bounds, {fillOpacity: 0}).addTo(this.map);
+
+      const location: ICoordinateFilter = {
+        topLeft: new L.LatLng(top, left),
+        bottomRight: new L.LatLng(bottom, right)
+      };
+      this.changeLocationFilterEvent.emit(location)
     }
   }
 

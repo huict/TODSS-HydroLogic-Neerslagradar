@@ -9,7 +9,7 @@ import { TemplateFullMapComponent } from "../template-full-map/template-full-map
   templateUrl: './template-select.component.html',
   styleUrls: ['./template-select.component.css']
 })
-export class TemplateSelectComponent implements ITemplate, ITemplateChange {
+export class TemplateSelectComponent implements ITemplateChange {
   templateTest = TemplateTestComponent;
   templateFullMap = TemplateFullMapComponent;
   @Output() changeTemplateEvent = new EventEmitter<ITemplate>()
@@ -19,4 +19,6 @@ export class TemplateSelectComponent implements ITemplate, ITemplateChange {
   public throwChangeEvent(template: Type<ITemplate>) {
     this.changeTemplateEvent.emit(new template())
   }
+
+  get data(): any {return {}}
 }

@@ -27,11 +27,13 @@ export class ConfigurationManager {
           views:[
             {
               name:"Map Utrecht",
-              templateType: this.templateTranslator.templates.full_map
+              templateType: this.templateTranslator.templates.full_map,
+              data:{},
             },
             {
               name:"Map Amersfoort",
-              templateType: this.templateTranslator.templates.full_map
+              templateType: this.templateTranslator.templates.full_map,
+              data:{},
             }
           ],
         },
@@ -40,15 +42,18 @@ export class ConfigurationManager {
           views:[
             {
               name:"Nederland",
-              templateType: this.templateTranslator.templates.full_map
+              templateType: this.templateTranslator.templates.full_map,
+              data:{},
             },
             {
               name:"Test",
-              templateType: this.templateTranslator.templates.test
+              templateType: this.templateTranslator.templates.test,
+              data:{},
             },
             {
               name:"Select",
-              templateType: this.templateTranslator.templates.select
+              templateType: this.templateTranslator.templates.select,
+              data:{},
             }
           ]
         }

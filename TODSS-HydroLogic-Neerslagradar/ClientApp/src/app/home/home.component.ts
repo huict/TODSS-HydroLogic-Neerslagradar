@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit {
     }
 
     // TODO create config data
-    let obj = {name:"test", views:[]};
+    let obj = {name:"test", views:this.views.map(v => v.data)};
     this.configManager.saveConfig(this.configId, obj);
 
     if (!configIdWasSet) {

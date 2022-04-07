@@ -1,3 +1,4 @@
 export interface ITemplate {
-  // Komen miss nog dingen in die voor elke template gelden
+  // Komen misschien nog dingen in die voor elke template gelden
+  get data():any;
 }

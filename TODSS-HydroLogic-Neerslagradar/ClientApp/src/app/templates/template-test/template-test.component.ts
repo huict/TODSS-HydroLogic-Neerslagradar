@@ -10,4 +10,8 @@ import {ITemplate} from "../i-template.view";
 })
 export class TemplateTestComponent implements ITemplate {
   constructor() {}
+
+  get data(): any {
+    return {}
+  }
 }

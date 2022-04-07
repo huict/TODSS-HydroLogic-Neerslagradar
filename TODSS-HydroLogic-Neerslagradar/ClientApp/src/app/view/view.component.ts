@@ -3,6 +3,7 @@ import { ITemplate } from "../templates/i-template.view";
 import { ITemplateChange } from "../templates/i-template-change.view";
 import { TemplateSelectComponent } from "../templates/template-select/template-select.component";
 import { TemplateTranslator } from "../templates/templateTranslator";
+import { ICoordinateFilter, ITimeFilter } from "../templates/i-weather.template";
 
 @Directive({
   selector: '[template]',
@@ -59,6 +60,7 @@ export class ViewComponent implements OnInit {
     return {
       name: this.name,
       templateType: this.template.constructor.name,
+      data: this.template.data,
     }
   }
 
@@ -98,6 +100,13 @@ export class ViewComponent implements OnInit {
 }
 
 export interface IViewData {
-  name: string,
-  templateType: string,
+  name: string;
+  templateType: string;
+  data:any;
+  filters?:IFilterData;
+}
+
+export interface IFilterData {
+  coordinates: ICoordinateFilter;
+  time: ITimeFilter;
 }
