@@ -19,7 +19,11 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   }
 
   get data(): any {
-    return {map:this._map?.data}
+    return {
+      map:this._map?.data,
+      coordinatesFilter: this.coordinatesFilter,
+      timeFilter: this.timeFilter,
+    }
   }
 
   get dataTemp(): any {
@@ -28,6 +32,8 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
 
   set data(value: any) {
     this._mapDataTemp = value.map;
+    this.coordinatesFilter = value.coordinatesFilter;
+    this.timeFilter = value.timeFilter;
   }
 
   get coordinatesFilter(): ICoordinateFilter | undefined {
