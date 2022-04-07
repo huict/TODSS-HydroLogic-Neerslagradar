@@ -17,7 +17,8 @@
         <PackageReference Include="Gdal.Core.LinuxRuntime" Version="2.3.0-beta-023" />
         <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.1" />
-        <PackageReference Include="System.Drawing.Common" Version="7.0.0-preview.2.22152.2" />
+        <PackageReference Include="SDSLite" Version="2.0.3" />
+        <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,7 +30,6 @@
 
     <ItemGroup>
       <Folder Include="ServerApp\Data" />
-      <Folder Include="ServerApp\Domain" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
