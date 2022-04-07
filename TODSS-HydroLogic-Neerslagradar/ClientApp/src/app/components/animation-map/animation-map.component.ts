@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
+import {LatLng} from "leaflet";
 
 @Component({
   selector: 'animation-map',
@@ -12,6 +13,7 @@ import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.templa
 export class AnimationMapComponent implements IChangesCoords, IChangesTime {
   @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
   @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
+  @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
   options = {
     layers: [
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -26,11 +28,21 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
   private _map: L.Map | undefined;
   private _mySelection: L.Polygon | undefined;
   private _points: L.LatLng[] = [];
-  private _data:any;
+  private _dataTemp: object | undefined;
 
-  @Input() set data(value: any) {
-    console.log(value);
-    this._data = value;
+  get data():IMapData {
+    return <IMapData>{
+      points: this._points,
+      zoom: this._map?.getZoom(),
+      centerLocation: this._map?.getCenter(),
+    }
+  }
+
+  @Input() set data(value: IMapData) {
+    if (value) {
+      this._dataTemp = value;
+      this._points = value.points;
+    }
   }
 
   constructor(private http: HttpClient) {
@@ -46,11 +58,21 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
 
       setTimeout(() => popup.remove(), 1500)
     });
+    // @ts-ignore
+    if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
+    this.renderSelection();
+    this.mapReadyEvent.emit(this);
   }
 
   addPoint(newPoint: L.LatLng) {
     this._points.push(newPoint);
     if (this._points.length == 3) this._points.shift();
+    if (this._points.length == 2) {
+      this.renderSelection();
+    }
+  }
+
+  private renderSelection() {
     if (this._points.length == 2) {
       let point1 = this._points[0];
       let point2 = this._points[1];
@@ -61,7 +83,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
       let left = lngs[0];
       let right = lngs[1];
 
-      if (this._mySelection) this._mySelection.remove()
+      if (this._mySelection) this._mySelection.remove();
       let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);
       this._mySelection = L.rectangle(bounds, {fillOpacity: 0}).addTo(this.map);
 
@@ -69,7 +91,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
         topLeft: new L.LatLng(top, left),
         bottomRight: new L.LatLng(bottom, right)
       };
-      this.changeLocationFilterEvent.emit(location)
+      this.changeLocationFilterEvent.emit(location);
     }
   }
 
@@ -85,4 +107,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
     // TODO insert temp url of image
     L.imageOverlay("https://cdn.discordapp.com/attachments/805785211774304297/960102663096242226/1.png", bounds, {opacity: 0.8}).addTo(this.map);
   }
+}
+
+export interface IMapData {
+  points: LatLng[],
+  zoom: number,
+  centerLocation: LatLng,
 }

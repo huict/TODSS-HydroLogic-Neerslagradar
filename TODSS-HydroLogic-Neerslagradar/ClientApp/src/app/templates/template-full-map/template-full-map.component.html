@@ -1,5 +1,6 @@
 <animation-map
   (changeLocationFilterEvent)="handleCoordEvent($event)"
   (changeTimeFilterEvent)="handleTimeEvent($event)"
-  [data]="data">
+  (mapReadyEvent)="handleMapReadyEvent($event)"
+  [data]="dataTemp">
 </animation-map>

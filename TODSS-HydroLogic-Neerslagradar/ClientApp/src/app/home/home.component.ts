@@ -64,6 +64,11 @@ export class HomeComponent implements OnInit {
     console.log("to be implemented")
   }
 
+  public openSaveConfig() {
+    // TODO open save config screen
+    this.saveConfig("Test", "This is a description");
+  }
+
   private loadConfig() {
     if (this.configId) {
       let data = this.configManager.getConfig(this.configId);
@@ -74,7 +79,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private saveConfig() {
+  private saveConfig(title: string, description: string) {
     let configIdWasSet = true;
     if (!this.configId) {
       this.configId = this.configManager.getNewIndex();
@@ -82,7 +87,8 @@ export class HomeComponent implements OnInit {
     }
 
     // TODO create config data
-    let obj = {name:"test", views:this.views.map(v => v.data)};
+    let obj = {title:title, description:description, views:this.views.map(v => v.data)};
+    console.log(obj)
     this.configManager.saveConfig(this.configId, obj);
 
     if (!configIdWasSet) {
@@ -97,6 +103,7 @@ export class HomeComponent implements OnInit {
 
 // TODO extra onderdelen toevoegen voor een configuratie
 export interface IConfiguration {
-  name: string;
+  title: string;
+  description: string;
   views: IViewData[];
 }

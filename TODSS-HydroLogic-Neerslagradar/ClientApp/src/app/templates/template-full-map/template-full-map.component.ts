@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ICoordinateFilter, ITimeFilter, IWeatherTemplate} from "../i-weather.template";
+import {AnimationMapComponent} from "../../components/animation-map/animation-map.component";
 
 @Component({
   selector: 'template-full-map',
@@ -9,7 +10,8 @@ import {ICoordinateFilter, ITimeFilter, IWeatherTemplate} from "../i-weather.tem
 export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   private _coordinatesFilter: ICoordinateFilter | undefined;
   private _timeFilter: ITimeFilter | undefined;
-  private _data: object | undefined;
+  private _map: AnimationMapComponent | undefined;
+  private _mapDataTemp: object | undefined;
 
   constructor() { }
 
@@ -17,11 +19,15 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   }
 
   get data(): any {
-    return this._data
+    return {map:this._map?.data}
+  }
+
+  get dataTemp(): any {
+    return this._mapDataTemp;
   }
 
   set data(value: any) {
-    this._data = value;
+    this._mapDataTemp = value.map;
   }
 
   get coordinatesFilter(): ICoordinateFilter | undefined {
@@ -46,5 +52,9 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
 
   handleTimeEvent(e: ITimeFilter) {
     this._timeFilter = e;
+  }
+
+  handleMapReadyEvent(e: AnimationMapComponent) {
+    this._map = e;
   }
 }

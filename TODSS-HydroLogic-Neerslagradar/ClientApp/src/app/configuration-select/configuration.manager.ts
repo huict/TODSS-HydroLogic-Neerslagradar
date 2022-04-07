@@ -23,22 +23,58 @@ export class ConfigurationManager {
       // TODO return standard configs at first launch
       let standard = {
         0: {
-          name:"compare 2 maps",
+          title:"compare 2 maps",
+          description:"",
           views:[
             {
               name:"Map Utrecht",
               templateType: this.templateTranslator.templates.full_map,
-              data:{},
+              data:{
+                map:{
+                  centerLocation:{
+                    lat: 52.07412382497353,
+                    lng: 5.144348144531251
+                  },
+                  points:[
+                    {
+                      lat: 52.147457256841705,
+                      lng: 5.012512207031251
+                    },{
+                      lat: 52.0038843087674,
+                      lng: 5.171127319335938
+                    }
+                  ],
+                  zoom: 11,
+                }
+              },
             },
             {
               name:"Map Amersfoort",
               templateType: this.templateTranslator.templates.full_map,
-              data:{},
+              data:{
+                map:{
+                  centerLocation:{
+                    lat: 52.184779042321736,
+                    lng: 5.4563597962260255
+                  },
+                  points:[
+                    {
+                      lat: 52.21501387135701,
+                      lng: 5.343063287436962
+                    },{
+                      lat: 52.12821256438199,
+                      lng: 5.472839288413525
+                    }
+                  ],
+                  zoom: 11,
+                }
+              },
             }
           ],
         },
         1: {
-          name:"test",
+          title:"test",
+          description:"",
           views:[
             {
               name:"Nederland",
@@ -81,6 +117,10 @@ export class ConfigurationManager {
 
   public getConfig(configId: number): IConfiguration {
     return this.getDataLocal()[configId];
+  }
+
+  public getAllConfigs() : IConfigContainer {
+    return this.getDataLocal();
   }
 
   public removeConfig(configId: number) {
