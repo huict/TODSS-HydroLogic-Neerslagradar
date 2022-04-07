@@ -16,7 +16,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime {
   @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
   options = {
     layers: [
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         { maxZoom: 18,
           attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }
