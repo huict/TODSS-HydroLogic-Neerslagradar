@@ -10,9 +10,9 @@ public class GeneratePhoto
 {
     private static int _plaatje;
 
-    public static List<Bitmap> GenerateBitmap(float[,,] slice, IColorScheme colorScheme)
+    public static List<byte[]> GenerateBitmap(float[,,] slice, IColorScheme colorScheme)
     {
-        var bitmapList = new List<Bitmap>();
+        var bitmapList = new List<byte[]>();
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
         for (var depth = 0; depth < slice.GetLength(0); depth++)
@@ -36,18 +36,24 @@ public class GeneratePhoto
                 //red byte
                 imageBytes[i + 2] = color.R;
                 //alpha byte
-                imageBytes[i + 3] = 255;
+                imageBytes[i + 3] = color.Equals(Color.Black) ? (byte) 0 :  (byte) 255;
             }
             
             Marshal.Copy(imageBytes, 0, scan0, imageBytes.Length);
             bitmap.UnlockBits(imageData);
             bitmap.MakeTransparent();
-            // bitmap.Save(@"C:\Users\salni\RiderProjects\" + _plaatje + ".png", ImageFormat.Png);
-            bitmapList.Add(bitmap);
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png);
+                bitmapList.Add(stream.ToArray());
+            }
+
+            
+            
             var renderTime = DateTime.Now - start;
             Console.WriteLine("Picture " + _plaatje+ " made in " + renderTime.TotalSeconds + " s");
         }
-
+        
         return bitmapList;
     }
 

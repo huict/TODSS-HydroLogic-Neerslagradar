@@ -29,7 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controller" />
       <Folder Include="ServerApp\Data" />
     </ItemGroup>
 

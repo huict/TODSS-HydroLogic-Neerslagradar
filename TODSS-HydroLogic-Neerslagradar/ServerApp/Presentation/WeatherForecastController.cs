@@ -25,7 +25,7 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Bitmap> Get()
+    public IEnumerable<byte[]> Get()
     {
         // return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         //     {
@@ -33,7 +33,7 @@ public class WeatherForecastController : ControllerBase
         //         TemperatureC = Random.Shared.Next(-20, 55),
         //         Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         //     })
-        //     .ToArray();4
+        //     .ToArray();
 
         return _radarImageService.loadData();
     }

@@ -5,6 +5,6 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 
 public interface IRadarImageService
 {
-    List<Bitmap> loadData();
+    List<byte[]> loadData();
     
 }
