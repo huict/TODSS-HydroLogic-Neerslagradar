@@ -2,12 +2,12 @@
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.Reading_Data;
 
-public class Reading_Data : IReadingData
+public class ReadingData : IReadingData
 {
     private DataSet Ds { get; }
     private Variable _p;
 
-    public Reading_Data(string filePath)
+    public ReadingData(string filePath)
     {
         Ds = DataSet.Open(filePath, ResourceOpenMode.ReadOnly);
         foreach (var variable in Ds.Variables)

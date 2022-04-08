@@ -1,7 +1,10 @@
-﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+﻿using System.Drawing;
+using Microsoft.AspNetCore.Mvc;
+
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 
 public interface IRadarImageService
 {
-    void loadData();
+    List<Bitmap> loadData();
     
 }

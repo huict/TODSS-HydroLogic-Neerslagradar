@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<IRadarImageService, RadarImageService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,9 +28,9 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");
 
-
-var gdal = new GDALProvider();
-
-gdal.loadData();
+//
+// var gdal = new GDALProvider();
+//
+// gdal.loadData();
 
 app.Run();

@@ -1,4 +1,4 @@
-﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation;
 
 public interface IRadarImageController
 {
