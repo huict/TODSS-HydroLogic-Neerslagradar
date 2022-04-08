@@ -1,3 +1,18 @@
+#mapContainer {
+  position: absolute;
+  height: 100%;
+}
+
+#times {
+  background-color: white;
+  width: max-content;
+  position: relative;
+  float: right;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
 #map {
   height: 100%;
 }

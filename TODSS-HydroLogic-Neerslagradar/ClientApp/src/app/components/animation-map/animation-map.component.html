@@ -1,1 +1,8 @@
-<div id="map" leaflet (leafletMapReady)="onReady($event)" [leafletOptions]="options"></div>
+<div id="mainContainer" style="height: 100%;">
+  <div id="map" leaflet (leafletMapReady)="onReady($event)" [leafletOptions]="options">
+    <div id="times">
+      <label>Begin: <input type="datetime-local"></label><br>
+      <label>Eind: <input type="datetime-local"></label>
+    </div>
+  </div>
+</div>
