@@ -1,8 +1,8 @@
 ﻿import {Injectable} from "@angular/core";
 import {IConfiguration} from "../home/home.component";
-import {TemplateTranslator} from "../templates/templateTranslator";
+import {ConfigurationStandardData} from "./configuration-standard.data";
 
-interface IConfigContainer {
+export interface IConfigContainer {
   [key: number]: IConfiguration;
 }
 
@@ -13,88 +13,15 @@ interface IConfigContainer {
 export class ConfigurationManager {
   private dataName: string = "configurations";
 
-  constructor(private templateTranslator: TemplateTranslator) {}
+  constructor(private standardData: ConfigurationStandardData) {}
 
   private getDataLocal(): IConfigContainer {
     let data = localStorage.getItem(this.dataName);
     if (data) {
       return JSON.parse(data);
     } else {
-      // TODO return standard configs at first launch
-      let standard = {
-        0: {
-          title:"compare 2 maps",
-          description:"",
-          views:[
-            {
-              name:"Map Utrecht",
-              templateType: this.templateTranslator.templates.full_map,
-              data:{
-                map:{
-                  centerLocation:{
-                    lat: 52.07412382497353,
-                    lng: 5.144348144531251
-                  },
-                  points:[
-                    {
-                      lat: 52.147457256841705,
-                      lng: 5.012512207031251
-                    },{
-                      lat: 52.0038843087674,
-                      lng: 5.171127319335938
-                    }
-                  ],
-                  zoom: 11,
-                }
-              },
-            },
-            {
-              name:"Map Amersfoort",
-              templateType: this.templateTranslator.templates.full_map,
-              data:{
-                map:{
-                  centerLocation:{
-                    lat: 52.184779042321736,
-                    lng: 5.4563597962260255
-                  },
-                  points:[
-                    {
-                      lat: 52.21501387135701,
-                      lng: 5.343063287436962
-                    },{
-                      lat: 52.12821256438199,
-                      lng: 5.472839288413525
-                    }
-                  ],
-                  zoom: 11,
-                }
-              },
-            }
-          ],
-        },
-        1: {
-          title:"test",
-          description:"",
-          views:[
-            {
-              name:"Nederland",
-              templateType: this.templateTranslator.templates.full_map,
-              data:{},
-            },
-            {
-              name:"Test",
-              templateType: this.templateTranslator.templates.test,
-              data:{},
-            },
-            {
-              name:"Select",
-              templateType: this.templateTranslator.templates.select,
-              data:{},
-            }
-          ]
-        }
-      }
-      // this.saveDataLocal(standard);
+      const standard = this.standardData.standardData;
+      this.saveDataLocal(standard);
       return standard;
     }
   }
