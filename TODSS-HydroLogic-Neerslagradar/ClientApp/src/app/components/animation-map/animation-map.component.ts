@@ -29,12 +29,16 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _mySelection: L.Polygon | undefined;
   private _points: L.LatLng[] = [];
   private _dataTemp: object | undefined;
+  public _beginTime: Date = new Date(1623974400000);
+  public _endTime: Date = new Date(1624060500000);
 
   get data():IMapData {
     return <IMapData>{
       points: this._points,
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
+      beginTime: this._beginTime.valueOf(),
+      endTime: this._endTime.valueOf(),
     }
   }
 
@@ -42,6 +46,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (value) {
       this._dataTemp = value;
       this._points = value.points;
+      if (value.beginTime > 0) this._beginTime = new Date(value.beginTime);
+      if (value.endTime > 0) this._endTime = new Date(value.endTime);
     }
   }
 
@@ -68,6 +74,17 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
     this.mapReadyEvent.emit(this);
+  }
+
+  changeTime(e: any, type: string) {
+    let time = e.target.valueAsNumber;
+    if (type == "begin") this._beginTime = new Date(time);
+    if (type == "end") this._endTime = new Date(time);
+    this.changeTimeFilterEvent.emit({
+      stepSize:1,
+      beginTimestamp: this._beginTime.valueOf(),
+      endTimestamp: this._endTime.valueOf()
+    })
   }
 
   addPoint(newPoint: L.LatLng) {
@@ -119,4 +136,6 @@ export interface IMapData {
   points: LatLng[],
   zoom: number,
   centerLocation: LatLng,
+  beginTime: number,
+  endTime:number,
 }
