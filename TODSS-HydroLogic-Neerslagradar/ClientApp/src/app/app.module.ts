@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import {NgChartsModule} from "ng2-charts";
 
 import { AppComponent } from './app.component';
 import { HomeComponent, ViewDirective } from './home/home.component';
@@ -39,7 +40,8 @@ import {LineChartComponent} from "./components/line-chart/line-chart.component";
       { path: 'configurations', component: ConfigurationSelectComponent },
       { path: '**', redirectTo:'/configurations' }
     ]),
-    LeafletModule
+    LeafletModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
