@@ -1,48 +1,121 @@
-﻿/*Component*/
+﻿/*!*Component*!*/
+/*#main {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*}*/
+
+/*#views {*/
+/*  flex-grow: 2;*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  box-sizing: border-box;*/
+/*}*/
+
+/*!*Top bar*!*/
+/*#topBar {*/
+/*  display: flex;*/
+/*  background-color: white;*/
+/*  border-bottom: var(--clr-200) 1px solid;*/
+/*}*/
+
+/*#topBar > * {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-content: center;*/
+/*}*/
+
+/*#topBar > #center {*/
+/*  flex-grow: 2;*/
+/*}*/
+
+/*#titleWhole {*/
+/*  font-size: larger;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*}*/
+
+/*#titleWhole > * {*/
+/*  margin: 0;*/
+/*}*/
+
+/*.titleBlue {*/
+/*  color: var(--hydrologic-blue);*/
+/*}*/
+
+/*.titleGreen {*/
+/*  color: var(--hydrologic-green);*/
+/*}*/
+/*.bx {*/
+/*  height: 2rem;*/
+/*  width: 2rem;*/
+/*}*/
+
 #main {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 }
+
 #views {
   flex-grow: 2;
   display: flex;
   flex-wrap: wrap;
-  box-sizing: border-box;
+  margin: 1rem;
 }
 
-/*Top bar*/
 #topBar {
   display: flex;
-  background-color: gray;
-}
-#topBar > * {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
-#topBar > #center {
-  flex-grow: 2;
-}
-#titleWhole {
-  font-size: larger;
-  display: flex;
-  margin: 0 7px;
+  background-color: white;
+  border-bottom: var(--grey-200) 1px solid;
   align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
-#titleWhole > * {
-  margin: 0;
-}
-.titleBlue {
-  color: #1b6ec2
-}
-.titleGreen {
-  color: #4db038
-}
-.bx {
-  height: 30px;
-  width: 30px;
-  margin: 0;
+
+#titleWhole {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.5rem;
   padding: 0;
+  margin: 0;
+}
+
+.titleBlue {
+  color: var(--hydrologic-blue);
+}
+
+.titleGreen {
+  color: var(--hydrologic-green);
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+#buttons {
+  display: flex;
+  column-gap: 2rem;
+}
+
+button {
+  border: none;
+  background-color: white;
+}
+
+.bx {
+  font-size: 1.5rem;
+  color: var(--grey-900);
+}
+
+@media screen and (max-width: 767px) {
+
+  .bx, h1 {
+    font-size: 1rem;
+  }
+
 }

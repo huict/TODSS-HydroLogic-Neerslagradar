@@ -111,12 +111,12 @@ export class ViewComponent implements OnInit, OnDestroy {
     console.log("to be implemented")
   }
 
-  // TODO temporary for testing
-  public colors: string[] = ["red", "orange", "yellow", "lightgreen", "green", "lightblue", "blue", "purple", "brown"];
-  get color(): string {
-    if (this.index == undefined) return "white";
-    return this.colors[this.index];
-  }
+  // // TODO temporary for testing
+  // public colors: string[] = ["red", "orange", "yellow", "lightgreen", "green", "lightblue", "blue", "purple", "brown"];
+  // get color(): string {
+  //   if (this.index == undefined) return "white";
+  //   return this.colors[this.index];
+  // }
 }
 
 export interface IViewData {
