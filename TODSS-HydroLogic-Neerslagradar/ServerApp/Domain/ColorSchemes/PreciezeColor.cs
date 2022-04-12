@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
+using Rewrite_NetCdf_test.classes.colorSchemes;
 
-namespace Rewrite_NetCdf_test.classes.colorSchemes;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.ColorSchemes;
 
 public class PreciezeColor : IColorScheme
 {
@@ -10,7 +11,6 @@ public class PreciezeColor : IColorScheme
         {
             return Color.Black;
         }
-
         if (number <= 0.014819145)
         {
             return Color.FromArgb(11, 161, 168);
@@ -31,11 +31,6 @@ public class PreciezeColor : IColorScheme
         {
             return Color.FromArgb(160, 48, 180);
         }
-        if (number <=  0.54115295)
-        {
-            return Color.FromArgb(160, 15, 90);
-        }
-
-        return Color.FromArgb(218, 15, 15);
+        return number <=  0.54115295 ? Color.FromArgb(160, 15, 90) : Color.FromArgb(218, 15, 15);
     }
 }
