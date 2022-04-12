@@ -8,8 +8,6 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain;
 
 public class GeneratePhoto
 {
-    private static int _plaatje;
-
     public static List<byte[]> GenerateBitmap(float[,,] slice, IColorScheme colorScheme)
     {
         var bitmapList = new List<byte[]>();
@@ -17,8 +15,6 @@ public class GeneratePhoto
         var height = slice.GetLength(1);
         for (var depth = 0; depth < slice.GetLength(0); depth++)
         {
-            _plaatje++;
-            var start = DateTime.Now;
             var bitmap = new Bitmap(width, height);
             var imageData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             var imageBytes = new byte[Math.Abs(imageData.Stride) * height];
@@ -47,11 +43,6 @@ public class GeneratePhoto
                 bitmap.Save(stream, ImageFormat.Png);
                 bitmapList.Add(stream.ToArray());
             }
-
-            
-            
-            var renderTime = DateTime.Now - start;
-            Console.WriteLine("Picture " + _plaatje+ " made in " + renderTime.TotalSeconds + " s");
         }
         
         return bitmapList;
