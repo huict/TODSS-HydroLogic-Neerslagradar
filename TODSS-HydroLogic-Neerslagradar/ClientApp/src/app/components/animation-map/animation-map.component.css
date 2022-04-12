@@ -13,6 +13,7 @@
   z-index: 999;
   padding: 5px;
   border-radius: 5px;
+  box-shadow: var(--grey-900) 0 0 .5rem;
 }
 
 #times > div {
@@ -23,4 +24,44 @@
 
 #map {
   height: 100%;
+}
+
+label{
+  font-family: var(--base-font);
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+input{
+  display: inline-block;
+  position: relative;
+  font-family: var(--base-font);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: none;
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  filter: invert(33%) sepia(92%) saturate(788%) hue-rotate(180deg) brightness(93%) contrast(98%);
+  cursor: pointer;
+}
+
+input:after{
+  content: '';
+  position: absolute;
+  width: 75%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 1px;
+  left: 1px;
+  background-color: #0087ca;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+input:hover:after{
+  transform: scaleX(1);
+  transform-origin: bottom left;
+
 }
