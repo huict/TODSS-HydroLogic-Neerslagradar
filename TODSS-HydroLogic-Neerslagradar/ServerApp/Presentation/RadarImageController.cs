@@ -1,31 +1,33 @@
 ﻿using System.Drawing;
-using ASP.NETCoreWebApplication1;
+using System.Web.Http.Description;
 using Microsoft.AspNetCore.Mvc;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation;
-
 
 [ApiController]
 [Route("[controller]")]
 public class RadarImageController :  ControllerBase
 {
-   
-    private readonly ILogger<RadarImageController> _logger;
+    
     private readonly IRadarImageService _radarImageService;
 
-    public RadarImageController(IRadarImageService service, ILogger<RadarImageController> logger)
+    public RadarImageController(IRadarImageService radarImageService)
     {
-        _radarImageService = service;
-        _logger = logger;
+        _radarImageService = radarImageService;
     }
     
-    // [HttpGet]
-    // public IEnumerable<Bitmap> Get()
-    // {
-    //     var bitmaps = _radarImageService.loadData();
-    //     return bitmaps;
-    // }
-    
+    [HttpGet]
+    public IEnumerable<byte[]> Get()
+    {
+        return _radarImageService.loadData();
+    }
 
+    [HttpPost]
+    public IEnumerable<byte[]> test(WeatherFiltersDTO dto)
+    {
+        return _radarImageService.GetSpecificSlices(dto);
+    }
+    
 }
