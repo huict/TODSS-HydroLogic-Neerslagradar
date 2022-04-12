@@ -14,7 +14,6 @@ import { AnimationMapComponent } from './components/animation-map/animation-map.
 import { TemplateFullMapComponent } from './templates/template-full-map/template-full-map.component';
 import { ConfigurationSelectComponent } from './configuration-select/configuration-select.component';
 import {LineChartComponent} from "./components/line-chart/line-chart.component";
-import {NgChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -40,8 +39,7 @@ import {NgChartsModule} from "ng2-charts";
       { path: 'configurations', component: ConfigurationSelectComponent },
       { path: '**', redirectTo:'/configurations' }
     ]),
-    LeafletModule,
-    NgChartsModule
+    LeafletModule
   ],
   providers: [],
   bootstrap: [AppComponent]

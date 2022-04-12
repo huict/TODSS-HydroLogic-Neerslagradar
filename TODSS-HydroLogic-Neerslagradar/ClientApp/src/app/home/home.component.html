@@ -8,7 +8,7 @@
       <button title="to configurations" routerLink="/configurations" class="bx bx-selection"></button>
       <button title="save config" class='bx bxs-save' (click)="openSaveConfig()"></button>
       <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>
-      <button title="add view" class='bx bxs-add-to-queue' (click)="addView()"></button>
+      <button title="add view" [disabled]="views.length==6" class='bx bxs-add-to-queue' (click)="addView()"></button>
     </div>
   </header>
 
