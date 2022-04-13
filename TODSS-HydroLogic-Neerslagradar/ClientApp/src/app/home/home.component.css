@@ -112,6 +112,10 @@ button {
   color: var(--grey-900);
 }
 
+button:disabled {
+  color: var(--grey-200);
+}
+
 @media screen and (max-width: 767px) {
 
   .bx, h1 {

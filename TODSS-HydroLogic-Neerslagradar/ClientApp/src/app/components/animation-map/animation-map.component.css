@@ -24,6 +24,7 @@
 
 #map {
   height: 100%;
+  border-radius: 0 0 .5rem .5rem;
 }
 
 label{
@@ -55,7 +56,7 @@ input:after{
   height: 2px;
   bottom: 1px;
   left: 1px;
-  background-color: #0087ca;
+  background-color: var(--hydrologic-blue);
   transform-origin: bottom right;
   transition: transform 0.25s ease-out;
 }

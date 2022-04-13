@@ -53,6 +53,8 @@
   margin: .5rem;
   box-shadow: var(--grey-200) 0 0 1rem;
   color: var(--grey-900);
+  z-index: 500;
+
 }
 
 #view {
@@ -63,6 +65,8 @@
 
 #template {
   flex-grow: 2;
+  background-color: var(--grey-200);
+  border-radius: 0 0 .5rem .5rem;
 }
 
 #topBar {
