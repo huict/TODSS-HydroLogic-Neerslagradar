@@ -8,7 +8,7 @@ assignees: ''
 
 ---
 
-# Issue naam
+# Issue
 ## Beschrijving
 <!-- Waar gaat de issue over -->
 
