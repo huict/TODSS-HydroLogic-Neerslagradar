@@ -29,13 +29,14 @@ export class TemplateDirective {
 })
 export class ViewComponent implements OnInit, OnDestroy {
   @Output() removeEvent = new EventEmitter<number>();
-  @ViewChild(TemplateDirective, {static: true}) viewHost!: TemplateDirective
+  @ViewChild(TemplateDirective, {static: true}) templateDirective!: TemplateDirective
 
   private _index: number = 0;
   private _name: string = "";
   private _template: ITemplate = new TemplateSelectComponent();
   private _skipInit: boolean = false;
   public settingsOpened = false;
+  private _templateSettings: HTMLElement | undefined;
 
   constructor(private templateTranslator: TemplateTranslator) {}
 
@@ -93,7 +94,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private loadTemplate(template: ITemplate, data?:any) {
-    const viewContainerRef = this.viewHost.viewContainerRef;
+    const viewContainerRef = this.templateDirective.viewContainerRef;
     viewContainerRef.clear();
     // @ts-ignore
     const component = viewContainerRef.createComponent<ITemplate>(template.constructor).instance;
@@ -105,6 +106,16 @@ export class ViewComponent implements OnInit, OnDestroy {
         this.template = t;
       })
     }
+    this.templateSettings = component.settings
+  }
+
+  get templateSettings(): HTMLElement {
+    if (this._templateSettings) return this._templateSettings;
+    return document.createElement("div");
+  }
+
+  set templateSettings(value: HTMLElement | undefined) {
+    this._templateSettings = value;
   }
 
   public toggleSettings() {

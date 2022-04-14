@@ -36,6 +36,14 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
     this.timeFilter = value.timeFilter;
   }
 
+  get settings(): HTMLElement {
+    // TODO settings voor template toevoegen
+    let container = document.createElement("div")
+    container.innerText = "hallooo"
+
+    return container;
+  }
+
   get coordinatesFilter(): ICoordinateFilter | undefined {
     return this._coordinatesFilter;
   }

@@ -27,4 +27,8 @@ export class TemplateSelectComponent implements ITemplateChange, OnDestroy {
   get data(): any {return {}}
 
   set data(value: any) {}
+
+  get settings(): HTMLElement {
+    return document.createElement("div");
+  }
 }

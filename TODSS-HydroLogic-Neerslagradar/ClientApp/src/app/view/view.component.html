@@ -13,6 +13,7 @@
     <div id="settings" [ngClass]="{'active':settingsOpened, 'notActive':!settingsOpened}">
       <h3 class="underlineTitle">Settings</h3>
       <label>View naam <input type="text" [value]="name" (input)="changeNameOption($event)"></label>
+      <div [innerHTML]="templateSettings.outerHTML"></div>
     </div>
     <ng-template template></ng-template>
   </div>
