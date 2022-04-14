@@ -13,9 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Gdal.Core" Version="2.3.0-beta-023" />
-        <PackageReference Include="Gdal.Core.LinuxRuntime" Version="2.3.0-beta-023" />
-        <PackageReference Include="Gdal.Core.WindowsRuntime" Version="2.3.0-beta-023" />
+        <PackageReference Include="DotSpatial.Projections" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.8" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.1" />
         <PackageReference Include="SDSLite" Version="2.0.3" />
