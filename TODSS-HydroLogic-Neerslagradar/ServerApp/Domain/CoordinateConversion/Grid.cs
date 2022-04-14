@@ -21,15 +21,15 @@ public sealed class GridSingelton
     }
     
     // Variables
-    private static GridCell[] _gridCells = {};
+    private GridCell[] _gridCells = {};
 
-    public static GridCell[] GridCells
+    public GridCell[] GridCells
     {
         get { return _gridCells; }
     }
 
     // Functional code for providing cells
-    public static void AddGridCell(GridCell gridCell)
+    public void AddGridCell(GridCell gridCell)
     {
         List<GridCell> gridCellList = _gridCells.ToList();
 
@@ -38,7 +38,7 @@ public sealed class GridSingelton
         _gridCells = gridCellList.ToArray();
     }
 
-    public static void AddGridCellList(List<GridCell> newGridCellList)
+    public void AddGridCellList(List<GridCell> newGridCellList)
     {
         List<GridCell> oldGridCellList = _gridCells.ToList();
 
@@ -47,12 +47,12 @@ public sealed class GridSingelton
         _gridCells = oldGridCellList.ToArray();
     }
 
-    public static GridCell FindByGridCoordinates(int x, int y)
+    public GridCell FindByGridCoordinates(int x, int y)
     {
         return _gridCells.First(i => i.X == x && i.Y == y);
     }
     
-    public static GridCell FindByGeoCoordinates(double[] coordinates)
+    public GridCell FindByGeoCoordinates(double[] coordinates)
     {
         return _gridCells.First(i => i.Coordinates == coordinates );
     }

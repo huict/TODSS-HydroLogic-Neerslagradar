@@ -31,7 +31,7 @@ public class CoordinateConversion
             }
         }
         
-        GridSingelton.AddGridCellList(gridCellList);
+        _grid.AddGridCellList(gridCellList);
     }
     
     //TODO coordinates that should be on the same line aren't cause the conversion happens twice. This should be optimized
