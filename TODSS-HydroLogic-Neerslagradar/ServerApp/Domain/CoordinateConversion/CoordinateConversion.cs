@@ -27,7 +27,7 @@ public class CoordinateConversion
         {
             for (int x = 0; x < Columns; x++)
             {
-                gridCellList.Add(new GridCell(Conversion(GenerateCoordinatesForCell(x, y)), x, y));
+                gridCellList.Add(new GridCell(Conversion(GenerateEdgeCoordinatesForCell(x, y)), x, y));
             }
         }
         
@@ -35,30 +35,48 @@ public class CoordinateConversion
     }
     
     //TODO coordinates that should be on the same line aren't cause the conversion happens twice. This should be optimized
-    public double[] Conversion(double[] coordinates)
+    public double[] Conversion(double[] edges)
     {
-        double[] numberOfCoordinates = new double[coordinates.Length / 2];
-        Reproject.ReprojectPoints(coordinates, numberOfCoordinates, SourceCRF, TargetCRF, 0, numberOfCoordinates.Length);
-        return coordinates;
+        double[] numberOfCoordinates = new double[edges.Length / 2];
+        Reproject.ReprojectPoints(edges, numberOfCoordinates, SourceCRF, TargetCRF, 0, numberOfCoordinates.Length);
+        return GenerateCornersFromEdges(edges);
+    }
+    
+    // Generates the 8 corner coordinates from the 4 edge coordinates that are converted
+    public double[] GenerateCornersFromEdges(double[] edgeCoordinates)
+    {
+        double[] cornerCoordinates = new double[8];
+        
+        // Lower left corner
+        cornerCoordinates[0] = edgeCoordinates[0];
+        cornerCoordinates[1] = edgeCoordinates[1];
+        // Lower right corner
+        cornerCoordinates[2] = edgeCoordinates[2];
+        cornerCoordinates[3] = edgeCoordinates[1];
+        // Top right corner
+        cornerCoordinates[4] = edgeCoordinates[2];
+        cornerCoordinates[5] = edgeCoordinates[3];
+        // Top left corner
+        cornerCoordinates[6] = edgeCoordinates[0];
+        cornerCoordinates[7] = edgeCoordinates[3];
+
+        return cornerCoordinates;
     }
 
-    private double[] GenerateCoordinatesForCell(int x, int y)
+    // Generates the 4 edge coordinates of a cell before convertion
+    private double[] GenerateEdgeCoordinatesForCell(int x, int y)
     {
-        double[] coordinates = new double[8];
+        double[] coordinates = new double[4];
         
-        // Lower left corner of cell
+        // left side
         coordinates[0] = XLowerLeft + x * CellWidth;
+        // bottom side
         coordinates[1] = YLowerLeft + y * CellHeight;
-        // Lower right corner of cell
+        // right side
         coordinates[2] = XLowerLeft + (x + 1) * CellWidth;
-        coordinates[3] = YLowerLeft + y * CellHeight;
-        // top right corner of cell
-        coordinates[4] = XLowerLeft + (x + 1) * CellWidth;
-        coordinates[5] = YLowerLeft + (y + 1) * CellHeight;
-        // top left corner of cell
-        coordinates[6] = XLowerLeft + x * CellWidth;
-        coordinates[7] = YLowerLeft + (y + 1) * CellHeight;
-
+        // top side
+        coordinates[3] = YLowerLeft + (y + 1) * CellHeight;
+        
         return coordinates;
     }
 }
