@@ -1,7 +1,7 @@
 <div id="view">
   <div id="topBar">
     <div id="viewName">
-      <div *ngIf="name == ''; else elseBlock">View: {{index}}</div>
+      <div *ngIf="name == ''; else elseBlock">View: {{index+1}}</div>
       <ng-template #elseBlock>{{name}}</ng-template>
     </div>
     <div id="buttons">

@@ -12,7 +12,12 @@ import { TemplateFullMapComponent } from "../template-full-map/template-full-map
 export class TemplateSelectComponent implements ITemplateChange, OnDestroy {
   templateTest = TemplateTestComponent;
   templateFullMap = TemplateFullMapComponent;
-  @Output() changeTemplateEvent = new EventEmitter<ITemplate>()
+
+  @Output() changeTemplateEvent = new EventEmitter<ITemplate>();
+  @Output() changeNameEvent = new EventEmitter<Event>();
+
+  private _selectedTemplate: Type<ITemplate> | undefined;
+  private _lastSelectedButton: HTMLElement | undefined;
 
   constructor() { }
 
@@ -20,8 +25,22 @@ export class TemplateSelectComponent implements ITemplateChange, OnDestroy {
     this.changeTemplateEvent.unsubscribe();
   }
 
-  public throwChangeEvent(template: Type<ITemplate>) {
-    this.changeTemplateEvent.emit(new template())
+  public selectTemplate(e: Event, template: Type<ITemplate>) {
+    this._selectedTemplate = template;
+
+    // @ts-ignore
+    let selectedButton: HTMLElement = e.target;
+    selectedButton.classList.add("selected")
+    if (this._lastSelectedButton) this._lastSelectedButton.classList.remove("selected")
+    this._lastSelectedButton = selectedButton;
+  }
+
+  public applyTemplate() {
+    if (this._selectedTemplate) {
+      this.changeTemplateEvent.emit(new this._selectedTemplate());
+    } else {
+      alert("Selecteer een template");
+    }
   }
 
   get data(): any {return {}}

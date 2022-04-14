@@ -3,7 +3,7 @@
   background-color: white;
   border-radius: .5rem;
   flex-grow: 1;
-  min-height: 10rem;
+  min-height: 40%;
   margin: .5rem;
   box-shadow: var(--grey-200) 0 0 1rem;
   color: var(--grey-900);
@@ -27,6 +27,7 @@
   z-index: 1100;
   padding: 8px;
   border-radius: 10px 0 0 10px;
+  border-left: 1px solid var(--bs-gray-500);
 }
 
 #settings.active {

@@ -71,7 +71,6 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   @Input() set template(value: ITemplate) {
-    // this._template = value;
     this.loadTemplate(value);
   }
 
@@ -100,12 +99,10 @@ export class ViewComponent implements OnInit, OnDestroy {
     const component = viewContainerRef.createComponent<ITemplate>(template.constructor).instance;
     this._template = component;
     if (data) component.data = data;
-    if (component.hasOwnProperty("changeTemplateEvent")) {
-      let selectComponent:ITemplateChange = <ITemplateChange> component;
-      selectComponent.changeTemplateEvent.subscribe(t => {
-        this.template = t;
-      })
-    }
+    // @ts-ignore
+    if (component.hasOwnProperty("changeTemplateEvent")) component.changeTemplateEvent.subscribe(t => this.template = t)
+    // @ts-ignore
+    if (component.hasOwnProperty("changeNameEvent")) component.changeNameEvent.subscribe(e => this.changeNameOption(e))
     this.templateSettings = component.settings
   }
 
@@ -122,7 +119,8 @@ export class ViewComponent implements OnInit, OnDestroy {
     this.settingsOpened = !this.settingsOpened;
   }
 
-  changeNameOption(e:any) {
+  changeNameOption(e:Event) {
+    // @ts-ignore
     this.name = e.target.value;
   }
 

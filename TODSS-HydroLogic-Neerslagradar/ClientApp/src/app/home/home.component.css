@@ -55,13 +55,10 @@ button {
 
 .bx {
   font-size: 1.5rem;
-  color: var(--grey-900);
 }
 
 @media screen and (max-width: 767px) {
-
   .bx, h1 {
     font-size: 1rem;
   }
-
 }
