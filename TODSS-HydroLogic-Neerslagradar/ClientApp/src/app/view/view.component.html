@@ -22,11 +22,15 @@
       <ng-template #elseBlock>{{name}}</ng-template>
     </div>
     <div id="buttons">
-      <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>
+      <button title="settings" class='bx bxs-wrench' (click)="toggleSettings()"></button>
       <button title="remove" class='bx bxs-x-square' (click)="throwRemoveEvent()"></button>
     </div>
   </div>
   <div id="template">
+    <div id="settings" [ngClass]="{'active':settingsOpened, 'notActive':!settingsOpened}">
+      <h3 class="underlineTitle">Settings</h3>
+      <label>View naam <input type="text" [value]="name" (input)="changeNameOption($event)"></label>
+    </div>
     <ng-template template></ng-template>
   </div>
 </div>

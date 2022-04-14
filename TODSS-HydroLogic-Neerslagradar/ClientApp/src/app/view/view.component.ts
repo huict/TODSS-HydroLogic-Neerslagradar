@@ -35,6 +35,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   private _name: string = "";
   private _template: ITemplate = new TemplateSelectComponent();
   private _skipInit: boolean = false;
+  public settingsOpened = false;
 
   constructor(private templateTranslator: TemplateTranslator) {}
 
@@ -106,9 +107,8 @@ export class ViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  public openSettings() {
-    // TODO display settings
-    console.log("to be implemented")
+  public toggleSettings() {
+    this.settingsOpened = !this.settingsOpened;
   }
 
   // // TODO temporary for testing
@@ -117,6 +117,12 @@ export class ViewComponent implements OnInit, OnDestroy {
   //   if (this.index == undefined) return "white";
   //   return this.colors[this.index];
   // }
+
+  changeNameOption(e:any) {
+    this.name = e.target.value;
+  }
+
+  testEvent(e:any) {console.log(e)}
 }
 
 export interface IViewData {
