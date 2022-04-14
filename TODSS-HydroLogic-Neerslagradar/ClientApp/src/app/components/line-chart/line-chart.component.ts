@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {Chart, Point} from "chart.js";
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Chart, Point } from "chart.js";
 
 @Component({
   selector: 'app-line-chart',
@@ -23,7 +23,12 @@ export class LineChartComponent implements AfterViewInit {
         datasets: [{
           label: 'Interesting Data',
           data: this.data,
-          fill: false
+          fill: true,
+          pointBackgroundColor: '#073B4C',
+          backgroundColor: 'rgba(17, 138, 178, .5)',
+          borderColor: '#073B4C',
+          pointHoverBorderColor: '#118AB2',
+          pointHoverBackgroundColor: '#118AB2'
         }]
       },
       options: {

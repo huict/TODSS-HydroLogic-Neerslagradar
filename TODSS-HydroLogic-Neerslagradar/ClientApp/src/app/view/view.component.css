@@ -86,6 +86,22 @@
   left: 100%;
 }
 
+#settings {
+  background-color: white;
+  position: absolute;
+  height: 100%;
+  z-index: 1100;
+  padding: .5rem;
+  border-radius: 10px 0 0 10px;
+  right: -100%;
+  transition: .5s;
+}
+
+#settings.active {
+  right: 0;
+  transition: .5s;
+}
+
 #template {
   position: relative;
   width: 100%;
