@@ -111,13 +111,6 @@ export class ViewComponent implements OnInit, OnDestroy {
     this.settingsOpened = !this.settingsOpened;
   }
 
-  // // TODO temporary for testing
-  // public colors: string[] = ["red", "orange", "yellow", "lightgreen", "green", "lightblue", "blue", "purple", "brown"];
-  // get color(): string {
-  //   if (this.index == undefined) return "white";
-  //   return this.colors[this.index];
-  // }
-
   changeNameOption(e:any) {
     this.name = e.target.value;
   }
