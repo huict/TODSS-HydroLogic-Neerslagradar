@@ -24,26 +24,13 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       //   }
       // )
 
-      // L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png', {
-      //   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      //   subdomains: 'abcd',
-      //   minZoom: 0,
-      //   maxZoom: 20
+      // Kadaster waterkaart
+      // L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/water/EPSG:3857/{z}/{x}/{y}.png', {
+      //   minZoom: 6,
+      //   maxZoom: 19,
+      //   bounds: [[50.5, 3.25], [54, 7.6]],
+      //   attribution: 'Kaartgegevens &copy; <a href="https://www.kadaster.nl">Kadaster</a>'
       // })
-
-      // L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.png', {
-      //   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      //   subdomains: 'abcd',
-      //   minZoom: 0,
-      //   maxZoom: 20
-      // })
-
-      L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/water/EPSG:3857/{z}/{x}/{y}.png', {
-        minZoom: 6,
-        maxZoom: 19,
-        bounds: [[50.5, 3.25], [54, 7.6]],
-        attribution: 'Kaartgegevens &copy; <a href="https://www.kadaster.nl">Kadaster</a>'
-      })
 
       // Less contrast 1
       // L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
@@ -52,11 +39,11 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       // })
 
       // Less contrast 2
-      // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      //   subdomains: 'abcd',
-      //   maxZoom: 20
-      // }),
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+      }),
     ],
     zoom: 7,
     center: L.latLng(52.1009274, 5.6462977)

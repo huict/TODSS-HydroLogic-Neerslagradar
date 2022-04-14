@@ -20,8 +20,13 @@
 :root {
   --grey-100: #F5F5F5;
   --grey-200: #E5E5E5;
-
   --grey-900: #2D2D2D;
+
+  --clr-100: #EF476F;
+  --clr-200: #FFD166;
+  --clr-300: #06D6A0;
+  --clr-400: #118AB2;
+  --clr-500: #073B4C;
 
   --hydrologic-blue: #1B6EC2;
   --hydrologic-green: #4DB038;
@@ -40,6 +45,6 @@
 
 body {
   font-family: var(--base-font);
-  color: var(--grey-900);
+  color: var(--clr-500);
   background-color: var(--grey-100);
 }

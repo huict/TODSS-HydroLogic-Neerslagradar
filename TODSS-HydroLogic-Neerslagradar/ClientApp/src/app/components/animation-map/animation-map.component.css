@@ -29,6 +29,7 @@
 
 label{
   font-family: var(--base-font);
+  color: var(--clr-500);
   margin-right: 10px;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -38,6 +39,7 @@ input{
   display: inline-block;
   position: relative;
   font-family: var(--base-font);
+  color: var(--clr-500);
   margin-top: 5px;
   margin-bottom: 5px;
   border: none;

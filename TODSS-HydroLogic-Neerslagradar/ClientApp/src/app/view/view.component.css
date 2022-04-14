@@ -52,7 +52,7 @@
   min-height: 10rem;
   margin: .5rem;
   box-shadow: var(--grey-200) 0 0 1rem;
-  color: var(--grey-900);
+  color: var(--clr-500);
   z-index: 500;
 
 }
@@ -86,7 +86,7 @@
 }
 
 .bx {
-  color: var(--grey-900);
+  color: var(--clr-500);
   font-size: 1.5rem;
 }
 

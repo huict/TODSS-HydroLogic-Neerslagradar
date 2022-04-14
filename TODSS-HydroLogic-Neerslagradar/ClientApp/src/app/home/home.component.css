@@ -69,6 +69,7 @@
 #topBar {
   display: flex;
   background-color: white;
+  color: var(--clr-500);
   border-bottom: var(--grey-200) 1px solid;
   align-items: center;
   justify-content: space-between;
@@ -104,12 +105,13 @@ p {
 
 button {
   border: none;
+  color: var(--clr-500);
   background-color: white;
 }
 
 .bx {
   font-size: 1.5rem;
-  color: var(--grey-900);
+  color: var(--clr-500);
 }
 
 button:disabled {
