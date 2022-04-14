@@ -26,6 +26,10 @@
   height: 100%;
 }
 
+.noHover{
+  pointer-events: none;
+}
+
 label{
   font-family: var(--base-font);
   margin-right: 10px;
@@ -63,5 +67,4 @@ input:after{
 input:hover:after{
   transform: scaleX(1);
   transform-origin: bottom left;
-
 }
