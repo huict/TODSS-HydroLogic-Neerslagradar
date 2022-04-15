@@ -9,6 +9,7 @@ export class ConfigurationStandardData {
   get standardData(): IConfigContainer {
     return {
       0: {
+        id: 0,
         title:"compare 2 maps",
         description:"",
         views:[
@@ -59,6 +60,7 @@ export class ConfigurationStandardData {
         ],
       },
       1: {
+        id: 1,
         title:"test",
         description:"",
         views:[
