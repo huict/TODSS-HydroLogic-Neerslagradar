@@ -76,3 +76,16 @@ h1{
   padding: 5px;
   border-radius: 10px;
 }
+
+.views{
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 50px;
+  margin: 50px;
+
+}
+
+.views p {
+  font-size: 12px;
+}
