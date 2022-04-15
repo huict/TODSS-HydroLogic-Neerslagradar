@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ConfigurationManager} from "./configuration.manager";
+import {IConfiguration} from "../home/home.component";
 
 @Component({
   selector: 'app-configuration-select',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfigurationSelectComponent implements OnInit {
 
-  constructor() { }
+  constructor(public manager:ConfigurationManager) { }
 
   ngOnInit(): void {
+  }
+
+  getAllConfigs() : IConfiguration[]{
+    console.log(Object.values(this.manager.getAllConfigs()))
+    return Object.values(this.manager.getAllConfigs())
   }
 
 }

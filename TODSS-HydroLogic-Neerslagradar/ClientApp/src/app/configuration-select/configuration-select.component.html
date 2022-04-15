@@ -13,18 +13,22 @@
     <p>Selecteer één van de configuraties of creeër een nieuwe</p>
   </div>
 
-  <div class="flexbox-container">
-    <div class="flexbox-item flexbox-item-1">
-      <button class="bottom">Selecteren</button>
+  <div class="flexbox-container" >
+    <div class="flexbox-item" *ngFor = "let config of getAllConfigs()">
+
+      <div class="grow">
+        <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
+        <p class="description">{{config.description}}</p>
+        <div class="divider div-transparent"></div>
+      </div>
+
+      <div>
+        <a href="/home?config={{config.id}}"><button class="bottom">Selecteren</button></a>
+      </div>
+
     </div>
   </div>
 
 </body>
 
-
-
-
-
 <a href="/home"><button>Empty</button></a>
-<a href="/home?config=0"><button>Config 1</button></a>
-<a href="/home?config=1"><button>Config 2</button></a>

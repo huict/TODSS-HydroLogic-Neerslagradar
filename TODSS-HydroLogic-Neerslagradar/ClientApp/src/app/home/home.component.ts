@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
     }
 
     // TODO create config data
-    let obj = {title:title, description:description, views:this.views.map(v => v.data)};
+    let obj = {id:this.configId ,title:title, description:description, views:this.views.map(v => v.data)};
     console.log(obj)
     this.configManager.saveConfig(this.configId, obj);
 
@@ -103,6 +103,7 @@ export class HomeComponent implements OnInit {
 
 // TODO extra onderdelen toevoegen voor een configuratie
 export interface IConfiguration {
+  id: number;
   title: string;
   description: string;
   views: IViewData[];
