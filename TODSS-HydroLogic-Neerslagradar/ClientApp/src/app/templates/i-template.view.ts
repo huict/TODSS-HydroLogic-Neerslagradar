@@ -1,5 +1,8 @@
+/**
+ * An interface for all templates.
+ */
 export interface ITemplate {
-  // Komen misschien nog dingen in die voor elke template gelden
+  // Data for configuration
   get data():any;
   set data(value: any);
 }

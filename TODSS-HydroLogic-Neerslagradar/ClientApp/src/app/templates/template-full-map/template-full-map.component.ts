@@ -2,6 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ICoordinateFilter, ITimeFilter, IWeatherTemplate} from "../i-weather.template";
 import {AnimationMapComponent} from "../../components/animation-map/animation-map.component";
 
+/**
+ * This template is for a full screen map.
+ */
 @Component({
   selector: 'template-full-map',
   templateUrl: './template-full-map.component.html',

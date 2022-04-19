@@ -4,6 +4,10 @@ import {TemplateFullMapComponent} from "./template-full-map/template-full-map.co
 import {TemplateSelectComponent} from "./template-select/template-select.component";
 import {TemplateTestComponent} from "./template-test/template-test.component";
 
+/**
+ * This class is used to translate a templates classname string to a instance of that class. When a new template is
+ * created a reference should also be added in this class.
+ */
 @Injectable({providedIn:"root"})
 export class TemplateTranslator {
   public templates = {
