@@ -3,6 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IViewData, ViewComponent } from "../view/view.component";
 import { ConfigurationManager } from "../configuration-select/configuration.manager";
 
+/**
+ * Used to manage the container of views so that they can be added and removed easily and so that we can get a
+ * association to the element in the dom.
+ */
 @Directive({
   selector: '[views]',
 })
@@ -10,6 +14,10 @@ export class ViewDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
+/**
+ * The main page of the application. This is the main container of all the views the user wants to see. Configurations
+ * and application wide settings can also be managed here.
+ */
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
@@ -37,6 +45,11 @@ export class HomeComponent implements OnInit {
     return this._views;
   }
 
+  /**
+   * Adds a view to the end of a container.
+   * @param data (optional) data from the configuration. Try not to create this data by hand, a view is responsible for
+   * its own data. So it is only used to load from a configuration.
+   */
   public addView(data? : IViewData): ViewComponent {
     const newView = this.viewHost.viewContainerRef.createComponent(ViewComponent).instance;
     newView.removeEvent.subscribe(event => {
@@ -49,12 +62,17 @@ export class HomeComponent implements OnInit {
     return newView
   }
 
+  /**
+   * Removes the view at index.
+   * @param index index
+   */
   public removeView(index: number) {
     this._views = this._views.filter((value, i) => index != i);
     this.viewHost.viewContainerRef.remove(index);
     this.reIndex();
   }
 
+  // Indexes all the views again so that they know themself where they are in the container
   private reIndex() {
     this._views.forEach((value, i) => value.index = i);
   }
@@ -81,16 +99,18 @@ export class HomeComponent implements OnInit {
 
   private saveConfig(title: string, description: string) {
     let configIdWasSet = true;
+
+    // Check if a new config was selected
     if (!this.configId) {
       this.configId = this.configManager.getNewIndex();
       configIdWasSet = false;
     }
 
-    // TODO create config data
+    // Construct the configuration
     let obj = {title:title, description:description, views:this.views.map(v => v.data)};
-    console.log(obj)
     this.configManager.saveConfig(this.configId, obj);
 
+    // If this is a new configuration, change the url to match the new configuration
     if (!configIdWasSet) {
       const urlTree = this.router.createUrlTree([], {
         queryParams: { config: this.configId },
@@ -102,6 +122,9 @@ export class HomeComponent implements OnInit {
 }
 
 // TODO extra onderdelen toevoegen voor een configuratie
+/**
+ * The interface for a configuration. Configurations can be loaded in and saved in the main view (home) component.
+ */
 export interface IConfiguration {
   title: string;
   description: string;
