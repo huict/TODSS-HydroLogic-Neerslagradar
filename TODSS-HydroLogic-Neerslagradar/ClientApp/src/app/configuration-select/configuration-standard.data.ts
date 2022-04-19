@@ -2,6 +2,10 @@
 import {TemplateTranslator} from "../templates/templateTranslator";
 import {IConfigContainer} from "./configuration.manager";
 
+
+/**
+ * These are the standard configurations that are loaded in when a user enters the site for the first time
+ */
 @Injectable({providedIn:"root"})
 export class ConfigurationStandardData {
   constructor(private templateTranslator: TemplateTranslator) {}
