@@ -15,6 +15,9 @@ import { TemplateSelectComponent } from "../templates/template-select/template-s
 import { TemplateTranslator } from "../templates/templateTranslator";
 import { ICoordinateFilter, ITimeFilter } from "../templates/i-weather.template";
 
+/**
+ * A reference to the container where a template is to be loaded in. Only one template should be loaded at once.
+ */
 @Directive({
   selector: '[template]',
 })
@@ -22,6 +25,10 @@ export class TemplateDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
+/**
+ * The view component is a middle way between the view container in home and the templates. This component manages
+ * settings that should otherwise be applicable for all templates. So to reduce duplicate code the view was created.
+ */
 @Component({
   selector: 'view',
   templateUrl: './view.component.html',
@@ -70,7 +77,6 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   @Input() set template(value: ITemplate) {
-    // this._template = value;
     this.loadTemplate(value);
   }
 
@@ -82,18 +88,27 @@ export class ViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Set the configuration data.
+   * @param value view data.
+   */
   @Input() set data(value: IViewData) {
     this._skipInit = true;
     this.name = value.name;
     this.loadTemplate(this.templateTranslator.getTemplate(value.templateType), value.data)
   }
 
+  /**
+   * Throws a remove event for itself.
+   */
   public throwRemoveEvent() {
     this.removeEvent.emit(this.index)
   }
 
+  // Load a new template with optionally data for the template.
   private loadTemplate(template: ITemplate, data?:any) {
     const viewContainerRef = this.viewHost.viewContainerRef;
+    // clear the container to make sure only 1 template exists inside of it
     viewContainerRef.clear();
     // @ts-ignore
     const component = viewContainerRef.createComponent<ITemplate>(template.constructor).instance;
@@ -107,22 +122,20 @@ export class ViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Open/close the settings menu.
+   */
   public toggleSettings() {
     this.settingsOpened = !this.settingsOpened;
   }
 
-  // // TODO temporary for testing
-  // public colors: string[] = ["red", "orange", "yellow", "lightgreen", "green", "lightblue", "blue", "purple", "brown"];
-  // get color(): string {
-  //   if (this.index == undefined) return "white";
-  //   return this.colors[this.index];
-  // }
-
+  /**
+   * Change the name of the view with an event.
+   * @param e event of the change.
+   */
   changeNameOption(e:any) {
     this.name = e.target.value;
   }
-
-  testEvent(e:any) {console.log(e)}
 }
 
 export interface IViewData {
