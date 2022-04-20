@@ -2,6 +2,7 @@ import { Component, OnInit, Directive, ViewContainerRef, ViewChild } from '@angu
 import { ActivatedRoute, Router } from '@angular/router';
 import { IViewData, ViewComponent } from "../view/view.component";
 import { ConfigurationManager } from "../configuration-select/configuration.manager";
+import {Subscription} from "rxjs";
 
 /**
  * Used to manage the container of views so that they can be added and removed easily and so that we can get a
@@ -27,16 +28,18 @@ export class HomeComponent implements OnInit {
   @ViewChild(ViewDirective, {static: true}) viewHost!: ViewDirective
   private _views: ViewComponent[] = [];
   configId: number | undefined;
+  private _routeParamSubscription: Subscription | undefined;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private configManager: ConfigurationManager) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this._routeParamSubscription = this.route.queryParams.subscribe(params => {
       if (params.hasOwnProperty("config")) {
         this.configId = params.config;
         this.loadConfig();
+        this._routeParamSubscription?.unsubscribe();
       }
     });
   }
@@ -112,6 +115,7 @@ export class HomeComponent implements OnInit {
 
     // If this is a new configuration, change the url to match the new configuration
     if (!configIdWasSet) {
+      this._routeParamSubscription?.unsubscribe();
       const urlTree = this.router.createUrlTree([], {
         queryParams: { config: this.configId },
         queryParamsHandling: "merge",
