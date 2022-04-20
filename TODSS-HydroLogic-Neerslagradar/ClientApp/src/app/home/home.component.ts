@@ -67,11 +67,13 @@ export class HomeComponent implements OnInit {
     if (this.configId) {
       let data = this.configManager.getConfig(this.configId);
       console.log(data);
-      for (const viewData of data.views) {
-        this.addView(viewData);
+      if (data) {
+        for (const viewData of data.views) {
+          this.addView(viewData);
+        }
+        this.configTitle = data.title;
+        this.configDescription = data.description;
       }
-      this.configTitle = data.title;
-      this.configDescription = data.description;
     }
   }
 
