@@ -7,7 +7,7 @@
     <div id="buttons">
       <button title="to configurations" routerLink="/configurations" class="bx bx-selection"></button>
       <button title="save config" class='bx bxs-save' (click)="saveConfigOpen=true"></button>
-      <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>
+      <button title="settings" class='bx bxs-wrench' (click)="settingsOpen=true"></button>
       <button title="add view" [disabled]="views.length==6" class='bx bxs-add-to-queue' (click)="addView()"></button>
     </div>
   </header>
@@ -33,5 +33,17 @@
       </div>
       <button type="submit">Opslaan</button>
     </form>
+  </div>
+</div>
+
+<div id="setingsMenu" class="overlay" *ngIf="settingsOpen" (click)="settingsOpen=false">
+  <div class="popup" (click)="$event.stopPropagation()">
+    <div class="top">
+      <h2>Instellingen</h2>
+      <button class="close" (click)="settingsOpen=false">&times;</button>
+    </div>
+    <div class="content">
+      <!--TODO add options for application-->
+    </div>
   </div>
 </div>

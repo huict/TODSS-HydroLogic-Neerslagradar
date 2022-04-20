@@ -61,11 +61,6 @@ export class HomeComponent implements OnInit {
     this._views.forEach((value, i) => value.index = i);
   }
 
-  public openSettings() {
-    // TODO display settings
-    console.log("to be implemented")
-  }
-
   private loadConfig() {
     if (this.configId) {
       let data = this.configManager.getConfig(this.configId);
