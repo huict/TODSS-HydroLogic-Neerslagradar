@@ -16,6 +16,7 @@
     <ng-template views class="views"></ng-template>
   </div>
 </div>
+
 <div id="saveConfigMenu" class="overlay" *ngIf="saveConfigOpen" (click)="saveConfigOpen=false">
   <div class="popup" (click)="$event.stopPropagation()">
     <div class="top">
@@ -23,20 +24,20 @@
       <button class="close" (click)="saveConfigOpen=false">&times;</button>
     </div>
     <div class="line"></div>
-    <form (submit)="handleSaveConfigSubmitEvent($event)">
+    <form (ngSubmit)="saveConfig()">
       <div class="content">
         <label for="title">Titel</label>
-        <input name="title" id="title" type="text" placeholder="titel">
+        <input name="title" id="title" type="text" placeholder="titel" [(ngModel)]="configTitle">
 
         <label for="description">Omschrijving</label>
-        <textarea name="description" id="description" placeholder="omschrijving"></textarea>
+        <textarea name="description" id="description" placeholder="omschrijving" [(ngModel)]="configDescription"></textarea>
       </div>
       <button type="submit">Opslaan</button>
     </form>
   </div>
 </div>
 
-<div id="setingsMenu" class="overlay" *ngIf="settingsOpen" (click)="settingsOpen=false">
+<div id="settingsMenu" class="overlay" *ngIf="settingsOpen" (click)="settingsOpen=false">
   <div class="popup" (click)="$event.stopPropagation()">
     <div class="top">
       <h2>Instellingen</h2>

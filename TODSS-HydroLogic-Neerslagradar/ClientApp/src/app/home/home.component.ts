@@ -21,6 +21,8 @@ export class HomeComponent implements OnInit {
   public configId: number | undefined;
   public settingsOpen: boolean = false;
   public saveConfigOpen: boolean = false;
+  public configTitle: string = "";
+  public configDescription: string = "";
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -68,25 +70,19 @@ export class HomeComponent implements OnInit {
       for (const viewData of data.views) {
         this.addView(viewData);
       }
+      this.configTitle = data.title;
+      this.configDescription = data.description;
     }
   }
 
-  handleSaveConfigSubmitEvent(e:any){
-    // e.preventDefault();
-    const title = e.target.elements[0].value;
-    const description = e.target.elements[1].value;
-    this.saveConfig(title, description);
-  }
-
-  private saveConfig(title: string, description: string) {
+  public saveConfig() {
     let configIdWasSet = true;
     if (!this.configId) {
       this.configId = this.configManager.getNewIndex();
       configIdWasSet = false;
     }
 
-    // TODO create config data
-    let obj = {id:this.configId, title:title, description:description, views:this.views.map(v => v.data)};
+    let obj = {id:this.configId, title:this.configTitle, description:this.configDescription, views:this.views.map(v => v.data)};
     console.log(obj)
     this.configManager.saveConfig(this.configId, obj);
 
