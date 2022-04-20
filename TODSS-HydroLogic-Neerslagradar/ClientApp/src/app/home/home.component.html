@@ -6,7 +6,7 @@
       </h1>
     <div id="buttons">
       <button title="to configurations" routerLink="/configurations" class="bx bx-selection"></button>
-      <button title="save config" class='bx bxs-save' (click)="openSaveConfig()"></button>
+      <button title="save config" class='bx bxs-save' (click)="saveConfigOpen=true"></button>
       <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>
       <button title="add view" [disabled]="views.length==6" class='bx bxs-add-to-queue' (click)="addView()"></button>
     </div>
@@ -14,5 +14,24 @@
 
   <div id="views">
     <ng-template views class="views"></ng-template>
+  </div>
+</div>
+<div id="saveConfigMenu" class="overlay" *ngIf="saveConfigOpen" (click)="saveConfigOpen=false">
+  <div class="popup" (click)="$event.stopPropagation()">
+    <div class="top">
+      <h2>Configuratie opslaan</h2>
+      <button class="close" (click)="saveConfigOpen=false">&times;</button>
+    </div>
+    <div class="line"></div>
+    <form (submit)="handleSaveConfigSubmitEvent($event)">
+      <div class="content">
+        <label for="title">Titel</label>
+        <input name="title" id="title" type="text" placeholder="titel">
+
+        <label for="description">Omschrijving</label>
+        <textarea name="description" id="description" placeholder="omschrijving"></textarea>
+      </div>
+      <button type="submit">Opslaan</button>
+    </form>
   </div>
 </div>

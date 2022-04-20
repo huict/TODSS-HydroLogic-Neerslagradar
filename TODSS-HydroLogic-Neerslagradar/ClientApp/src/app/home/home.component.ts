@@ -18,7 +18,9 @@ export class ViewDirective {
 export class HomeComponent implements OnInit {
   @ViewChild(ViewDirective, {static: true}) viewHost!: ViewDirective
   private _views: ViewComponent[] = [];
-  configId: number | undefined;
+  public configId: number | undefined;
+  public settingsOpen: boolean = false;
+  public saveConfigOpen: boolean = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -64,11 +66,6 @@ export class HomeComponent implements OnInit {
     console.log("to be implemented")
   }
 
-  public openSaveConfig() {
-    // TODO open save config screen
-    this.saveConfig("Test", "This is a description");
-  }
-
   private loadConfig() {
     if (this.configId) {
       let data = this.configManager.getConfig(this.configId);
@@ -77,6 +74,13 @@ export class HomeComponent implements OnInit {
         this.addView(viewData);
       }
     }
+  }
+
+  handleSaveConfigSubmitEvent(e:any){
+    // e.preventDefault();
+    const title = e.target.elements[0].value;
+    const description = e.target.elements[1].value;
+    this.saveConfig(title, description);
   }
 
   private saveConfig(title: string, description: string) {
