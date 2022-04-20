@@ -104,6 +104,7 @@ button {
 .content {
   display: grid;
   grid-template-areas: "label input";
+  grid-template-columns: min-content 1fr;
   justify-items: stretch;
   column-gap: 5px;
   row-gap: 5px;
