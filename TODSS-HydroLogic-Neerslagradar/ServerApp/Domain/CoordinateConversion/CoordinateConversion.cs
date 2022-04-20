@@ -19,7 +19,7 @@ public class CoordinateConversion
 
     private static GridSingelton _grid = GridSingelton.Grid;
 
-
+    private const int precision = 6;
     public void ProvideGridCellCoordinates()
     {
         List<GridCell> gridCellList = new List<GridCell>();
@@ -39,6 +39,10 @@ public class CoordinateConversion
     {
         double[] numberOfCoordinates = new double[edges.Length / 2];
         Reproject.ReprojectPoints(edges, numberOfCoordinates, SourceCRF, TargetCRF, 0, numberOfCoordinates.Length);
+        for (int i = 0; i < edges.Length - 1; i++)
+        {
+            edges[i] = Math.Round(edges[i], precision);
+        }
         return GenerateCornersFromEdges(edges);
     }
     
