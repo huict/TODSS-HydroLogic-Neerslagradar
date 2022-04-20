@@ -5,6 +5,22 @@ import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
 import {LatLng} from "leaflet";
 
+/**
+ * This component is a map on which filters can be set and an animation of the weather can be viewed.
+ *
+ * <br><h2>Filters:</h2><br>
+ * The filters that this component changes are the coordinates filter and the time filter.
+ * The coordinates filter can be set by making a selection on the map.
+ * The time filter can be set by selecting a begin- and end time.
+ *
+ * <br><h2>Animation:</h2><br>
+ * The map shows an animation of the weather on itself. With the time filter the timeframe of the animation can be
+ * changed.
+ *
+ * <br><h2>Data:</h2><br>
+ * The data of the map is not exact. It is used to somewhat show the intensity of the weather. Other components
+ * are recommended to show a better picture of the weather data.
+ */
 @Component({
   selector: 'animation-map',
   templateUrl: './animation-map.component.html',
@@ -14,6 +30,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
   @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
   @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
+
+  // starting options for loading map
   options = {
     layers: [
 
@@ -49,7 +67,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     center: L.latLng(52.1009274, 5.6462977)
   };
   private _map: L.Map | undefined;
-  private _mySelection: L.Polygon | undefined;
+  private _mySelection: L.Rectangle | undefined;
   private _points: L.LatLng[] = [];
   private _dataTemp: object | undefined;
   public _beginTime: Date = new Date(1623974400000);
@@ -83,6 +101,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.mapReadyEvent.unsubscribe();
   }
 
+  // This function is run when leaflet says the map is ready
   onReady(e: any) {
     this._map = e;
     this.map.on("click", e => {
@@ -96,9 +115,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
+
+    // Event if thrown when the map is ready
     this.mapReadyEvent.emit(this);
   }
 
+  // Throws a time filter changed event
   changeTime(e: any, type: string) {
     let time = e.target.valueAsNumber;
     if (type == "begin") this._beginTime = new Date(time);
@@ -110,6 +132,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     })
   }
 
+  // Adds a new point to list of points and removes the first one if the list has a length of three points.
   addPoint(newPoint: L.LatLng) {
     this._points.push(newPoint);
     if (this._points.length == 3) this._points.shift();
@@ -118,6 +141,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
+  // Render the two selected points on the map as a rectangle.
   private renderSelection() {
     if (this._points.length == 2) {
       let point1 = this._points[0];
@@ -145,6 +169,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     return <L.Map>this._map;
   }
 
+  // Fetches the images for the animation.
   private fetchImage() {
     // TODO fetch image and set it to temp url
 
