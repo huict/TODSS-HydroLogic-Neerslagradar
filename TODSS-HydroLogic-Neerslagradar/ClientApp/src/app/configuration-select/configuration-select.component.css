@@ -4,6 +4,7 @@
   border-bottom: var(--grey-200) 1px solid;
   align-items: center;
   justify-content: space-between;
+  padding: 1rem 2rem;
 }
 
 #titleWhole {
@@ -15,31 +16,13 @@
   margin: 0;
 }
 
-h1{
-  font-size: 32px;
-  margin-top: 20px;
-}
-
 .description{
   font-size: 13px;
 }
 
-.divider
-{
-  position: relative;
-  height: 1px;
-}
-
-.div-transparent:before
-{
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 5%;
-  right: 5%;
-  width: 90%;
-  height: 1px;
-  background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
+.configuraties-text{
+  padding-left: 20px;
+  padding-top: 20px;
 }
 
 .titleBlue {
@@ -50,42 +33,66 @@ h1{
   color: var(--hydrologic-green);
 }
 
+.solid{
+  border-top: 3px solid #bbb;
+}
+
 .flexbox-container{
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
-
 
 .flexbox-item{
   display: flex;
   flex-direction: column;
   width: 400px;
-  height: 400px;
-  margin: 20px;
+  margin: 10px;
   border-radius: 25px;
-  text-align: center;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  overflow: hidden;
 }
 
 .grow{
   flex-grow: 2;
+
 }
 
 .bottom{
   margin: 10px;
-  padding: 5px;
+  padding-left: 4px;
   border-radius: 10px;
 }
 
-.views{
-  display: flex;
+.views-container{
   flex-direction: column;
-  width: 100px;
-  height: 50px;
-  margin: 50px;
+  display: flex;
+}
 
+.views-container p{
+  padding-left: 20px;
+}
+
+.views{
+  padding: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  border:1px solid black;
+  border-radius: 15px;
 }
 
 .views p {
   font-size: 12px;
+  margin-bottom: 0px;
+  margin-right: 0px;
+}
+
+.view-text{
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+.view-text h1{
+  font-size: 30px;
 }

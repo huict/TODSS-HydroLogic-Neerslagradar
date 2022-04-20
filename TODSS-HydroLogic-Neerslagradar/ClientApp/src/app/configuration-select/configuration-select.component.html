@@ -17,15 +17,22 @@
     <div class="flexbox-item" *ngFor = "let config of getAllConfigs()">
 
       <div class="grow">
-        <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
-        <p class="description">{{config.description}}</p>
-        <div class="divider div-transparent"></div>
 
-
-        <div class="views" *ngFor = "let view of config.views">
-          <p>{{view.name}}</p>
-          <p>{{view.templateType}}</p>
+        <div class="view-text">
+          <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
+          <p class="description">{{config.description}}</p>
         </div>
+
+        <hr class="solid">
+
+        <div class="views-container">
+          <p>Geselecteerde views: </p>
+          <div class="views" *ngFor = "let view of config.views">
+            <p>{{view.name}}</p>
+            <p>{{view.templateType}}</p>
+          </div>
+        </div>
+
       </div>
 
       <div>
