@@ -1,24 +1,7 @@
-<!--<div id="view">-->
-<!--  <div id="topBar" [style.background-color]="color">-->
-<!--    <div id="viewName">-->
-<!--      <div *ngIf="name == ''; else elseBlock">View: {{index}}</div>-->
-<!--      <ng-template #elseBlock>{{name}}</ng-template>-->
-<!--    </div>-->
-<!--    <div id="buttons">-->
-<!--      <button title="settings" class='bx bxs-wrench' (click)="openSettings()"></button>-->
-<!--      <button title="remove" class='bx bxs-message-square-x' style='color:#ff6464' (click)="throwRemoveEvent()"></button>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--  <div id="template">-->
-<!--    <ng-template template></ng-template>-->
-<!--  </div>-->
-<!--</div>-->
-
-
 <div id="view">
   <div id="topBar">
     <div id="viewName">
-      <div *ngIf="name == ''; else elseBlock">View: {{index}}</div>
+      <div *ngIf="name == ''; else elseBlock">View: {{index+1}}</div>
       <ng-template #elseBlock>{{name}}</ng-template>
     </div>
     <div id="buttons">
@@ -29,7 +12,8 @@
   <div id="template">
     <div id="settings" [ngClass]="{'active':settingsOpened, 'notActive':!settingsOpened}">
       <h3 class="underlineTitle">Settings</h3>
-      <label>View naam <input type="text" [value]="name" (input)="changeNameOption($event)"></label>
+      <label>View naam <input type="text" [(ngModel)]="name"></label>
+      <div [innerHTML]="templateSettings.outerHTML"></div>
     </div>
     <ng-template template></ng-template>
   </div>

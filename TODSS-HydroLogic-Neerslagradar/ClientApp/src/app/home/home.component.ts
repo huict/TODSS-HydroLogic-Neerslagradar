@@ -27,7 +27,11 @@ export class ViewDirective {
 export class HomeComponent implements OnInit {
   @ViewChild(ViewDirective, {static: true}) viewHost!: ViewDirective
   private _views: ViewComponent[] = [];
-  configId: number | undefined;
+  public configId: number | undefined;
+  public settingsOpen: boolean = false;
+  public saveConfigOpen: boolean = false;
+  public configTitle: string = "";
+  public configDescription: string = "";
   private _routeParamSubscription: Subscription | undefined;
 
   constructor(private route: ActivatedRoute,
@@ -80,27 +84,21 @@ export class HomeComponent implements OnInit {
     this._views.forEach((value, i) => value.index = i);
   }
 
-  public openSettings() {
-    // TODO display settings
-    console.log("to be implemented")
-  }
-
-  public openSaveConfig() {
-    // TODO open save config screen
-    this.saveConfig("Test", "This is a description");
-  }
-
   private loadConfig() {
     if (this.configId) {
       let data = this.configManager.getConfig(this.configId);
       console.log(data);
-      for (const viewData of data.views) {
-        this.addView(viewData);
+      if (data) {
+        for (const viewData of data.views) {
+          this.addView(viewData);
+        }
+        this.configTitle = data.title;
+        this.configDescription = data.description;
       }
     }
   }
 
-  private saveConfig(title: string, description: string) {
+  public saveConfig() {
     let configIdWasSet = true;
 
     // Check if a new config was selected
@@ -110,7 +108,8 @@ export class HomeComponent implements OnInit {
     }
 
     // Construct the configuration
-    let obj = {title:title, description:description, views:this.views.map(v => v.data)};
+    let obj = {id:this.configId, title:this.configTitle, description:this.configDescription, views:this.views.map(v => v.data)};
+    console.log(obj)
     this.configManager.saveConfig(this.configId, obj);
 
     // If this is a new configuration, change the url to match the new configuration
@@ -130,6 +129,7 @@ export class HomeComponent implements OnInit {
  * The interface for a configuration. Configurations can be loaded in and saved in the main view (home) component.
  */
 export interface IConfiguration {
+  id: number;
   title: string;
   description: string;
   views: IViewData[];

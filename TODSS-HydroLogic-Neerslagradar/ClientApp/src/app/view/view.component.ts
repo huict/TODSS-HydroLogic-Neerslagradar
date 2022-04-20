@@ -36,13 +36,14 @@ export class TemplateDirective {
 })
 export class ViewComponent implements OnInit, OnDestroy {
   @Output() removeEvent = new EventEmitter<number>();
-  @ViewChild(TemplateDirective, {static: true}) viewHost!: TemplateDirective
+  @ViewChild(TemplateDirective, {static: true}) templateDirective!: TemplateDirective
 
   private _index: number = 0;
   private _name: string = "";
   private _template: ITemplate = new TemplateSelectComponent();
   private _skipInit: boolean = false;
   public settingsOpened = false;
+  private _templateSettings: HTMLElement | undefined;
 
   constructor(private templateTranslator: TemplateTranslator) {}
 
@@ -107,19 +108,27 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   // Load a new template with optionally data for the template.
   private loadTemplate(template: ITemplate, data?:any) {
-    const viewContainerRef = this.viewHost.viewContainerRef;
+    const viewContainerRef = this.templateDirective.viewContainerRef;
     // clear the container to make sure only 1 template exists inside of it
     viewContainerRef.clear();
     // @ts-ignore
     const component = viewContainerRef.createComponent<ITemplate>(template.constructor).instance;
     this._template = component;
     if (data) component.data = data;
-    if (component.hasOwnProperty("changeTemplateEvent")) {
-      let selectComponent:ITemplateChange = <ITemplateChange> component;
-      selectComponent.changeTemplateEvent.subscribe(t => {
-        this.template = t;
-      })
-    }
+    // @ts-ignore
+    if (component.hasOwnProperty("changeTemplateEvent")) component.changeTemplateEvent.subscribe(t => this.template = t)
+    // @ts-ignore
+    if (component.hasOwnProperty("changeNameEvent")) component.changeNameEvent.subscribe(e => this.changeNameOption(e))
+    this.templateSettings = component.settings
+  }
+
+  get templateSettings(): HTMLElement {
+    if (this._templateSettings) return this._templateSettings;
+    return document.createElement("div");
+  }
+
+  set templateSettings(value: HTMLElement | undefined) {
+    this._templateSettings = value;
   }
 
   /**
@@ -133,7 +142,8 @@ export class ViewComponent implements OnInit, OnDestroy {
    * Change the name of the view with an event.
    * @param e event of the change.
    */
-  changeNameOption(e:any) {
+  changeNameOption(e:Event) {
+    // @ts-ignore
     this.name = e.target.value;
   }
 }

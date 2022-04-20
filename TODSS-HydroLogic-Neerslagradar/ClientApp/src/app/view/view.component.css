@@ -1,55 +1,9 @@
-
-
-/*:host {*/
-/*  width: 600px;*/
-/*  border: 1px solid #000;*/
-/*  flex-grow: 1;*/
-/*  min-height: 120px;*/
-/*  box-sizing: border-box;*/
-/*  margin: 5px;*/
-/*  justify-content: space-between;*/
-/*  text-align: center;*/
-/*}*/
-
-/*!*view*!*/
-/*#view {*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*  height: 100%;*/
-/*}*/
-
-/*!*Top bar*!*/
-/*#topBar {*/
-/*  display: flex;*/
-/*}*/
-/*#viewName {*/
-/*  flex-grow: 2;*/
-/*  align-items: center;*/
-/*  display: flex;*/
-/*  margin-left: 7px;*/
-/*}*/
-/*.bx {*/
-/*  height: 30px;*/
-/*  width: 30px;*/
-/*  margin: 0;*/
-/*  padding: 0;*/
-/*}*/
-
-/*!*Content*!*/
-/*#template {*/
-/*  flex-grow: 2;*/
-/*}*/
-
-/** {*/
-/*  border: lightcoral 1px solid;*/
-/*}*/
-
 :host {
   width: 40%;
   background-color: white;
   border-radius: .5rem;
   flex-grow: 1;
-  min-height: 10rem;
+  min-height: 40%;
   margin: .5rem;
   box-shadow: var(--grey-200) 0 0 1rem;
   color: var(--grey-900);
@@ -76,6 +30,7 @@
   z-index: 1100;
   padding: 8px;
   border-radius: 10px 0 0 10px;
+  border-left: 1px solid var(--bs-gray-500);
 }
 
 #settings.active {

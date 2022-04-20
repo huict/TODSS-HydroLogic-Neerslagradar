@@ -16,4 +16,8 @@ export class TemplateTestComponent implements ITemplate {
   }
 
   set data(value: any) {}
+
+  get settings(): HTMLElement {
+    return document.createElement("div");
+  }
 }
