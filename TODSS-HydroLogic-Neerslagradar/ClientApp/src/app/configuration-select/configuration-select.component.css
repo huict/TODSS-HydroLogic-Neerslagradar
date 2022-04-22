@@ -27,10 +27,14 @@
 
 .titleBlue {
   color: var(--hydrologic-blue);
+  padding: 0;
+  margin: 0;
 }
 
 .titleGreen {
   color: var(--hydrologic-green);
+  padding: 0;
+  margin: 0;
 }
 
 .flexbox-container{
