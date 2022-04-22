@@ -11,20 +11,17 @@
   <div class="configuraties-text">
     <h1>Configuraties</h1>
     <p>Selecteer één van de configuraties of creeër een nieuwe</p>
+
+    <a href="/home"><button class="empty">Empty</button></a>
   </div>
 
   <div class="flexbox-container" >
     <div class="flexbox-item" *ngFor = "let config of getAllConfigs()">
-
       <div class="grow">
-
         <div class="view-text">
           <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
           <p class="description">{{config.description}}</p>
         </div>
-
-        <hr class="solid">
-
         <div class="views-container">
           <p>Geselecteerde views: </p>
           <div class="views" *ngFor = "let view of config.views">
@@ -32,10 +29,9 @@
             <p>{{view.templateType}}</p>
           </div>
         </div>
-
       </div>
 
-      <div>
+      <div class="button-div">
         <a href="/home?config={{config.id}}"><button class="bottom">Selecteren</button></a>
       </div>
 
@@ -43,5 +39,3 @@
   </div>
 
 </body>
-
-<a href="/home"><button>Empty</button></a>
