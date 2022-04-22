@@ -115,6 +115,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
+    this.fetchImage();
 
     // Event if thrown when the map is ready
     this.mapReadyEvent.emit(this);
@@ -172,6 +173,13 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   // Fetches the images for the animation.
   private fetchImage() {
     // TODO fetch image and set it to temp url
+    this.http.post("https://localhost:7187/radarimage", `{
+    "Longitude": 2.358578,
+    "Latitude": 50.25574,
+    "StartSeconds" : 427545,
+    "EndSeconds" : 428545}`).subscribe(e => {
+      console.log(e)
+    })
 
     // TODO get actual coordinates and create bound
     let bounds = L.latLngBounds([[ 55.39, 0], [ 49.36, 10.85]]);
