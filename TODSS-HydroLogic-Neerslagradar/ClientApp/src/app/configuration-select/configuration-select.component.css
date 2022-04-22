@@ -131,6 +131,8 @@
 }
 
 .view-text{
+  display: flex;
+  justify-content: space-between;
   padding-left: 20px;
   padding-top: 20px;
   background-color: white;
@@ -139,6 +141,16 @@
 
 .view-text h1{
   font-size: 30px;
+}
+
+.bx{
+  font-size: 30px;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.bx:hover{
+  cursor: pointer;
 }
 
 
