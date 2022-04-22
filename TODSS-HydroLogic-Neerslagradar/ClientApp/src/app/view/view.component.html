@@ -1,0 +1,20 @@
+<div id="view">
+  <div id="topBar">
+    <div id="viewName">
+      <div *ngIf="name == ''; else elseBlock">View: {{index+1}}</div>
+      <ng-template #elseBlock>{{name}}</ng-template>
+    </div>
+    <div id="buttons">
+      <button title="settings" class='bx bxs-wrench' (click)="toggleSettings()"></button>
+      <button title="remove" class='bx bxs-x-square' (click)="throwRemoveEvent()"></button>
+    </div>
+  </div>
+  <div id="template">
+    <div id="settings" [ngClass]="{'active':settingsOpened, 'notActive':!settingsOpened}">
+      <h3 class="underlineTitle">Settings</h3>
+      <label>View naam <input type="text" [(ngModel)]="name"></label>
+      <div [innerHTML]="templateSettings.outerHTML"></div>
+    </div>
+    <ng-template template></ng-template>
+  </div>
+</div>

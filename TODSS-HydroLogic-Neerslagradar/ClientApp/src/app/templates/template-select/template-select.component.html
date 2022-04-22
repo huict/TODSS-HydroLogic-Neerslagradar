@@ -1,0 +1,20 @@
+<div id="selectContent">
+  <div id="options">
+    <p>Geef de view een naam</p>
+    <label>Naam: <input type="text" (input)="changeNameEvent.emit($event)"></label>
+  </div>
+
+  <div class="seperationLine"></div>
+
+  <p>Selecteer een template</p>
+  <div id="templates">
+    <button (click)="selectTemplate($event, templateTest)">test</button>
+    <button (click)="selectTemplate($event, templateFullMap)">map</button>
+  </div>
+
+  <div class="seperationLine"></div>
+
+  <div id="buttons">
+    <button (click)="applyTemplate()">Aanmaken</button>
+  </div>
+</div>

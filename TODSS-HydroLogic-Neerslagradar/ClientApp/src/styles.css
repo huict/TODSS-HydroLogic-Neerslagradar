@@ -1,16 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap'); /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+/*a {*/
+/*  color: #0366d6;*/
+/*}*/
+
+/*code {*/
+/*  color: #e01a76;*/
+/*}*/
+
+/*.btn-primary {*/
+/*  color: #fff;*/
+/*  background-color: #1b6ec2;*/
+/*  border-color: #1861ac;*/
+/*}*/
+
+
+/* ROOT STYLES */
+:root {
+  --grey-100: #F5F5F5;
+  --grey-200: #E5E5E5;
+  --grey-900: #2D2D2D;
+
+  --clr-100: #EF476F;
+  --clr-200: #FFD166;
+  --clr-300: #06D6A0;
+  --clr-400: #118AB2;
+  --clr-500: #073B4C;
+
+  --hydrologic-blue: #1B6EC2;
+  --hydrologic-green: #4DB038;
+
+
+  --base-font: 'Poppins', sans-serif;
+
+  --medium-weight: 500;
 }
 
-code {
-  color: #e01a76;
+*,::before,::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+body {
+  font-family: var(--base-font);
+  color: var(--clr-500);
+  background-color: var(--grey-100);
 }
