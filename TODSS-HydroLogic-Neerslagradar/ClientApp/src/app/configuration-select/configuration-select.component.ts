@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+/**
+ * A selection component that gives a brief summary of each saved configuration that can be selected or removed.
+ * An empty configuration can allso be selected.
+ */
 @Component({
   selector: 'app-configuration-select',
   templateUrl: './configuration-select.component.html',

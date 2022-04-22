@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import {NgChartsModule} from "ng2-charts";
 
 import { AppComponent } from './app.component';
 import { HomeComponent, ViewDirective } from './home/home.component';
@@ -13,6 +14,7 @@ import { TemplateTestComponent } from './templates/template-test/template-test.c
 import { AnimationMapComponent } from './components/animation-map/animation-map.component';
 import { TemplateFullMapComponent } from './templates/template-full-map/template-full-map.component';
 import { ConfigurationSelectComponent } from './configuration-select/configuration-select.component';
+import {LineChartComponent} from "./components/line-chart/line-chart.component";
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { ConfigurationSelectComponent } from './configuration-select/configurati
     TemplateTestComponent,
     AnimationMapComponent,
     TemplateFullMapComponent,
-    ConfigurationSelectComponent
+    ConfigurationSelectComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -37,7 +40,8 @@ import { ConfigurationSelectComponent } from './configuration-select/configurati
       { path: 'configurations', component: ConfigurationSelectComponent },
       { path: '**', redirectTo:'/configurations' }
     ]),
-    LeafletModule
+    LeafletModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

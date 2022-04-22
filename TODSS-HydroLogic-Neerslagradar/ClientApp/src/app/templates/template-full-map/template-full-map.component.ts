@@ -2,6 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ICoordinateFilter, ITimeFilter, IWeatherTemplate} from "../i-weather.template";
 import {AnimationMapComponent} from "../../components/animation-map/animation-map.component";
 
+/**
+ * This template is for a full screen map.
+ */
 @Component({
   selector: 'template-full-map',
   templateUrl: './template-full-map.component.html',
@@ -34,6 +37,14 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
     this._mapDataTemp = value.map;
     this.coordinatesFilter = value.coordinatesFilter;
     this.timeFilter = value.timeFilter;
+  }
+
+  get settings(): HTMLElement {
+    // TODO settings voor template toevoegen
+    let container = document.createElement("div")
+    container.innerText = "hallooo"
+
+    return container;
   }
 
   get coordinatesFilter(): ICoordinateFilter | undefined {

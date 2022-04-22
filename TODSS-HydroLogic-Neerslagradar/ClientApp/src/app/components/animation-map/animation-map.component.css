@@ -11,8 +11,61 @@
   top: 20px;
   right: 20px;
   z-index: 999;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: var(--grey-900) 0 0 .5rem;
+}
+
+#times > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #map {
   height: 100%;
+  border-radius: 0 0 .5rem .5rem;
+}
+
+label{
+  font-family: var(--base-font);
+  color: var(--clr-500);
+  font-weight: var(--medium-weight);
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+input{
+  display: inline-block;
+  position: relative;
+  font-family: var(--base-font);
+  color: var(--clr-500);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: none;
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  filter: invert(33%) sepia(92%) saturate(788%) hue-rotate(180deg) brightness(93%) contrast(98%);
+  cursor: pointer;
+}
+
+input:after{
+  content: '';
+  position: absolute;
+  width: 75%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 1px;
+  left: 1px;
+  background-color: var(--hydrologic-blue);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+input:hover:after{
+  transform: scaleX(1);
+  transform-origin: bottom left;
+
 }

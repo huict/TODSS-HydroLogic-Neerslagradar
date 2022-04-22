@@ -1,10 +1,11 @@
 ﻿import {EventEmitter} from "@angular/core"
 import {ITemplate} from "./i-template.view";
 
-// Is bedoeld om aan te geven dat een template zijn template type kan veranderen.
-// De verplichte line die wordt bedoeld met deze interface:
-// @Output() changeTemplateEvent = new EventEmitter<ITemplate>();
-
+/**
+ * An interface for templates that can change. <br>
+ * Copy the next line: <br>
+ * @Output() changeTemplateEvent = new EventEmitter<ITemplate>();
+ */
 export interface ITemplateChange extends ITemplate {
   changeTemplateEvent: EventEmitter<ITemplate>;
 }
