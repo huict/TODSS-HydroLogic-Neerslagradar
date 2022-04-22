@@ -9,17 +9,23 @@ public class CoordinateConversion
     
     public static ProjectionInfo SourceCRF = ProjectionInfo.FromProj4String(_sourceProj4Params);
     public static ProjectionInfo TargetCRF = ProjectionInfo.FromProj4String(_targetProj4Params);
-
+    
     private const double XLowerLeft = 0;
     private const double YLowerLeft = -4415.002329;
     private const int Columns = 700;
     private const int Rows = 765;
     private const double CellWidth = 1.0000013;
     private const double CellHeight = 1.0000052;
+    
+    private const int ColumnsPyr = 175;
+    private const int RowsPyr = 192;
+    private const double CellWidthPyr = 1.0000013 * 4;
+    private const double CellHeightPyr = 1.0000052 * 4;
 
     private static GridSingelton _grid = GridSingelton.Grid;
 
-    private const int precision = 6;
+    private const int Precision = 5;
+    
     public void ProvideGridCellCoordinates()
     {
         List<GridCell> gridCellList = new List<GridCell>();
@@ -32,6 +38,20 @@ public class CoordinateConversion
         }
         
         _grid.AddGridCellList(gridCellList);
+        ProvidePyramidedGridCellCoordinates();
+    }
+
+    public void ProvidePyramidedGridCellCoordinates()
+    {
+        List<GridCell> gridCellList = new List<GridCell>();
+        for (int y = 0; y < RowsPyr; y++)
+        {
+            for (int x = 0; x < ColumnsPyr; x++)
+            {
+                gridCellList.Add(new GridCell(Conversion(GenerateEdgeCoordinatesForCellPyramided(x, y)), x, y));
+            }
+        }
+        _grid.AddPyramidedGridCellList(gridCellList);
     }
     
     //TODO coordinates that should be on the same line aren't cause the conversion happens twice. This should be optimized
@@ -39,9 +59,9 @@ public class CoordinateConversion
     {
         double[] numberOfCoordinates = new double[edges.Length / 2];
         Reproject.ReprojectPoints(edges, numberOfCoordinates, SourceCRF, TargetCRF, 0, numberOfCoordinates.Length);
-        for (int i = 0; i < edges.Length - 1; i++)
+        for (int i = 0; i < edges.Length; i++)
         {
-            edges[i] = Math.Round(edges[i], precision);
+            edges[i] = Math.Round(edges[i], Precision);
         }
         return GenerateCornersFromEdges(edges);
     }
@@ -80,6 +100,22 @@ public class CoordinateConversion
         coordinates[2] = XLowerLeft + (x + 1) * CellWidth;
         // top side
         coordinates[3] = YLowerLeft + (y + 1) * CellHeight;
+        
+        return coordinates;
+    }
+    
+    private double[] GenerateEdgeCoordinatesForCellPyramided(int x, int y)
+    {
+        double[] coordinates = new double[4];
+        
+        // left side
+        coordinates[0] = XLowerLeft + x * CellWidthPyr;
+        // bottom side
+        coordinates[1] = YLowerLeft + y * CellHeightPyr;
+        // right side
+        coordinates[2] = XLowerLeft + (x + 1) * CellWidthPyr;
+        // top side
+        coordinates[3] = YLowerLeft + (y + 1) * CellHeightPyr;
         
         return coordinates;
     }

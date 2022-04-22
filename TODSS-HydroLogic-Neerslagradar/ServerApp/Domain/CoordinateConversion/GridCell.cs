@@ -7,17 +7,17 @@ public class GridCell
     public double[] Coordinates;
     public int X;
     public int Y;
-    public Polygon Polygon;
+    public List<List<List<double>>> coordsForGeoJson;
     
     public GridCell(double[] coordinates, int x, int y)
     {
         Coordinates = coordinates;
         this.X = x;
         this.Y = y;
-        Polygon = GeneratePolygon(coordinates);
+        coordsForGeoJson = GenerateCoordsGeoJson(coordinates);
     }
 
-    private Polygon GeneratePolygon(IReadOnlyList<double> coordinates)
+    private List<List<List<double>>> GenerateCoordsGeoJson(IReadOnlyList<double> coordinates)
     {
         var list2 = new List<List<double>>();
         for (var k = 0; k < coordinates.Count; k+=2)
@@ -28,8 +28,8 @@ public class GridCell
             };
             list2.Add(list);
         }
-        list2.Add(list2[0]);
-        return new Polygon(new List<List<List<double>>>{list2});
+        // list2.Add(list2[0]);
+        return new List<List<List<double>>>{list2};
         
     }
 }

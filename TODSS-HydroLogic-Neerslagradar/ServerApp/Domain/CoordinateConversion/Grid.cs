@@ -21,8 +21,14 @@ public sealed class GridSingelton
     }
     
     // Variables
-    private GridCell[] _gridCells = {};
+    private GridCell[] _gridCells = Array.Empty<GridCell>();
 
+    private GridCell[] _gridCellsPyramided = Array.Empty<GridCell>();
+
+    public GridCell[] GridCellsPyramided
+    {
+        get { return _gridCellsPyramided; }
+    }
     public GridCell[] GridCells
     {
         get { return _gridCells; }
@@ -47,9 +53,25 @@ public sealed class GridSingelton
         _gridCells = oldGridCellList.ToArray();
     }
 
+    public void AddPyramidedGridCellList(List<GridCell> newPyramidedGridCellList)
+    {
+        List<GridCell> oldGridCellList = _gridCells.ToList();
+
+        oldGridCellList.AddRange(newPyramidedGridCellList);
+
+        _gridCellsPyramided = oldGridCellList.ToArray();
+    }
+
     public GridCell FindByGridCoordinates(int x, int y)
     {
-        return _gridCells.First(i => i.X == x && i.Y == y);
+        var index = y * 700 + x;
+        return _gridCells[index];
+    }
+
+    public GridCell FindByGridCoordinatesPyramided(int x, int y)
+    {
+        var index = y * 175 + x;
+        return _gridCellsPyramided[index];
     }
     
     public GridCell FindByGeoCoordinates(double[] coordinates)
