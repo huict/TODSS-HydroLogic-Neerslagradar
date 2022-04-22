@@ -15,7 +15,7 @@
     </div>
 
     <div class="empty-button-div">
-      <a href="/home"><button class="empty">Nieuwe configuratie</button></a>
+      <a href="/home"><button class="empty" title="Maak nieuwe configuratie">Nieuwe configuratie</button></a>
     </div>
   </div>
 
@@ -25,8 +25,16 @@
       <div class="grow">
 
         <div class="view-text">
-          <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
-          <p class="description">{{config.description}}</p>
+
+          <div class="text-view-div">
+            <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
+            <p class="description">{{config.description}}</p>
+          </div>
+
+          <div>
+            <i class='bx bxs-trash' title="Verwijder configuratie"></i>
+          </div>
+
         </div>
 
         <div class="views-container">
@@ -40,7 +48,7 @@
       </div>
 
       <div class="button-div">
-        <a href="/home?config={{config.id}}"><button class="bottom">Selecteren</button></a>
+        <a href="/home?config={{config.id}}"><button class="bottom" title="Selecteren">Selecteren</button></a>
       </div>
 
     </div>
