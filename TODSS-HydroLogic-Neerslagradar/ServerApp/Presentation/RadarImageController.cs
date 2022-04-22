@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Web.Http.Description;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
@@ -25,9 +23,15 @@ public class RadarImageController :  ControllerBase
     }
 
     [HttpPost]
-    public IEnumerable<byte[]> test(WeatherFiltersDTO dto)
+    public List<GeoDataDTO> test(WeatherFiltersDTO dto)
     {
         return _radarImageService.GetSpecificSlices(dto);
     }
+    //
+    // [HttpPatch]
+    // public List<GeoDataDTO> geoJSon()
+    // {
+    //     return GenerateGeoJSON.GenerateGeo();
+    // }
     
 }

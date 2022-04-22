@@ -1,7 +1,7 @@
-﻿using GeoJSON.Net.Feature;
-using GeoJSON.Net.Geometry;
-using Newtonsoft.Json;
+﻿using System.Drawing;
+using Rewrite_NetCdf_test.classes.colorSchemes;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
 
@@ -9,26 +9,24 @@ public class GenerateGeoJSON
 {
     private static readonly GridSingelton Grid = GridSingelton.Grid;
     
-    public static string GenerateGeo()
+    public static List<GeoDataDTO> GenerateGeo(float[,,] slice, IColorScheme scheme )
     {
-        var featureCollection = new FeatureCollection();
-        for (int i = 0; i < 1; i++)
+        var geoData = new List<GeoDataDTO>();
+        var width = slice.GetLength(2);
+        var height = slice.GetLength(1);
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < 765; j++)
+            for (int j = 0; j < height; j++)
             {
-                var polygon = Grid.FindByGridCoordinates(i,j ).Polygon;
-
-                var feature = new Feature(polygon);
-                feature.Properties.Add("stroke"," #000000");
-                feature.Properties.Add("stroke-opacity", 1);
-                feature.Properties.Add("fill"," #ff0000");
-                feature.Properties.Add("fill-opacity", 0.5);
-                feature.Properties.Add("stroke-width", 2);
-                featureCollection.Features.Add(feature);
+                var geoDataDto = new GeoDataDTO
+                {
+                    coords = Grid.FindByGridCoordinatesPyramided(i, j).coordsForGeoJson,
+                    color = ColorTranslator.ToHtml(scheme.GetColorValue(slice[0, j, i]))
+                };
+                geoData.Add(geoDataDto);
             }
-            
         }
 
-        return JsonConvert.SerializeObject(featureCollection);
+        return geoData;
     }
 }
