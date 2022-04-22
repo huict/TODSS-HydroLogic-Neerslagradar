@@ -80,14 +80,20 @@
   background-color: #EEEEEE;
 }
 
+.text-and-button-container{
+  display: flex;
+  justify-content: space-between;
+}
+
 .empty{
-  float: right;
-  margin: 20px;
+  margin-top:40px;
+  margin-right: 50px;
+  padding: 10px;
   font-size: 15px;
   border-radius: 10px;
   border-width: 3px;
   background-color: white;
-  border-color: 	#EEEEEE;
+  border-color: #EEEEEE;
   -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
   transition: 200ms ease-in-out, color 200ms ease-in-out;
 }
