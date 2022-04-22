@@ -27,6 +27,10 @@
   border-radius: 0 0 .5rem .5rem;
 }
 
+.noHover{
+  pointer-events: none;
+}
+
 label{
   font-family: var(--base-font);
   color: var(--clr-500);
@@ -67,5 +71,4 @@ input:after{
 input:hover:after{
   transform: scaleX(1);
   transform-origin: bottom left;
-
 }

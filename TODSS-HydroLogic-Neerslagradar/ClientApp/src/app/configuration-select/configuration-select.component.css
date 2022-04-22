@@ -1,0 +1,134 @@
+#topBar {
+  display: flex;
+  background-color: white;
+  border-bottom: var(--grey-200) 1px solid;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+
+#titleWhole {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.description{
+  font-size: 13px;
+}
+
+.configuraties-text{
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+.titleBlue {
+  color: var(--hydrologic-blue);
+}
+
+.titleGreen {
+  color: var(--hydrologic-green);
+}
+
+.flexbox-container{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.flexbox-item{
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  margin: 10px;
+  border-radius: 25px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  overflow: hidden;
+}
+
+.grow{
+  flex-grow: 2;
+  background-color: #EEEEEE;
+}
+
+.bottom{
+  font-size: 15px;
+  float: right;
+  margin: 15px;
+  padding: 5px;
+  border-radius: 10px;
+  border-width: 3px;
+  background-color: white;
+  border-color: 	#EEEEEE;
+  -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
+  transition: 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+.bottom:hover{
+  box-shadow: 0 0 40px 40px var(--hydrologic-blue) inset;
+  color: white;
+}
+
+.button-div{
+  background-color: #EEEEEE;
+}
+
+.empty{
+  float: right;
+  margin: 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  border-width: 3px;
+  background-color: white;
+  border-color: 	#EEEEEE;
+  -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
+  transition: 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+.empty:hover{
+  box-shadow: 0 0 40px 40px var(--hydrologic-blue) inset;
+  color: white;
+}
+
+.views-container{
+  flex-direction: column;
+  display: flex;
+  background-color: #EEEEEE;
+}
+
+.views-container p{
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.views{
+  padding: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  background-color: white;
+}
+
+.views p {
+  font-size: 12px;
+  margin-bottom: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+}
+
+.view-text{
+  padding-left: 20px;
+  padding-top: 20px;
+  background-color: white;
+  border-bottom: 1px solid #bbb;
+}
+
+.view-text h1{
+  font-size: 30px;
+}
+
+

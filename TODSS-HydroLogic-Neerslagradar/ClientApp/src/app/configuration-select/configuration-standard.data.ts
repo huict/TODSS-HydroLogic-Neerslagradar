@@ -15,7 +15,7 @@ export class ConfigurationStandardData {
       0: {
         id: 0,
         title:"compare 2 maps",
-        description:"",
+        description:"Configuration to compare 2 maps",
         views:[
           {
             name:"Map Utrecht",
@@ -66,7 +66,7 @@ export class ConfigurationStandardData {
       1: {
         id: 1,
         title:"test",
-        description:"",
+        description:"This is a test!",
         views:[
           {
             name:"Nederland",
