@@ -32,22 +32,19 @@ public class GeneratePhoto
                 //red byte
                 imageBytes[i + 2] = color.R;
                 //alpha byte
-                imageBytes[i + 3] = color.Equals(Color.Black) ? (byte) 0 :  (byte) 255;
+                // imageBytes[i + 3] = color.Equals(Color.Black) ? (byte) 0 :  (byte) 255;
             }
             
             Marshal.Copy(imageBytes, 0, scan0, imageBytes.Length);
             bitmap.UnlockBits(imageData);
             bitmap.MakeTransparent();
-            using (var stream = new MemoryStream())
-            {
-                bitmap.Save(stream, ImageFormat.Png);
-                bitmapList.Add(stream.ToArray());
-            }
+            using var stream = new MemoryStream();
+            bitmap.Save(stream, ImageFormat.Png);
+            bitmapList.Add(stream.ToArray());
         }
         
         return bitmapList;
     }
-
     private static float GetValueFromSlice(float[,,] slice, int index, int depth)
     {
         var col = index % slice.GetLength(2);
