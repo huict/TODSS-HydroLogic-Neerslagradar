@@ -30,6 +30,7 @@
 label{
   font-family: var(--base-font);
   color: var(--clr-500);
+  font-weight: var(--medium-weight);
   margin-right: 10px;
   margin-top: 5px;
   margin-bottom: 5px;

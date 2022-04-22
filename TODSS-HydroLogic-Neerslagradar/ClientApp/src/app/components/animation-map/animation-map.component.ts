@@ -155,7 +155,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
       if (this._mySelection) this._mySelection.remove();
       let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);
-      this._mySelection = L.rectangle(bounds, {fillOpacity: 0, color: 'var(--hydrologic-blue)'}).addTo(this.map);
+      this._mySelection = L.rectangle(bounds, {fillOpacity: 0, color: '#EF476F'}).addTo(this.map);
 
       const location: ICoordinateFilter = {
         topLeft: new L.LatLng(top, left),

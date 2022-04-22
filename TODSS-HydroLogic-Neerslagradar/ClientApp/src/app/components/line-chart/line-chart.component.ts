@@ -28,7 +28,8 @@ export class LineChartComponent implements AfterViewInit {
           backgroundColor: 'rgba(17, 138, 178, .5)',
           borderColor: '#073B4C',
           pointHoverBorderColor: '#118AB2',
-          pointHoverBackgroundColor: '#118AB2'
+          pointHoverBackgroundColor: '#118AB2',
+          tension: 0.2
         }]
       },
       options: {
