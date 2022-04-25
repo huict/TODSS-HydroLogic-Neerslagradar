@@ -16,6 +16,31 @@
   margin: 0;
 }
 
+
+.back-to-top-button{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 26px;
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  border: 3px solid #333;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  transition-property: background-color, color;
+  border-radius: 50%;
+}
+
+.back-to-top-button:hover{
+  background-color: #333;
+  color: #fff;
+}
+
+
 .description{
   font-size: 13px;
 }
@@ -151,6 +176,16 @@
 
 .bx:hover{
   cursor: pointer;
+}
+
+#top-knop{
+  margin-right: 0;
+  margin-top: 0;
+  padding-top: 8px;
+}
+
+.no-style-button{
+  display: block;
 }
 
 

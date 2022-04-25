@@ -1,3 +1,6 @@
+<head>
+  <title>Neerslagradar</title>
+</head>
 
 <body>
 
@@ -7,6 +10,8 @@
       <p class="titleGreen">NET</p>
     </h1>
   </header>
+
+
 
   <div class="text-and-button-container">
     <div class="configuraties-text">
@@ -53,5 +58,9 @@
 
     </div>
   </div>
+
+  <button *ngIf="showMe" class="back-to-top-button" (click)="scrollTop()"><i class='bx bxs-chevrons-up' id="top-knop"></i></button>
+
+
 
 </body>
