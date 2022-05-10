@@ -117,7 +117,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.renderSelection();
     this.fetchImage();
 
-    // Event if thrown when the map is ready
+    // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
   }
 
@@ -177,14 +177,16 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     "Longitude": 2.358578,
     "Latitude": 50.25574,
     "StartSeconds" : 427545,
-    "EndSeconds" : 428545}`).subscribe(e => {
+    "EndSeconds" : 428545}`, {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       console.log(e)
     })
 
+
+
     // TODO get actual coordinates and create bound
-    let bounds = L.latLngBounds([[ 55.39, 0], [ 49.36, 10.85]]);
+    // let bounds = L.latLngBounds([[ 55.39, 0], [ 49.36, 10.85]]);
     // TODO insert temp url of image
-    L.imageOverlay("https://cdn.discordapp.com/attachments/805785211774304297/960102663096242226/1.png", bounds, {opacity: 0.8}).addTo(this.map);
+    // L.imageOverlay("https://cdn.discordapp.com/attachments/805785211774304297/960102663096242226/1.png", bounds, {opacity: 0.8}).addTo(this.map);
   }
 }
 
