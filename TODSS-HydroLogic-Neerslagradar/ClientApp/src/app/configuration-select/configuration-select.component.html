@@ -1,3 +1,6 @@
+<head>
+  <title>Neerslagradar</title>
+</head>
 
 <body>
 
@@ -8,34 +11,56 @@
     </h1>
   </header>
 
-  <div class="configuraties-text">
-    <h1>Configuraties</h1>
-    <p>Selecteer één van de configuraties of creeër een nieuwe</p>
 
-    <a href="/home"><button class="empty">Empty</button></a>
+
+  <div class="text-and-button-container">
+    <div class="configuraties-text">
+      <h1>Configuraties</h1>
+      <p>Selecteer één van de configuraties of creeër een nieuwe</p>
+    </div>
+
+    <div class="empty-button-div">
+      <a href="/home"><button class="empty" title="Maak nieuwe configuratie">Nieuwe configuratie</button></a>
+    </div>
   </div>
+
 
   <div class="flexbox-container" >
     <div class="flexbox-item" *ngFor = "let config of getAllConfigs()">
       <div class="grow">
+
         <div class="view-text">
-          <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
-          <p class="description">{{config.description}}</p>
+
+          <div class="text-view-div">
+            <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
+            <p class="description">{{config.description}}</p>
+          </div>
+
+          <div>
+            <i class='bx bxs-trash' title="Verwijder configuratie"></i>
+          </div>
+
         </div>
+
         <div class="views-container">
           <p>Geselecteerde views: </p>
           <div class="views" *ngFor = "let view of config.views">
-            <p>{{view.name}}</p>
-            <p>{{view.templateType}}</p>
+            <p><b>View naam:</b> {{view.name}}</p>
+            <p><b>View type:</b>  {{view.templateType}}</p>
           </div>
         </div>
+
       </div>
 
       <div class="button-div">
-        <a href="/home?config={{config.id}}"><button class="bottom">Selecteren</button></a>
+        <a href="/home?config={{config.id}}"><button class="bottom" title="Selecteren">Selecteren</button></a>
       </div>
 
     </div>
   </div>
+
+  <button *ngIf="showMe" class="back-to-top-button" (click)="scrollTop()"><i class='bx bxs-chevrons-up' id="top-knop"></i></button>
+
+
 
 </body>

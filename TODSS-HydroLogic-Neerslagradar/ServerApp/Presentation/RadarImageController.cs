@@ -23,7 +23,7 @@ public class RadarImageController :  ControllerBase
     }
 
     [HttpPost]
-    public List<GeoDataDTO> test(WeatherFiltersDTO dto)
+    public IEnumerable<IEnumerable<GeoDataDTO>> test(WeatherFiltersDTO dto)
     {
         return _radarImageService.GetSpecificSlices(dto);
     }
