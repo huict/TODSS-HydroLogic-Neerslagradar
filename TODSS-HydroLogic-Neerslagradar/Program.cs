@@ -18,7 +18,9 @@ if (startWebsite)
         options.AddPolicy(name: _myAllowSpecificOrigins,
             policy  =>
             {
-                policy.WithOrigins("*");
+                policy.AllowAnyOrigin();
+                policy.AllowAnyMethod();
+                policy.AllowAnyHeader();
             });
     });
 
