@@ -5,6 +5,6 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 public interface IRadarImageService
 {
     IEnumerable<byte[]> loadData();
-    List<GeoDataDTO> GetSpecificSlices(WeatherFiltersDTO dto);
+    IEnumerable<IEnumerable<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto);
 
 }

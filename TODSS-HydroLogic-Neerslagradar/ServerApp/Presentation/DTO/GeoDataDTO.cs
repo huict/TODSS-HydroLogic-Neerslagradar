@@ -3,5 +3,5 @@
 public class GeoDataDTO
 {
     public List<List<List<double>>> coords { get; set; }
-    public string color { get; set; }
+    public float intensity { get; set; }
 }

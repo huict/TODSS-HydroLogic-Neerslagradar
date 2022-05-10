@@ -9,6 +9,9 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 
 public class RadarImageService : IRadarImageService
 {
+    private static readonly ReadingData Pyramided = new ("neerslag_data.nc");
+    // private static readonly ReadingData Original = new("neerslag.nc");
+    
     public IEnumerable<byte[]> loadData()
     {
         var ds = new ReadingData(@"C:\Users\salni\RiderProjects\TODSS-HydroLogic-Neerslagradar\TODSS-HydroLogic-Neerslagradar\sources\Knmi.Radar.Uncorrected_20210618_original.nc");
@@ -17,18 +20,15 @@ public class RadarImageService : IRadarImageService
         return bitmaps;
     }
 
-    public List<GeoDataDTO> GetSpecificSlices(WeatherFiltersDTO dto)
+    public IEnumerable<IEnumerable<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto)
     {
-        var ds = new ReadingData("neerslag_data.nc");
         var beginZ = TimeConversion.GetDepthFromSeconds(dto.StartSeconds);
         var depth = TimeConversion.GetDepthFromSeconds(dto.EndSeconds) - beginZ;
-        var scheme = new PreciezeColor();
         //TODO Conversion from coordinates to x, y and height, width in dataset
-        return GenerateGeoJSON.GenerateGeo(ds.GetSlices(0, 0, beginZ, 175, 192, depth), scheme);
+        for (var i = beginZ; i < beginZ + depth; i++)
+        {
+            yield return GenerateGeoJSON.GenerateGeo(Pyramided.GetSlices(0, 0, beginZ, 175, 192, depth));
+        }
     }
-
-    public List<GeoDataDTO> GetGeoData()
-    {
-        return new List<GeoDataDTO>();
-    }
+    
 }
