@@ -19,6 +19,12 @@ Aan deze voorwaardes moet het backlog item voldoen voordat development hieraan k
 - [ ] Team begrijpt User Story
 - [ ] Wireframes gemaakt
 
+## Tasks for completion
+Deze taken moeten uitgevoerd worden voor het afronden van deze user story.
+<!-- Hierin kunnen bijvoorbeeld alle taken van de back-end en front-end apart beschreven worden -->
+- [ ] Bijv. Front-end maakt een component die zijn eigen requests kan uitvoeren.
+- [ ] Bijv. Back-end maakt een rest endpoint.
+
 ## Definition of Done (DoD) 
 Aan deze criteria moet het backlog item voldoen om als compleet te kunnen verklaren: 
 - [ ] Code gedocumenteerd 

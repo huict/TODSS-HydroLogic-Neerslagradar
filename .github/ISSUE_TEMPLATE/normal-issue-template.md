@@ -16,6 +16,11 @@ assignees: ''
 Aan deze voorwaardes moet het backlog item voldoen voordat development hieraan kan beginnen:
 - [ ] Team begrijpt de issue
 
+## Tasks for completion
+Deze taken moeten gemaakt worden om de issue af te krijgen
+- [ ] Bijv. Nieuwe component maken voor feature.
+- [ ] Bijv. Dit component koppelen aan bestaande architectuur.
+
 ## Definition of Done (DoD)
 Aan deze criteria moet de issue voldoen om als compleet te kunnen worden verklaard: 
 - [ ] Besproken met team in daily
