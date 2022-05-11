@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
-import {LatLng} from "leaflet";
+import {GeoJSON, LatLng} from "leaflet";
+import * as gj from "geojson";
 
 /**
  * This component is a map on which filters can be set and an animation of the weather can be viewed.
@@ -70,8 +71,15 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _mySelection: L.Rectangle | undefined;
   private _points: L.LatLng[] = [];
   private _dataTemp: object | undefined;
+
   public _beginTime: Date = new Date(1623974400000);
   public _endTime: Date = new Date(1624060500000);
+
+  private _animationInterval: number | undefined;
+  private _animationFrames: any[] = [];
+  private _currentFrame: number = -1;
+  private _totalFrames: number = 0;
+  private _lastGeoJson: GeoJSON | undefined;
 
   get data():IMapData {
     return <IMapData>{
@@ -99,6 +107,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.changeLocationFilterEvent.unsubscribe();
     this.changeTimeFilterEvent.unsubscribe();
     this.mapReadyEvent.unsubscribe();
+    this.clearAnimation();
   }
 
   // This function is run when leaflet says the map is ready
@@ -115,7 +124,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
-    this.fetchImage();
+    // this.startNewAnimation();
+    this.fetchOrLoadImage();
 
     // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
@@ -131,6 +141,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       beginTimestamp: this._beginTime.valueOf(),
       endTimestamp: this._endTime.valueOf()
     })
+    this.startNewAnimation();
   }
 
   // Adds a new point to list of points and removes the first one if the list has a length of three points.
@@ -170,23 +181,84 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     return <L.Map>this._map;
   }
 
+  public startNewAnimation() {
+    this.clearAnimation();
+
+    // TODO werkend maken over meerdere dagen.
+    let calculateSeconds = (date: Date) => {
+      let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
+      return Math.round(s/300)*300;
+    }
+
+    let beginSeconds:number = calculateSeconds(this._beginTime);
+    let endSeconds:number = calculateSeconds(this._endTime);
+    let totalFrames = endSeconds/300-beginSeconds/300+1;
+
+    console.log({beginSeconds, endSeconds, totalFrames})
+
+    this._totalFrames = totalFrames;
+    this.resumeAnimation();
+  }
+
+  public clearAnimation() {
+    if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+    if (this._lastGeoJson) this._lastGeoJson.remove();
+    this._totalFrames = 0;
+    this._currentFrame = -1;
+    this._animationFrames = [];
+  }
+
+  public pauseAnimation() {
+    if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+  }
+
+  public resumeAnimation() {
+    if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+
+    this._animationInterval = setInterval(() => {
+      this._currentFrame++;
+      if (this._currentFrame == this._totalFrames) this._currentFrame = 0;
+
+      // console.log(`Fetching: frame ${this._currentFrame+1} of ${this._totalFrames}, seconds ${beginSeconds+this._currentFrame*300}`)
+
+      // this.fetchOrLoadImage();
+    }, 2000);
+  }
+
   // Fetches the images for the animation.
-  private fetchImage() {
-    // TODO fetch image and set it to temp url
+  private fetchOrLoadImage() {
+    // if statement voor als de frame al eerder is opgehaald
+    // if (this._animationFrames.length-1!=this._currentFrame) return;
     this.http.post("https://localhost:7187/radarimage", `{
-    "Longitude": 2.358578,
-    "Latitude": 50.25574,
-    "StartSeconds" : 427545,
-    "EndSeconds" : 428545}`, {headers: {"Content-Type": "application/json"}}).subscribe(e => {
-      console.log(e)
+       "Longitude": 2.358578,
+       "Latitude": 50.25574,
+       "StartSeconds" : 0,
+       "EndSeconds" : 300}`,
+      {headers: {"Content-Type": "application/json"}}).subscribe(e => {
+      let requestData = e as IRequestData[][];
+      let geojson: gj.FeatureCollection = {
+        type: "FeatureCollection",
+        features: requestData[0].map(data => {
+          console.log(data)
+          return {
+            type: "Feature",
+            properties: {
+              "stroke": "#8f8f8f",
+              "stroke-width": 2,
+              "stroke-opacity": 0.7,
+              "fill": "#e30d0d",
+              "fill-opacity": 0.5
+            },
+            geometry: {
+              type: "Polygon",
+              coordinates: data.coords
+            },
+          }
+        }),
+      }
+
+      new L.GeoJSON(geojson).addTo(this.map)
     })
-
-
-
-    // TODO get actual coordinates and create bound
-    // let bounds = L.latLngBounds([[ 55.39, 0], [ 49.36, 10.85]]);
-    // TODO insert temp url of image
-    // L.imageOverlay("https://cdn.discordapp.com/attachments/805785211774304297/960102663096242226/1.png", bounds, {opacity: 0.8}).addTo(this.map);
   }
 }
 
@@ -196,4 +268,9 @@ export interface IMapData {
   centerLocation: LatLng,
   beginTime: number,
   endTime:number,
+}
+
+interface IRequestData {
+  coords: [][][number],
+  intensity: number
 }
