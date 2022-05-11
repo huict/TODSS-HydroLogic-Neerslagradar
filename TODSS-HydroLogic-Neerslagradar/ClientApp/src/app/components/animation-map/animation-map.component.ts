@@ -76,7 +76,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   public _endTime: Date = new Date(1624060500000);
 
   private _animationInterval: number | undefined;
-  private _animationFrames: any[] = [];
+  private _animationFrames: number[][] = [];
+  private _animationCoords: number[][] = [];
   private _currentFrame: number = -1;
   private _totalFrames: number = 0;
   private _lastGeoJson: GeoJSON | undefined;
@@ -124,8 +125,56 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
-    // this.startNewAnimation();
-    this.fetchOrLoadImage();
+    this.startNewAnimation();
+
+    // TODO remove, this was for testing styling
+    let geo: gj.FeatureCollection = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "fill": "#111111",
+            "fill-opacity": 0.5,
+            "stroke": "#8f8f8f",
+            "stroke-opacity": 0,
+            "stroke-width": 0
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  6.263580322265624,
+                  52.342051636387865
+                ],
+                [
+                  6.156463623046875,
+                  52.283282143126186
+                ],
+                [
+                  6.29241943359375,
+                  52.20424032262008
+                ],
+                [
+                  6.455841064453125,
+                  52.237051359522724
+                ],
+                [
+                  6.4105224609375,
+                  52.3261076319194
+                ],
+                [
+                  6.263580322265624,
+                  52.342051636387865
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    }
+    new L.GeoJSON(geo).addTo(this.map);
 
     // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
@@ -215,49 +264,68 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   public resumeAnimation() {
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
 
-    this._animationInterval = setInterval(() => {
-      this._currentFrame++;
-      if (this._currentFrame == this._totalFrames) this._currentFrame = 0;
-
-      // console.log(`Fetching: frame ${this._currentFrame+1} of ${this._totalFrames}, seconds ${beginSeconds+this._currentFrame*300}`)
-
-      // this.fetchOrLoadImage();
-    }, 2000);
+    this.nextFrame();
+    this._animationInterval = setInterval(() => this.nextFrame(), 5000);
   }
 
-  // Fetches the images for the animation.
-  private fetchOrLoadImage() {
-    // if statement voor als de frame al eerder is opgehaald
-    // if (this._animationFrames.length-1!=this._currentFrame) return;
+  // Checks what to do with the next frame. Load it form memory or fetch from server
+  private nextFrame() {
+    this._currentFrame++;
+    if (this._currentFrame == this._totalFrames) this._currentFrame = 0;
+
+    // if frame is not yet requested -> request frame
+    let frameNotYetRequested = this._animationFrames.length==this._currentFrame;
+    if (frameNotYetRequested) {
+      this.fetchFrame();
+    } else {
+      this.loadFrame();
+    }
+  }
+
+  // Loads the next frame from memory
+  private loadFrame() {
+
+    let geojson: gj.FeatureCollection = {
+      type: "FeatureCollection",
+      features: this._animationFrames[this._currentFrame].map((value, index):gj.Feature => {
+        return {
+          type: "Feature",
+          "properties": {
+            "fill": "#111111",
+            "fill-opacity": 0.5,
+            "stroke": "#8f8f8f",
+            "stroke-opacity": 0,
+            "stroke-width": 0
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: this._animationCoords[index] as unknown as gj.Position[][]
+          },
+        }
+      }),
+    }
+    this._lastGeoJson?.remove();
+    this._lastGeoJson = new L.GeoJSON(geojson).addTo(this.map);
+  }
+
+  // Fetches the next frame from the server, loads it into memory and loads the next frame.
+  private fetchFrame() {
+    // TODO fix time
     this.http.post("https://localhost:7187/radarimage", `{
        "Longitude": 2.358578,
        "Latitude": 50.25574,
-       "StartSeconds" : 0,
-       "EndSeconds" : 300}`,
+       "StartSeconds" : ${this._currentFrame*300},
+       "EndSeconds" : ${this._currentFrame*300+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       let requestData = e as IRequestData[][];
-      let geojson: gj.FeatureCollection = {
-        type: "FeatureCollection",
-        features: requestData[0].map(data => {
-          console.log(data)
-          return {
-            type: "Feature",
-            properties: {
-              "stroke": "#8f8f8f",
-              "stroke-width": 2,
-              "stroke-opacity": 0.7,
-              "fill": "#e30d0d",
-              "fill-opacity": 0.5
-            },
-            geometry: {
-              type: "Polygon",
-              coordinates: data.coords
-            },
-          }
-        }),
+
+      // If the coords are not yet saved, save them. For memory performance the coords of the polygons are only saved once.
+      if (this._animationCoords.length != requestData[0].length) {
+        this._animationCoords = requestData[0].map(data => data.coords);
       }
 
-      new L.GeoJSON(geojson).addTo(this.map)
+      this._animationFrames.push(requestData[0].map(data => data.intensity));
+      this.loadFrame();
     })
   }
 }
