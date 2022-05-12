@@ -41,9 +41,16 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
 
   get settings(): HTMLElement {
     // TODO settings voor template toevoegen
-    let container = document.createElement("div")
-    container.innerText = "hallooo"
+    let container = document.createElement("div");
+    let input = document.createElement("input");
+    input.type = "number"
+    // @ts-ignore
+    input.value = this._map?.map.getZoom();
+    // @ts-ignore
+    input.addEventListener("input", e=>this._map?.map.setZoom(e.target.value))
 
+    // TODO deze test voor template dependent settings verwijderen.
+    container.appendChild(input);
     return container;
   }
 

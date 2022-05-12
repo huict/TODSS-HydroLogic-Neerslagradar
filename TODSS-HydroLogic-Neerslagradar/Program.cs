@@ -2,6 +2,7 @@ using TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 
 const bool startWebsite = true;
+const string  _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var coordinateConversion = new CoordinateConversion();
 coordinateConversion.ProvideGridCellCoordinates();
@@ -11,6 +12,17 @@ if (startWebsite)
     var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: _myAllowSpecificOrigins,
+            policy  =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyMethod();
+                policy.AllowAnyHeader();
+            });
+    });
 
     builder.Services.AddControllersWithViews();
 
@@ -29,6 +41,7 @@ if (startWebsite)
     app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseRouting();
+    app.UseCors(_myAllowSpecificOrigins);
 
 
     app.MapControllerRoute(
