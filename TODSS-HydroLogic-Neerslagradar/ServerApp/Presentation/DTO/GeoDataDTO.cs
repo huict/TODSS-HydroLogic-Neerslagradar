@@ -1,4 +1,6 @@
-﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
+﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
+
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 public class GeoDataDTO
 {
