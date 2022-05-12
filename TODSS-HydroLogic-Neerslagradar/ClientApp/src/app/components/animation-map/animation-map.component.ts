@@ -5,6 +5,7 @@ import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
 import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
+import {DataStreamReducer} from "./data-stream-reducer";
 
 /**
  * This component is a map on which filters can be set and an animation of the weather can be viewed.
@@ -101,7 +102,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dataReducer: DataStreamReducer) {
   }
 
   ngOnDestroy(): void {
@@ -284,7 +285,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Loads the next frame from memory
   private loadFrame() {
-
     let geojson: gj.FeatureCollection = {
       type: "FeatureCollection",
       features: this._animationFrames[this._currentFrame].map((value, index):gj.Feature => {
@@ -338,7 +338,7 @@ export interface IMapData {
   endTime:number,
 }
 
-interface IRequestData {
+export interface IRequestData {
   coords: [][][number],
   intensity: number
 }
