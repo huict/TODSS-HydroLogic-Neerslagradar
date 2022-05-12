@@ -128,55 +128,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.renderSelection();
     this.startNewAnimation();
 
-    // TODO remove, this was for testing styling
-    let geo: gj.FeatureCollection = {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "fill": "#111111",
-            "fill-opacity": 0.5,
-            "stroke": "#8f8f8f",
-            "stroke-opacity": 0,
-            "stroke-width": 0
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  6.263580322265624,
-                  52.342051636387865
-                ],
-                [
-                  6.156463623046875,
-                  52.283282143126186
-                ],
-                [
-                  6.29241943359375,
-                  52.20424032262008
-                ],
-                [
-                  6.455841064453125,
-                  52.237051359522724
-                ],
-                [
-                  6.4105224609375,
-                  52.3261076319194
-                ],
-                [
-                  6.263580322265624,
-                  52.342051636387865
-                ]
-              ]
-            ]
-          }
-        }
-      ]
-    }
-    new L.GeoJSON(geo).addTo(this.map);
-
     // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
   }
@@ -252,7 +203,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   public clearAnimation() {
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
-    if (this._lastGeoJson) this._lastGeoJson.remove();
+    this._lastGeoJson?.remove();
     this._totalFrames = 0;
     this._currentFrame = -1;
     this._animationFrames = [];
@@ -266,7 +217,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
 
     this.nextFrame();
-    this._animationInterval = setInterval(() => this.nextFrame(), 5000);
+    this._animationInterval = setInterval(() => this.nextFrame(), 2000);
   }
 
   // Checks what to do with the next frame. Load it form memory or fetch from server
@@ -291,11 +242,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         return {
           type: "Feature",
           "properties": {
-            "fill": "#111111",
-            "fill-opacity": 0.5,
-            "stroke": "#8f8f8f",
-            "stroke-opacity": 0,
-            "stroke-width": 0
+            "intensity":value
           },
           geometry: {
             type: "Polygon",
@@ -305,7 +252,9 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }),
     }
     this._lastGeoJson?.remove();
-    this._lastGeoJson = new L.GeoJSON(geojson).addTo(this.map);
+    this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
+      return {fillColor:"#555555", fillOpacity:feature?.properties["intensity"]*100, weight:0}
+      }}).addTo(this.map);
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
