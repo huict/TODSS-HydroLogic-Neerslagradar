@@ -5,7 +5,7 @@ const bool startWebsite = true;
 const string  _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var coordinateConversion = new CoordinateConversion();
-coordinateConversion.ProvideGridCellCoordinates();
+coordinateConversion.GenerateCellGrids();
 
 if (startWebsite)
 {
