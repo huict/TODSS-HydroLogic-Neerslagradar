@@ -252,7 +252,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
             coordinates: this._animationCoords[index] as unknown as gj.Position[][]
           },
         }
-      }),
+        // @ts-ignore
+      }).filter(value => value.properties["intensity"]>0),
     }
     this._lastGeoJson?.remove();
     this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
