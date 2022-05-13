@@ -48,7 +48,7 @@ public class CoordinateConversion
             for (int x = 0; x < columnAmount + 1; x++)
             {
                 pointmap[x, y] = PointCoordinatesConversion(new[]
-                    {XLowerLeft + x * cellWidth, YLowerLeft + y * cellHeight});
+                    {XLowerLeft + x * cellWidth, YLowerLeft + rowAmount * cellHeight - y * cellHeight});
             }
         }
 
