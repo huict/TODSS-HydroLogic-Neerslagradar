@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
-import {LatLng} from "leaflet";
+import {GeoJSON, LatLng} from "leaflet";
+import * as gj from "geojson";
+import {DataStreamReducer} from "./data-stream-reducer";
 
 /**
  * This component is a map on which filters can be set and an animation of the weather can be viewed.
@@ -70,8 +72,17 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _mySelection: L.Rectangle | undefined;
   private _points: L.LatLng[] = [];
   private _dataTemp: object | undefined;
+
   public _beginTime: Date = new Date(1623974400000);
   public _endTime: Date = new Date(1624060500000);
+
+  private _animationInterval: number | undefined;
+  private _animationFrames: number[][] = [];
+  private _animationCoords: number[][][][] = [];
+  private _currentFrame: number = -1;
+  private _totalFrames: number = 0;
+  private _lastGeoJson: GeoJSON | undefined;
+  private _dataCompression: number = 2;
 
   get data():IMapData {
     return <IMapData>{
@@ -92,13 +103,14 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dataReducer: DataStreamReducer) {
   }
 
   ngOnDestroy(): void {
     this.changeLocationFilterEvent.unsubscribe();
     this.changeTimeFilterEvent.unsubscribe();
     this.mapReadyEvent.unsubscribe();
+    this.clearAnimation();
   }
 
   // This function is run when leaflet says the map is ready
@@ -115,8 +127,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
+    this.startNewAnimation();
+    // this.nextFrame()
 
-    // Event if thrown when the map is ready
+    // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
   }
 
@@ -130,6 +144,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       beginTimestamp: this._beginTime.valueOf(),
       endTimestamp: this._endTime.valueOf()
     })
+    this.startNewAnimation();
   }
 
   // Adds a new point to list of points and removes the first one if the list has a length of three points.
@@ -169,14 +184,102 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     return <L.Map>this._map;
   }
 
-  // Fetches the images for the animation.
-  private fetchImage() {
-    // TODO fetch image and set it to temp url
+  public startNewAnimation() {
+    this.clearAnimation();
 
-    // TODO get actual coordinates and create bound
-    let bounds = L.latLngBounds([[ 55.39, 0], [ 49.36, 10.85]]);
-    // TODO insert temp url of image
-    L.imageOverlay("https://cdn.discordapp.com/attachments/805785211774304297/960102663096242226/1.png", bounds, {opacity: 0.8}).addTo(this.map);
+    // TODO werkend maken over meerdere dagen.
+    let calculateSeconds = (date: Date) => {
+      let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
+      return Math.round(s/300)*300;
+    }
+
+    let beginSeconds:number = calculateSeconds(this._beginTime);
+    let endSeconds:number = calculateSeconds(this._endTime);
+    let totalFrames = endSeconds/300-beginSeconds/300+1;
+
+    console.log({beginSeconds, endSeconds, totalFrames})
+
+    this._totalFrames = totalFrames;
+    this.resumeAnimation();
+  }
+
+  public clearAnimation() {
+    if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+    this._lastGeoJson?.remove();
+    this._totalFrames = 0;
+    this._currentFrame = -1;
+    this._animationFrames = [];
+  }
+
+  public pauseAnimation() {
+    if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+  }
+
+  public resumeAnimation() {
+    if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+
+    this.nextFrame();
+    this._animationInterval = setInterval(() => this.nextFrame(), 2000);
+  }
+
+  // Checks what to do with the next frame. Load it form memory or fetch from server
+  private nextFrame() {
+    if (this._currentFrame >= this._animationFrames.length) return;
+    this._currentFrame++;
+    if (this._currentFrame == this._totalFrames) this._currentFrame = 0;
+
+    // if frame is not yet requested -> request frame
+    let frameNotYetRequested = this._animationFrames.length==this._currentFrame;
+    if (frameNotYetRequested) {
+      this.fetchFrame();
+    } else {
+      this.loadFrame();
+    }
+  }
+
+  // Loads the next frame from memory
+  private loadFrame() {
+    let geojson: gj.FeatureCollection = {
+      type: "FeatureCollection",
+      features: this._animationFrames[this._currentFrame].map((value, index):gj.Feature => {
+        return {
+          type: "Feature",
+          "properties": {
+            "intensity":value
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: this._animationCoords[index] as unknown as gj.Position[][]
+          },
+        }
+        // @ts-ignore
+      }).filter(value => value.properties["intensity"]>0),
+    }
+    this._lastGeoJson?.remove();
+    this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
+      return {fillColor:"#555555", fillOpacity:feature?.properties["intensity"]*100/this._dataCompression, weight:0}
+      }}).addTo(this.map);
+  }
+
+  // Fetches the next frame from the server, loads it into memory and loads the next frame.
+  private fetchFrame() {
+    // TODO fix time
+    this.http.post("https://localhost:7187/radarimage", `{
+       "Longitude": 2.358578,
+       "Latitude": 50.25574,
+       "StartSeconds" : ${this._currentFrame*300},
+       "EndSeconds" : ${this._currentFrame*300+300}}`,
+      {headers: {"Content-Type": "application/json"}}).subscribe(e => {
+      let requestData = e as IRequestData[][];
+
+      // If the coords are not yet saved, save them. For memory performance the coords of the polygons are only saved once.
+      if (this._animationCoords.length == 0) {
+        this._animationCoords = this.dataReducer.reduceCoords(this._dataCompression, requestData[0].map(data => data.coords), 192, 175);
+      }
+
+      this._animationFrames.push(this.dataReducer.reduceIntensity(this._dataCompression, requestData[0].map(data => data.intensity), 192, 175));
+      this.loadFrame();
+    })
   }
 }
 
@@ -186,4 +289,9 @@ export interface IMapData {
   centerLocation: LatLng,
   beginTime: number,
   endTime:number,
+}
+
+export interface IRequestData {
+  coords: [][][number],
+  intensity: number
 }

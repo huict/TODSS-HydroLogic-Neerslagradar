@@ -9,9 +9,8 @@ public class GenerateGeoJSON
 {
     private static readonly GridSingelton Grid = GridSingelton.Grid;
     
-    public static List<GeoDataDTO> GenerateGeo(float[,,] slice, IColorScheme scheme )
+    public static IEnumerable<GeoDataDTO> GenerateGeo(float[,,] slice)
     {
-        var geoData = new List<GeoDataDTO>();
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
         for (int i = 0; i < width; i++)
@@ -21,12 +20,10 @@ public class GenerateGeoJSON
                 var geoDataDto = new GeoDataDTO
                 {
                     coords = Grid.FindByGridCoordinatesPyramided(i, j).coordsForGeoJson,
-                    color = ColorTranslator.ToHtml(scheme.GetColorValue(slice[0, j, i]))
+                    intensity = slice[0, j, i]
                 };
-                geoData.Add(geoDataDto);
+                yield return geoDataDto;
             }
         }
-
-        return geoData;
     }
 }
