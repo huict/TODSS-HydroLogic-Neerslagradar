@@ -7,7 +7,7 @@ import {
   ViewContainerRef,
   ViewChild,
   OnInit,
-  OnDestroy
+  OnDestroy, ElementRef
 } from '@angular/core';
 import { ITemplate } from "../templates/i-template.view";
 import { ITemplateChange } from "../templates/i-template-change.view";
@@ -37,6 +37,7 @@ export class TemplateDirective {
 export class ViewComponent implements OnInit, OnDestroy {
   @Output() removeEvent = new EventEmitter<number>();
   @ViewChild(TemplateDirective, {static: true}) templateDirective!: TemplateDirective
+  @ViewChild("templateSettings", {static: true}) templateDiv!: ElementRef;
 
   private _index: number = 0;
   private _name: string = "";
@@ -109,17 +110,25 @@ export class ViewComponent implements OnInit, OnDestroy {
   // Load a new template with optionally data for the template.
   private loadTemplate(template: ITemplate, data?:any) {
     const viewContainerRef = this.templateDirective.viewContainerRef;
-    // clear the container to make sure only 1 template exists inside of it
+    // Clear the container to make sure only 1 template exists inside of it
     viewContainerRef.clear();
     // @ts-ignore
     const component = viewContainerRef.createComponent<ITemplate>(template.constructor).instance;
     this._template = component;
+
+    // Insert data
     if (data) component.data = data;
+
+    // Add event listeners
     // @ts-ignore
-    if (component.hasOwnProperty("changeTemplateEvent")) component.changeTemplateEvent.subscribe(t => this.template = t)
+    if (component.hasOwnProperty("changeTemplateEvent")) component.changeTemplateEvent.subscribe(t => this.template = t);
     // @ts-ignore
-    if (component.hasOwnProperty("changeNameEvent")) component.changeNameEvent.subscribe(e => this.changeNameOption(e))
-    this.templateSettings = component.settings
+    if (component.hasOwnProperty("changeNameEvent")) component.changeNameEvent.subscribe(e => this.changeNameOption(e));
+
+    // Insert template dependant settings
+    this.templateSettings = component.settings;
+    this.templateDiv.nativeElement.innerHTML = "";
+    this.templateDiv.nativeElement.appendChild(this.templateSettings)
   }
 
   get templateSettings(): HTMLElement {

@@ -55,7 +55,7 @@ public sealed class GridSingelton
 
     public void AddPyramidedGridCellList(List<GridCell> newPyramidedGridCellList)
     {
-        List<GridCell> oldGridCellList = _gridCells.ToList();
+        List<GridCell> oldGridCellList = _gridCellsPyramided.ToList();
 
         oldGridCellList.AddRange(newPyramidedGridCellList);
 
