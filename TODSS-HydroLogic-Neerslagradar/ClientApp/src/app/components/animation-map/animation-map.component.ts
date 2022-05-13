@@ -78,10 +78,11 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   private _animationInterval: number | undefined;
   private _animationFrames: number[][] = [];
-  private _animationCoords: number[][] = [];
+  private _animationCoords: number[][][][] = [];
   private _currentFrame: number = -1;
   private _totalFrames: number = 0;
   private _lastGeoJson: GeoJSON | undefined;
+  private _dataCompression: number = 1;
 
   get data():IMapData {
     return <IMapData>{
@@ -127,6 +128,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
     this.startNewAnimation();
+    // this.nextFrame()
 
     // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
@@ -222,6 +224,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Checks what to do with the next frame. Load it form memory or fetch from server
   private nextFrame() {
+    if (this._currentFrame >= this._animationFrames.length) return;
     this._currentFrame++;
     if (this._currentFrame == this._totalFrames) this._currentFrame = 0;
 
@@ -253,7 +256,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
     this._lastGeoJson?.remove();
     this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
-      return {fillColor:"#555555", fillOpacity:feature?.properties["intensity"]*100, weight:0}
+      return {fillColor:"#555555", fillOpacity:feature?.properties["intensity"]*100/this._dataCompression, weight:0}
       }}).addTo(this.map);
   }
 
@@ -269,11 +272,11 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       let requestData = e as IRequestData[][];
 
       // If the coords are not yet saved, save them. For memory performance the coords of the polygons are only saved once.
-      if (this._animationCoords.length != requestData[0].length) {
-        this._animationCoords = requestData[0].map(data => data.coords);
+      if (this._animationCoords.length == 0) {
+        this._animationCoords = this.dataReducer.reduceCoords(this._dataCompression, requestData[0].map(data => data.coords), 192, 175);
       }
 
-      this._animationFrames.push(requestData[0].map(data => data.intensity));
+      this._animationFrames.push(this.dataReducer.reduceIntensity(this._dataCompression, requestData[0].map(data => data.intensity), 192, 175));
       this.loadFrame();
     })
   }
