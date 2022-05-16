@@ -66,7 +66,7 @@ export class DataStreamReducer {
             blockTotal += rowsSplit[heightBlock+heightInBlock][widthBlock+widthInBlock];
           }
         }
-        newValues.push(blockTotal);
+        newValues.push(blockTotal/combineAmountOfFields);
       }
     }
 

@@ -84,6 +84,14 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _lastGeoJson: GeoJSON | undefined;
   private _dataCompression: number = 2;
 
+  get dataCompression():number {
+    return this._dataCompression;
+  }
+
+  @Input() set dataCompression(value:number) {
+    this._dataCompression = value;
+  }
+
   get data():IMapData {
     return <IMapData>{
       points: this._points,
@@ -128,7 +136,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
     this.startNewAnimation();
-    // this.nextFrame()
 
     // Event is thrown when the map is ready
     this.mapReadyEvent.emit(this);
@@ -187,20 +194,20 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   public startNewAnimation() {
     this.clearAnimation();
 
-    // TODO werkend maken over meerdere dagen.
-    let calculateSeconds = (date: Date) => {
-      let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
-      return Math.round(s/300)*300;
-    }
-
-    let beginSeconds:number = calculateSeconds(this._beginTime);
-    let endSeconds:number = calculateSeconds(this._endTime);
+    let beginSeconds:number = this.calculateEpochTime(this._beginTime);
+    let endSeconds:number = this.calculateEpochTime(this._endTime);
     let totalFrames = endSeconds/300-beginSeconds/300+1;
 
     console.log({beginSeconds, endSeconds, totalFrames})
 
     this._totalFrames = totalFrames;
     this.resumeAnimation();
+  }
+
+  // TODO werkend maken over meerdere dagen.
+  private calculateEpochTime(date:Date):number {
+    let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
+    return Math.round(s/300)*300;
   }
 
   public clearAnimation() {
@@ -257,7 +264,56 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
     this._lastGeoJson?.remove();
     this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
-      return {fillColor:"#555555", fillOpacity:feature?.properties["intensity"]*100/this._dataCompression, weight:0}
+      let intensity: number = feature?.properties["intensity"];
+      let boarderWeights = 0.1;
+      switch (true) {
+        case intensity <= 0.02/12:
+          return {
+            fillOpacity: 0,
+            opacity: 0,
+            weight: 0
+          }
+        case intensity <= 1/12:
+          return {
+            fillColor: "#9db6d6",
+            color: "#9db6d6",
+            weight: boarderWeights,
+            fillOpacity: 0.7,
+            opacity: 0.7
+          }
+        case intensity <= 2/12:
+          return {
+            fillColor: "#4c7bb5",
+            color: "#4c7bb5",
+            weight: boarderWeights,
+            fillOpacity: 0.7,
+            opacity: 0.7
+          }
+        case intensity <= 5/12:
+          return {
+            fillColor: "#1e00ff",
+            color: "#1e00ff",
+            weight: boarderWeights,
+            fillOpacity: 0.6,
+            opacity: 0.6
+          }
+        case intensity <= 10/12:
+          return {
+            fillColor: "#eb1416",
+            color: "#eb1416",
+            weight: boarderWeights,
+            fillOpacity: 0.6,
+            opacity: 0.6
+          }
+        default:
+          return {
+            fillColor: "#e718aa",
+            color: "#e718aa",
+            weight: boarderWeights,
+            fillOpacity: 0.6,
+            opacity: 0.6
+          }
+      }
       }}).addTo(this.map);
   }
 
@@ -267,8 +323,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.http.post("https://localhost:7187/radarimage", `{
        "Longitude": 2.358578,
        "Latitude": 50.25574,
-       "StartSeconds" : ${this._currentFrame*300},
-       "EndSeconds" : ${this._currentFrame*300+300}}`,
+       "StartSeconds" : ${this.calculateEpochTime(this._beginTime)+this._currentFrame*300},
+       "EndSeconds" : ${this.calculateEpochTime(this._beginTime)+this._currentFrame*300+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       let requestData = e as IRequestData[][];
 
