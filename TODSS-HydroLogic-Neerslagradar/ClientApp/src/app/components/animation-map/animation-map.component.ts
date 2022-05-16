@@ -82,7 +82,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _currentFrame: number = -1;
   private _totalFrames: number = 0;
   private _lastGeoJson: GeoJSON | undefined;
-  private _dataCompression: number = 2;
+  private _dataCompression: number = 1;
 
   get data():IMapData {
     return <IMapData>{
