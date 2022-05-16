@@ -39,4 +39,7 @@ export class ConfigurationSelectComponent implements OnInit {
     });
   }
 
+  deleteConfig(id: number){
+    this.manager.removeConfig(id);
+  }
 }

@@ -30,19 +30,12 @@
       <div class="grow">
 
         <div class="view-text">
-
-          <div class="text-view-div">
-            <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
-            <p class="description">{{config.description}}</p>
-          </div>
-
-          <div>
-            <i class='bx bxs-trash' title="Verwijder configuratie"></i>
-          </div>
-
+          <h1>{{config.title.charAt(0).toUpperCase() + config.title.slice(1)}}</h1>
+          <i class='bx bxs-trash' title="Verwijder configuratie" (click)="deleteConfig(config.id)"></i>
         </div>
 
         <div class="views-container">
+          <p class="description">{{config.description}}</p>
           <p>Geselecteerde views: </p>
           <div class="views" *ngFor = "let view of config.views">
             <p><b>View naam:</b> {{view.name}}</p>

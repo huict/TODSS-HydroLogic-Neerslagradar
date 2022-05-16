@@ -164,8 +164,7 @@
 .view-text{
   display: flex;
   justify-content: space-between;
-  padding-left: 20px;
-  padding-top: 20px;
+  padding: 20px;
   background-color: white;
   border-bottom: 1px solid #bbb;
 }
@@ -176,8 +175,6 @@
 
 .bx{
   font-size: 30px;
-  margin-right: 20px;
-  margin-top: 20px;
 }
 
 .bx:hover{
