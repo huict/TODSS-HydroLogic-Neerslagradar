@@ -1,7 +1,7 @@
 ---
 name: Normal issue template
-about: 'Template voor het maken van normale issues. Dit zijn bijvoorbeeld: bugreports,
-  feature requests, tasks in front of back-end'
+about: 'Template voor het maken van normale issues. Dit zijn bijvoorbeeld: feature
+  requests, tasks in front-end of tasks in back-end.'
 title: ''
 labels: ''
 assignees: ''

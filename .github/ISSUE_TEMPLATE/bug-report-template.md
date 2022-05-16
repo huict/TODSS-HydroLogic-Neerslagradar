@@ -24,5 +24,8 @@ Stappen om het gedrag van de bug na te bootsen:
 ## Screenshots of terminal log (optioneel)
 <!-- Hier kan een screenshot of een kopie van de terminal log aan toegevoegd worden zodat de error duidelijk te zien is -->
 
+## Mogelijke oplossing
+<!-- Wat is een oplossing om deze bug te verhelpen -->
+
 ## Overige informatie
 <!-- Voeg hier overige informatie toe zoals bijv. de gebruikte browser -->
