@@ -1,30 +1,36 @@
-#mapContainer {
-  position: absolute;
-  height: 100%;
-}
-
-#times {
+/*overlays*/
+.overlay {
   background-color: white;
   width: max-content;
-  position: relative;
-  float: right;
-  top: 20px;
-  right: 20px;
+  position: absolute;
   z-index: 999;
   padding: 5px;
   border-radius: 5px;
   box-shadow: var(--grey-900) 0 0 .5rem;
 }
 
-#times > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/*map*/
+#mapContainer {
+  height: 100%;
 }
 
 #map {
   height: 100%;
   border-radius: 0 0 .5rem .5rem;
+}
+
+/*time*/
+#times {
+  transform: scale(0.9);
+  float: right;
+  top: 5px;
+  right: 5px;
+}
+
+#times > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .noHover{
@@ -72,3 +78,66 @@ input:hover:after{
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+/*legend*/
+#legend {
+  transform: scale(0.9);
+  float: left;
+  bottom: 5px;
+  left: 5px;
+}
+
+#legend>ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.colorItem {
+  display: flex;
+  align-content: center;
+}
+
+.legendTitle {
+  margin: 0 8px 5px 8px;
+  font-size: smaller;
+}
+
+.colorItem>label {
+  margin: 0;
+  padding: 0;
+  font-size: smaller;
+}
+
+.colorPrev {
+  width: 1.5rem;
+  height: 1rem;
+  margin: 0 8px;
+  padding: 0;
+  border: solid 0.5px var(--bs-gray-600);
+}
+
+#colorPrev1 {
+  background-color: #9db6d6;
+}
+
+#colorPrev2 {
+  background-color: #4c7bb5;
+}
+
+#colorPrev3 {
+  background-color: #1e00ff;
+}
+
+#colorPrev4 {
+  background-color: #eb1416;
+}
+
+#colorPrev5 {
+  background-color: #e718aa;
+}
+
+#colorPrev6 {
+  background-color: #000000;
+}
+
