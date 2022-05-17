@@ -264,6 +264,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
       let intensity: number = feature?.properties["intensity"];
       let boarderWeights = 0.1;
+      let opacityLightColors = 0.7;
+      let opacityDarkColors = 0.6;
       switch (true) {
         case intensity <= 0.02/12:
           return {
@@ -276,40 +278,48 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
             fillColor: "#9db6d6",
             color: "#9db6d6",
             weight: boarderWeights,
-            fillOpacity: 0.7,
-            opacity: 0.7
+            fillOpacity: opacityLightColors,
+            opacity: opacityLightColors
           }
         case intensity <= 2/12:
           return {
             fillColor: "#4c7bb5",
             color: "#4c7bb5",
             weight: boarderWeights,
-            fillOpacity: 0.7,
-            opacity: 0.7
+            fillOpacity: opacityLightColors,
+            opacity: opacityLightColors
           }
         case intensity <= 5/12:
           return {
             fillColor: "#1e00ff",
             color: "#1e00ff",
             weight: boarderWeights,
-            fillOpacity: 0.6,
-            opacity: 0.6
+            fillOpacity: opacityDarkColors,
+            opacity: opacityDarkColors
           }
         case intensity <= 10/12:
           return {
             fillColor: "#eb1416",
             color: "#eb1416",
             weight: boarderWeights,
-            fillOpacity: 0.6,
-            opacity: 0.6
+            fillOpacity: opacityDarkColors,
+            opacity: opacityDarkColors
           }
-        default:
+        case intensity <= 20/12:
           return {
             fillColor: "#e718aa",
             color: "#e718aa",
             weight: boarderWeights,
-            fillOpacity: 0.6,
-            opacity: 0.6
+            fillOpacity: opacityDarkColors,
+            opacity: opacityDarkColors
+          }
+        default:
+          return {
+            fillColor: "#000000",
+            color: "#000000",
+            weight: boarderWeights,
+            fillOpacity: opacityDarkColors,
+            opacity: opacityDarkColors
           }
       }
       }}).addTo(this.map);
