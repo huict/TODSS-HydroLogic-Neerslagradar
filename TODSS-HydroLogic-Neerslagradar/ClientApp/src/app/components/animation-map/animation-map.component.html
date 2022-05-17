@@ -1,7 +1,7 @@
 <div id="mainContainer" style="height: 100%;">
   <div id="map" leaflet (leafletMapReady)="onReady($event)" [leafletOptions]="options"></div>
 
-  <div id="times" (click)="$event.stopPropagation()">
+  <div id="times" class="overlay" (click)="$event.stopPropagation()">
     <div>
       <label class="noHover" for="beginDateTime">Begin </label>
       <input (change)="changeTime($event, 'begin')" [valueAsNumber]="_beginTime.valueOf()" step="300" id="beginDateTime" type="datetime-local">
@@ -10,5 +10,29 @@
       <label class="noHover" for="endDateTime">Eind </label>
       <input (change)="changeTime($event, 'end')"  [valueAsNumber]="_endTime.valueOf()" step="300" id="endDateTime" type="datetime-local">
     </div>
+  </div>
+
+  <div id="legend" class="overlay">
+    <label class="legendTitle" for="colorList">Neerslag in mm/uur</label>
+    <ul id="colorList">
+      <li class="colorItem">
+        <div class="colorPrev" id="colorPrev1"></div>
+        <label for="colorPrev1">0-1</label></li>
+      <li class="colorItem">
+        <div class="colorPrev" id="colorPrev2"></div>
+        <label for="colorPrev2">1-2</label></li>
+      <li class="colorItem">
+        <div class="colorPrev" id="colorPrev3"></div>
+        <label for="colorPrev3">2-5</label></li>
+      <li class="colorItem">
+        <div class="colorPrev" id="colorPrev4"></div>
+        <label for="colorPrev4">5-10</label></li>
+      <li class="colorItem">
+        <div class="colorPrev" id="colorPrev5"></div>
+        <label for="colorPrev5">10-20</label></li>
+      <li class="colorItem">
+        <div class="colorPrev" id="colorPrev6"></div>
+        <label for="colorPrev6">20+</label></li>
+    </ul>
   </div>
 </div>
