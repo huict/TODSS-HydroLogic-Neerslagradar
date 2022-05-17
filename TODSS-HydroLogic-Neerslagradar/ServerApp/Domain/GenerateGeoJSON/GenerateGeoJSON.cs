@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Diagnostics;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
+﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
@@ -49,7 +48,7 @@ public class GenerateGeoJSON
                         gridCells.Add(Grid.FindByGridCoordinatesPyramided(k,l));
                     }
                 }
-                var intensity = gridCells.Sum(cell => slice[0, cell.Y, cell.X]);
+                var intensity = gridCells.Average(cell => slice[0, cell.Y, cell.X]);
                 // if (intensity<=0)continue;
                 var coordTopLeft = new [] {gridCells[0].Coordinates[0], gridCells[0].Coordinates[1]};
                 var coordTopRight = new [] {gridCells[^combineAmountOfFields ].Coordinates[2], gridCells[^combineAmountOfFields].Coordinates[3]};
