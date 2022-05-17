@@ -1,14 +1,14 @@
 <div id="mainContainer" style="height: 100%;">
-  <div id="map" leaflet (leafletMapReady)="onReady($event)" [leafletOptions]="options">
-    <div id="times" (click)="$event.stopPropagation()">
-      <div>
-        <label class="noHover" for="beginDateTime">Begin </label>
-        <input (change)="changeTime($event, 'begin')" [valueAsNumber]="_beginTime.valueOf()" step="300" id="beginDateTime" type="datetime-local">
-      </div>
-      <div>
-        <label class="noHover" for="endDateTime">Eind </label>
-        <input (change)="changeTime($event, 'end')"  [valueAsNumber]="_endTime.valueOf()" step="300" id="endDateTime" type="datetime-local">
-      </div>
+  <div id="map" leaflet (leafletMapReady)="onReady($event)" [leafletOptions]="options"></div>
+
+  <div id="times" (click)="$event.stopPropagation()">
+    <div>
+      <label class="noHover" for="beginDateTime">Begin </label>
+      <input (change)="changeTime($event, 'begin')" [valueAsNumber]="_beginTime.valueOf()" step="300" id="beginDateTime" type="datetime-local">
+    </div>
+    <div>
+      <label class="noHover" for="endDateTime">Eind </label>
+      <input (change)="changeTime($event, 'end')"  [valueAsNumber]="_endTime.valueOf()" step="300" id="endDateTime" type="datetime-local">
     </div>
   </div>
 </div>
