@@ -29,8 +29,13 @@ public class RadarImageService : IRadarImageService
         {
             geoDataList.Add(GenerateGeoJSON.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(0, 0, i, 175, 192)));
         }
-        ReadingData iets = new ("neerslag_data.nc");
         return geoDataList;
     }
-    
+
+
+    public (int beginX, int beginY, int width, int height) GetDimensionsForSpecifiedCoords(double[] coords)
+    {
+        return (0, 0, 0, 0);
+    }
+
 }
