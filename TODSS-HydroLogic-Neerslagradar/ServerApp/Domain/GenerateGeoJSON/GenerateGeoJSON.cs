@@ -50,7 +50,7 @@ public class GenerateGeoJSON
                     }
                 }
                 var intensity = gridCells.Sum(cell => slice[0, cell.Y, cell.X]);
-                if (intensity<=0)continue;
+                // if (intensity<=0)continue;
                 var coordTopLeft = new [] {gridCells[0].Coordinates[0], gridCells[0].Coordinates[1]};
                 var coordTopRight = new [] {gridCells[^combineAmountOfFields ].Coordinates[2], gridCells[^combineAmountOfFields].Coordinates[3]};
                 var coordBotRight = new []{gridCells[^1].Coordinates[4], gridCells[^1].Coordinates[5]};

@@ -11,7 +11,7 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 public class RadarImageService : IRadarImageService
 {
     private static readonly ReadingData Pyramided = new ("neerslag_data.nc");
-    private static readonly ReadingData Original = new("neerslag.nc");
+    // private static readonly ReadingData Original = new("neerslag.nc");
     
     public IEnumerable<byte[]> loadData()
     {
