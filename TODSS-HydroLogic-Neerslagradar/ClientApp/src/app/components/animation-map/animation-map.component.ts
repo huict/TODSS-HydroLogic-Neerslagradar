@@ -5,7 +5,6 @@ import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
 import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
-import {DataStreamReducer} from "./data-stream-reducer";
 
 /**
  * This component is a map on which filters can be set and an animation of the weather can be viewed.
@@ -82,7 +81,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _currentFrame: number = -1;
   private _totalFrames: number = 0;
   private _lastGeoJson: GeoJSON | undefined;
-  private _dataCompression: number = 1;
+  private _dataCompression: number = 3;
 
   get dataCompression():number {
     return this._dataCompression;
@@ -111,8 +110,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
-  constructor(private http: HttpClient, private dataReducer: DataStreamReducer) {
-  }
+  constructor(private http: HttpClient) {}
 
   ngOnDestroy(): void {
     this.changeLocationFilterEvent.unsubscribe();
@@ -321,8 +319,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private fetchFrame() {
     // TODO fix time
     this.http.post("https://localhost:7187/radarimage", `{
-       "Longitude": 2.358578,
-       "Latitude": 50.25574,
+       "CombineFields": ${this._dataCompression},
        "StartSeconds" : ${this.calculateEpochTime(this._beginTime)+this._currentFrame*300},
        "EndSeconds" : ${this.calculateEpochTime(this._beginTime)+this._currentFrame*300+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
@@ -330,10 +327,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
       // If the coords are not yet saved, save them. For memory performance the coords of the polygons are only saved once.
       if (this._animationCoords.length == 0) {
-        this._animationCoords = this.dataReducer.reduceCoords(this._dataCompression, requestData[0].map(data => data.coords), 192, 175);
+        this._animationCoords = requestData[0].map(data => data.coords);
       }
 
-      this._animationFrames.push(this.dataReducer.reduceIntensity(this._dataCompression, requestData[0].map(data => data.intensity), 192, 175));
+      this._animationFrames.push(requestData[0].map(data => data.intensity));
       this.loadFrame();
     })
   }
