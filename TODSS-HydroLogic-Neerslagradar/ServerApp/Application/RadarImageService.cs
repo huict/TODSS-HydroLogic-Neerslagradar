@@ -13,7 +13,7 @@ public class RadarImageService : IRadarImageService
     private static readonly ReadingData Pyramided = new ("neerslag_data.nc");
     // private static readonly ReadingData Original = new("neerslag.nc");
     
-    public IEnumerable<byte[]> loadData()
+    public IEnumerable<byte[]> LoadData()
     {
         var ds = new ReadingData(@"C:\Users\salni\RiderProjects\TODSS-HydroLogic-Neerslagradar\TODSS-HydroLogic-Neerslagradar\sources\Knmi.Radar.Uncorrected_20210618_original.nc");
         var scheme = new PreciezeColor();
@@ -35,7 +35,7 @@ public class RadarImageService : IRadarImageService
         for (var i = beginZ; i < beginZ + depth; i++)
         {
            // geoDataList.Add(GenerateGeoJSON.GenerateGeo(Pyramided.GetSlice(0, 0, i, 175, 192)));
-           geoDataList.Add(GenerateGeoJSON.ReduceCoords(2,Pyramided.GetSlice(0, 0, i, 175, 192)));
+           geoDataList.Add(GenerateGeoJSON.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(0, 0, i, 175, 192)));
         }
 
         return geoDataList;

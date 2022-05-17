@@ -19,7 +19,7 @@ public class RadarImageController :  ControllerBase
     [HttpGet]
     public IEnumerable<byte[]> Get()
     {
-        return _radarImageService.loadData();
+        return _radarImageService.LoadData();
     }
 
     [HttpPost]
