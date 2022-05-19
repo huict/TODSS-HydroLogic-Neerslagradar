@@ -73,12 +73,14 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _dataTemp: object | undefined;
 
   public _beginTime: Date = new Date(1623974400000);
+  public _currentTime: Date = new Date(this._beginTime);
   public _endTime: Date = new Date(1624060500000);
 
   private _animationInterval: number | undefined;
   private _animationFrames: number[][] = [];
   private _animationCoords: number[][][][] = [];
-  private _currentFrame: number = -1;
+  private _nextFrameIndex: number = -1;
+  private _currentFrameIndex: number = -1;
   private _totalFrames: number = 0;
   private _lastGeoJson: GeoJSON | undefined;
   private _dataCompression: number = 3;
@@ -89,6 +91,20 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   @Input() set dataCompression(value:number) {
     this._dataCompression = value;
+  }
+
+  get currentFrameIndex(): number {
+    return this._currentFrameIndex;
+  }
+
+  set currentFrameIndex(value: number) {
+    this._currentFrameIndex = value;
+    this._nextFrameIndex = value;
+    this.nextFrame();
+  }
+
+  get totalFrames(): number {
+    return this._totalFrames;
   }
 
   get data():IMapData {
@@ -196,7 +212,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     let endSeconds:number = this.calculateEpochTime(this._endTime);
     let totalFrames = endSeconds/300-beginSeconds/300+1;
 
-    console.log({beginSeconds, endSeconds, totalFrames})
+    for (let i = 0; i < totalFrames; i++) this._animationFrames.push([]);
 
     this._totalFrames = totalFrames;
     this.resumeAnimation();
@@ -212,7 +228,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
     this._lastGeoJson?.remove();
     this._totalFrames = 0;
-    this._currentFrame = -1;
+    this._nextFrameIndex = -1;
+    this._currentFrameIndex = -1;
     this._animationFrames = [];
   }
 
@@ -229,12 +246,13 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Checks what to do with the next frame. Load it form memory or fetch from server
   private nextFrame() {
-    if (this._currentFrame >= this._animationFrames.length) return;
-    this._currentFrame++;
-    if (this._currentFrame == this._totalFrames) this._currentFrame = 0;
+    // Is the previous frame loaded
+    if (this._currentFrameIndex != this._nextFrameIndex) return;
+    this._nextFrameIndex++;
+    if (this._nextFrameIndex == this._totalFrames) this._nextFrameIndex = 0;
 
     // if frame is not yet requested -> request frame
-    let frameNotYetRequested = this._animationFrames.length==this._currentFrame;
+    let frameNotYetRequested = this._animationFrames[this._nextFrameIndex].length == 0;
     if (frameNotYetRequested) {
       this.fetchFrame();
     } else {
@@ -246,7 +264,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private loadFrame() {
     let geojson: gj.FeatureCollection = {
       type: "FeatureCollection",
-      features: this._animationFrames[this._currentFrame].map((value, index):gj.Feature => {
+      features: this._animationFrames[this._nextFrameIndex].map((value, index):gj.Feature => {
         return {
           type: "Feature",
           "properties": {
@@ -323,6 +341,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
           }
       }
       }}).addTo(this.map);
+    this._currentFrameIndex = this._nextFrameIndex;
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
@@ -330,8 +349,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // TODO fix time
     this.http.post("https://localhost:7187/radarimage", `{
        "CombineFields": ${this._dataCompression},
-       "StartSeconds" : ${this.calculateEpochTime(this._beginTime)+this._currentFrame*300},
-       "EndSeconds" : ${this.calculateEpochTime(this._beginTime)+this._currentFrame*300+300}}`,
+       "StartSeconds" : ${this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*300},
+       "EndSeconds" : ${this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*300+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       let requestData = e as IRequestData[][];
 
@@ -340,7 +359,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         this._animationCoords = requestData[0].map(data => data.coords);
       }
 
-      this._animationFrames.push(requestData[0].map(data => data.intensity));
+      this._animationFrames[this._nextFrameIndex] = requestData[0].map(data => data.intensity);
       this.loadFrame();
     })
   }

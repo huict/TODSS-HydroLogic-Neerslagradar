@@ -21,10 +21,9 @@
 
 /*time*/
 #times {
-  transform: scale(0.9);
   float: right;
-  top: 5px;
-  right: 5px;
+  top: 10px;
+  right: 10px;
 }
 
 #times > div {
@@ -46,7 +45,7 @@ label{
   margin-bottom: 5px;
 }
 
-input{
+.datePicker{
   display: inline-block;
   position: relative;
   font-family: var(--base-font);
@@ -61,7 +60,7 @@ input{
   cursor: pointer;
 }
 
-input:after{
+.datePicker:after{
   content: '';
   position: absolute;
   width: 75%;
@@ -74,17 +73,16 @@ input:after{
   transition: transform 0.25s ease-out;
 }
 
-input:hover:after{
+.datePicker:hover:after{
   transform: scaleX(1);
   transform-origin: bottom left;
 }
 
 /*legend*/
 #legend {
-  transform: scale(0.9);
   float: left;
-  bottom: 5px;
-  left: 5px;
+  bottom: 10px;
+  left: 10px;
 }
 
 #legend>ul {
@@ -141,3 +139,9 @@ input:hover:after{
   background-color: #000000;
 }
 
+/*slider*/
+#slider {
+  float: right;
+  right: 10px;
+  bottom: 25px;
+}
