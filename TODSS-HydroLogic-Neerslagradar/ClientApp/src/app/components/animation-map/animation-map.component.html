@@ -37,6 +37,10 @@
   </div>
 
   <div id="slider" class="overlay">
-    <input type="range" min="0" [max]="totalFrames-1" [(ngModel)]="currentFrameIndex">
+    <button [ngClass]="[animationPlaying?'play':'pause', 'playButton']" (click)="animationPlaying=!animationPlaying">
+      <div class='pauseIcon bx bx-pause'></div>
+      <div class='playIcon bx bx-play' ></div>
+    </button>
+    <input type="range" min="0" [max]="totalFrames-1" [(ngModel)]="currentFrameIndex" (mousedown)="pauseAnimation()" (mouseup)="resumeAnimation()">
   </div>
 </div>

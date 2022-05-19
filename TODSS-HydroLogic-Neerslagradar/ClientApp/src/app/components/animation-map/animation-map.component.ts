@@ -67,15 +67,19 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     zoom: 7,
     center: L.latLng(52.1009274, 5.6462977)
   };
+
+  // map variables
   private _map: L.Map | undefined;
   private _mySelection: L.Rectangle | undefined;
   private _points: L.LatLng[] = [];
   private _dataTemp: object | undefined;
 
+  // time filters
   public _beginTime: Date = new Date(1623974400000);
   public _currentTime: Date = new Date(this._beginTime);
   public _endTime: Date = new Date(1624060500000);
 
+  // animation variables
   private _animationInterval: number | undefined;
   private _animationFrames: number[][] = [];
   private _animationCoords: number[][][][] = [];
@@ -83,7 +87,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _currentFrameIndex: number = -1;
   private _totalFrames: number = 0;
   private _lastGeoJson: GeoJSON | undefined;
-  private _dataCompression: number = 3;
+  private _animationPlaying: boolean = false;
+
+  // animation options
+  private _animationTime: number = 1000;
+  private _dataCompression: number = 2;
+  private _animationStepSize: number = 2;
 
   get dataCompression():number {
     return this._dataCompression;
@@ -93,6 +102,27 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this._dataCompression = value;
   }
 
+  get animationStepSize(): number {
+    return this._animationStepSize;
+  }
+
+  set animationStepSize(value: number) {
+    this._animationStepSize = value;
+  }
+
+  get animationPlaying(): boolean {
+    return this._animationPlaying;
+  }
+
+  set animationPlaying(value: boolean) {
+    this._animationPlaying = value;
+    if (value) {
+      this.resumeAnimation();
+    } else {
+      this.pauseAnimation();
+    }
+  }
+
   get currentFrameIndex(): number {
     return this._currentFrameIndex;
   }
@@ -100,7 +130,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   set currentFrameIndex(value: number) {
     this._currentFrameIndex = value;
     this._nextFrameIndex = value;
-    this.nextFrame();
   }
 
   get totalFrames(): number {
@@ -165,6 +194,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       beginTimestamp: this._beginTime.valueOf(),
       endTimestamp: this._endTime.valueOf()
     })
+
+    // TODO step size automatisch aanpassen aan tijd range
     this.startNewAnimation();
   }
 
@@ -211,6 +242,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     let beginSeconds:number = this.calculateEpochTime(this._beginTime);
     let endSeconds:number = this.calculateEpochTime(this._endTime);
     let totalFrames = endSeconds/300-beginSeconds/300+1;
+    totalFrames = Math.floor(totalFrames/this._animationStepSize)
 
     for (let i = 0; i < totalFrames; i++) this._animationFrames.push([]);
 
@@ -226,6 +258,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   public clearAnimation() {
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
+    this._animationInterval = undefined;
+    this._animationPlaying = false;
     this._lastGeoJson?.remove();
     this._totalFrames = 0;
     this._nextFrameIndex = -1;
@@ -234,14 +268,16 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   }
 
   public pauseAnimation() {
+    this._animationPlaying = false;
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
   }
 
   public resumeAnimation() {
+    this._animationPlaying = true;
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
 
     this.nextFrame();
-    this._animationInterval = setInterval(() => this.nextFrame(), 2000);
+    this._animationInterval = setInterval(() => this.nextFrame(), this._animationTime);
   }
 
   // Checks what to do with the next frame. Load it form memory or fetch from server
@@ -341,16 +377,20 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
           }
       }
       }}).addTo(this.map);
+    this._mySelection?.bringToFront();
     this._currentFrameIndex = this._nextFrameIndex;
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
   private fetchFrame() {
+    let tempNextFrame = this._nextFrameIndex;
+
     // TODO fix time
+    let fetchTime = this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300;
     this.http.post("https://localhost:7187/radarimage", `{
        "CombineFields": ${this._dataCompression},
-       "StartSeconds" : ${this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*300},
-       "EndSeconds" : ${this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*300+300}}`,
+       "StartSeconds" : ${fetchTime},
+       "EndSeconds" : ${fetchTime+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       let requestData = e as IRequestData[][];
 
@@ -359,7 +399,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         this._animationCoords = requestData[0].map(data => data.coords);
       }
 
-      this._animationFrames[this._nextFrameIndex] = requestData[0].map(data => data.intensity);
+      this._animationFrames[tempNextFrame] = requestData[0].map(data => data.intensity);
       this.loadFrame();
     })
   }

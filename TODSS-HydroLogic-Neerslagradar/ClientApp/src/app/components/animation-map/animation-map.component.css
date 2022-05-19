@@ -145,3 +145,19 @@ label{
   right: 10px;
   bottom: 25px;
 }
+
+/*play pause*/
+button.play>.pauseIcon {
+  display: none;
+}
+
+button.pause>.playIcon {
+  display: none;
+}
+
+.playButton {
+  margin: 0 5px 0 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
