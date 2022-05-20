@@ -32,10 +32,14 @@
 
 .titleBlue {
   color: var(--hydrologic-blue);
+  font-style: italic;
+  font-weight: bold;
 }
 
 .titleGreen {
   color: var(--hydrologic-green);
+  font-weight: bold;
+  margin-left: 1px;
 }
 
 p {
