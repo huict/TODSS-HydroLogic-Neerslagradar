@@ -55,16 +55,20 @@
   align-items: center;
 }
 
+#times > div:first-child {
+  margin-bottom: 5px;
+}
+
 #times>*>label{
   font-family: var(--base-font);
   color: var(--clr-500);
   font-weight: var(--medium-weight);
-  margin: 0 5px;
+  margin: 0 8px 0 2px;
   pointer-events: none;
 }
 
 .datePicker{
-  width: 10rem;
+  width: 12rem;
   display: inline-block;
   position: relative;
   font-family: var(--base-font);
@@ -80,7 +84,7 @@
 .datePicker:after{
   content: '';
   position: absolute;
-  width: 85%;
+  width: 14ch;
   transform: scaleX(0);
   height: 2px;
   bottom: 1px;
@@ -96,6 +100,10 @@
 }
 
 /*legend*/
+#legend {
+  width: min-content;
+}
+
 #legend>ul {
   list-style-type: none;
   margin: 0;
@@ -105,6 +113,7 @@
 .colorItem {
   display: flex;
   align-content: center;
+  width: max-content;
 }
 
 .legendTitle {
