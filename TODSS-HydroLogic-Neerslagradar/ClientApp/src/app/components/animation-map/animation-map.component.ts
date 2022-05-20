@@ -23,7 +23,7 @@ import * as gj from "geojson";
  * are recommended to show a better picture of the weather data.
  */
 @Component({
-  selector: 'animation-map',
+  selector: 'app-animation-map',
   templateUrl: './animation-map.component.html',
   styleUrls: ['./animation-map.component.css']
 })

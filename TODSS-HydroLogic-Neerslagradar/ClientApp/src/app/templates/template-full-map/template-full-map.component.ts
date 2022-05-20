@@ -6,7 +6,7 @@ import {AnimationMapComponent} from "../../components/animation-map/animation-ma
  * This template is for a full screen map.
  */
 @Component({
-  selector: 'template-full-map',
+  selector: 'app-template-full-map',
   templateUrl: './template-full-map.component.html',
   styleUrls: ['./template-full-map.component.css']
 })
