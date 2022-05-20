@@ -33,7 +33,6 @@ export class LineChartComponent implements AfterViewInit {
         }]
       },
       options: {
-        responsive: true,
         maintainAspectRatio: false,
         scales: {
           xAxis: {
