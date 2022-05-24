@@ -92,7 +92,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   // animation options
   private _animationTime: number = 1000;
   private _dataCompression: number = 2;
-  private _animationStepSize: number = 2;
+  private _animationStepSize: number = 1;
 
   get dataCompression():number {
     return this._dataCompression;
@@ -290,9 +290,15 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // if frame is not yet requested -> request frame
     let frameNotYetRequested = this._animationFrames[this._nextFrameIndex].length == 0;
     if (frameNotYetRequested) {
-      this.fetchFrame();
+      this.fetchFrame(this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300, this._nextFrameIndex, true);
     } else {
       this.loadFrame();
+    }
+
+    // Allso look at the next frame and load that beforehand
+    let nextNextFrameIndex = this._nextFrameIndex+1;
+    if (this._animationFrames[nextNextFrameIndex] && this._animationFrames[nextNextFrameIndex].length == 0) {
+      this.fetchFrame(this.calculateEpochTime(this._beginTime)+nextNextFrameIndex*this._animationStepSize*300, nextNextFrameIndex, false);
     }
   }
 
@@ -382,11 +388,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
-  private fetchFrame() {
-    let tempNextFrame = this._nextFrameIndex;
-
+  private fetchFrame(fetchTime: number, frameIndex: number, autoLoadNext: boolean) {
     // TODO fix time
-    let fetchTime = this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300;
     this.http.post("https://localhost:7187/radarimage", `{
        "CombineFields": ${this._dataCompression},
        "StartSeconds" : ${fetchTime},
@@ -399,9 +402,9 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         this._animationCoords = requestData[0].map(data => data.coords);
       }
 
-      this._animationFrames[tempNextFrame] = requestData[0].map(data => data.intensity);
-      this.loadFrame();
-    })
+      this._animationFrames[frameIndex] = requestData[0].map(data => data.intensity);
+      if (autoLoadNext) this.loadFrame();
+    });
   }
 }
 
