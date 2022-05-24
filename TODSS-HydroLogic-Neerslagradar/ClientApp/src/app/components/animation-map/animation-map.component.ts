@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
-import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
+import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
 import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
 
@@ -30,6 +30,7 @@ import * as gj from "geojson";
 export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDestroy {
   @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
   @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
+  @Output() changeCurrentTimeEvent = new EventEmitter<IMoveTimeStep>();
   @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
 
   // starting options for loading map
@@ -192,6 +193,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (type == "begin") this._beginTime = new Date(Math.round(time / min5) * min5);
     if (type == "end") this._endTime = new Date(Math.round(time / min5) * min5);
     if (this._endTime.valueOf() < this._beginTime.valueOf()) this._endTime = new Date(this._beginTime.valueOf());
+    this._currentTime = new Date(this._beginTime.valueOf());
 
     this.changeTimeFilterEvent.emit({
       stepSize:1,
@@ -388,7 +390,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }
       }}).addTo(this.map);
     this._mySelection?.bringToFront();
+
     this._currentFrameIndex = this._nextFrameIndex;
+    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300);
+    this.changeCurrentTimeEvent.emit({
+      currentTimestamp: this._currentTime.valueOf()
+    })
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
