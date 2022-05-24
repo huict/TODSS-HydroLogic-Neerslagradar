@@ -12,8 +12,8 @@ public class GridCell
     public GridCell(double[] coordinates, int x, int y)
     {
         Coordinates = coordinates;
-        this.X = x;
-        this.Y = y;
+        X = x;
+        Y = y;
         coordsForGeoJson = GenerateCoordsGeoJson(coordinates);
     }
 
