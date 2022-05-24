@@ -1,20 +1,44 @@
-input{
+.input-div{
+  position: relative;
+  height: 48px;
+  margin-bottom: 1.5rem;
+}
+
+.form-input{
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--clr-500);
+  border-bottom-color: var(--clr-500);
   border-top: none;
   border-left: none;
   border-right: none;
-  background-color: transparent;
-}
-
-input:focus{
   outline: none;
+  padding: 1rem;
+  background-color: transparent;
+  z-index: 1;
 }
 
-.input-div{
-  position: relative;
-}
-
-label{
+.form-label{
   position: absolute;
+  top: 1rem;
+  padding: 0 .25rem;
+  background-color: transparent;
+  transition: .3s;
+}
+
+.form-input:focus + .form-label{
+  top: -.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 10;
+}
+
+.form-input:not(:placeholder-shown).form-input:not(:focus)+ .form-label{
+  top: -.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 10;
 }
 
 #selectContent {
@@ -77,6 +101,6 @@ label{
 
 #buttons > *:hover{
   box-shadow: 0 10px 36px rgba(0,0,0, .20);
-  background-color: var(--clr-400);
+  background-color: var(--clr-300);
   color: white;
 }
