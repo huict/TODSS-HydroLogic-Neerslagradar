@@ -1,9 +1,38 @@
-/*overlays*/
-.overlay {
-  background-color: white;
-  width: max-content;
+/*sections and overlays*/
+.section {
   position: absolute;
   z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.section > * {
+  margin: 5px 0;
+}
+
+.upperRight {
+  float: right;
+  top: 5px;
+  right: 10px;
+  align-items: flex-end;
+}
+
+.lowerLeft {
+  float: left;
+  bottom: 5px;
+  left: 10px;
+  align-items: flex-start;
+}
+
+.lowerRight {
+  float: right;
+  right: 5px;
+  bottom: 25px;
+  align-items: flex-end;
+}
+
+.overlay {
+  background-color: white;
   padding: 5px;
   border-radius: 5px;
   box-shadow: var(--grey-900) 0 0 .5rem;
@@ -20,38 +49,26 @@
 }
 
 /*time*/
-#times {
-  float: right;
-  top: 10px;
-  right: 10px;
-}
-
 #times > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.noHover{
-  pointer-events: none;
-}
-
-label{
+#times>*>label{
   font-family: var(--base-font);
   color: var(--clr-500);
   font-weight: var(--medium-weight);
-  margin-right: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 0 5px;
+  pointer-events: none;
 }
 
 .datePicker{
+  width: 10rem;
   display: inline-block;
   position: relative;
   font-family: var(--base-font);
   color: var(--clr-500);
-  margin-top: 5px;
-  margin-bottom: 5px;
   border: none;
 }
 
@@ -63,7 +80,7 @@ label{
 .datePicker:after{
   content: '';
   position: absolute;
-  width: 75%;
+  width: 85%;
   transform: scaleX(0);
   height: 2px;
   bottom: 1px;
@@ -79,12 +96,6 @@ label{
 }
 
 /*legend*/
-#legend {
-  float: left;
-  bottom: 10px;
-  left: 10px;
-}
-
 #legend>ul {
   list-style-type: none;
   margin: 0;
@@ -139,19 +150,12 @@ label{
   background-color: #000000;
 }
 
-/*slider*/
-#slider {
-  float: right;
-  right: 10px;
-  bottom: 25px;
-}
-
-/*play pause*/
-button.play>.pauseIcon {
+/*play/pause and slider*/
+button.play>.playIcon {
   display: none;
 }
 
-button.pause>.playIcon {
+button.pause>.pauseIcon {
   display: none;
 }
 
