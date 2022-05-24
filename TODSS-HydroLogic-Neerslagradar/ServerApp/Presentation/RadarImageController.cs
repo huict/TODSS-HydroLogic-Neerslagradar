@@ -15,10 +15,15 @@ public class RadarImageController :  ControllerBase
     {
         _radarImageService = radarImageService;
     }
-    
+
+    [HttpPatch]
+    public List<GridCellDTO> GetAllGridCells(InGridCellsDTO dto)
+    {
+        return _radarImageService.GetGridCellCoords(dto.LargeDataset, dto.CombineFields);
+    }
 
     [HttpPost]
-    public List<List<GeoDataDTO>> test(WeatherFiltersDTO dto)
+    public List<List<GeoDataDTO>> GetWeatherData(WeatherFiltersDTO dto)
     {
         return _radarImageService.GetSpecificSlices(dto);
     }
