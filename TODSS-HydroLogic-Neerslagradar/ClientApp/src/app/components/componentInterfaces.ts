@@ -1,4 +1,4 @@
-﻿import { ICoordinateFilter, ITimeFilter } from "../templates/i-weather.template";
+﻿import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../templates/i-weather.template";
 import { EventEmitter } from "@angular/core";
 
 /**
@@ -8,6 +8,7 @@ import { EventEmitter } from "@angular/core";
  */
 export interface IChangesTime {
   changeTimeFilterEvent: EventEmitter<ITimeFilter>;
+  changeCurrentTimeEvent: EventEmitter<IMoveTimeStep>;
 }
 
 /**

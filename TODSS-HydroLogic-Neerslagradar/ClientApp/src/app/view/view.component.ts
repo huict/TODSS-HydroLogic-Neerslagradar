@@ -30,7 +30,7 @@ export class TemplateDirective {
  * settings that should otherwise be applicable for all templates. So to reduce duplicate code the view was created.
  */
 @Component({
-  selector: 'view',
+  selector: 'app-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.css']
 })
