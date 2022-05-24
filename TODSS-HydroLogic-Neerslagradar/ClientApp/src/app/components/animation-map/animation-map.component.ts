@@ -186,14 +186,18 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Throws a time filter changed event
   changeTime(e: any, type: string) {
+    const min5 = 1000 * 60 * 5;
     let time = e.target.valueAsNumber;
-    if (type == "begin") this._beginTime = new Date(time);
-    if (type == "end") this._endTime = new Date(time);
+
+    if (type == "begin") this._beginTime = new Date(Math.round(time / min5) * min5);
+    if (type == "end") this._endTime = new Date(Math.round(time / min5) * min5);
+    if (this._endTime.valueOf() < this._beginTime.valueOf()) this._endTime = new Date(this._beginTime.valueOf());
+
     this.changeTimeFilterEvent.emit({
       stepSize:1,
       beginTimestamp: this._beginTime.valueOf(),
       endTimestamp: this._endTime.valueOf()
-    })
+    });
 
     // TODO step size automatisch aanpassen aan tijd range
     this.startNewAnimation();
