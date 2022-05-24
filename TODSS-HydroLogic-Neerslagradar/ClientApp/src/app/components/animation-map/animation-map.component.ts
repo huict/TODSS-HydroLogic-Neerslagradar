@@ -82,8 +82,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // animation variables
   private _animationInterval: number | undefined;
-  private _animationFrames: number[][] = [];
-  private _animationCoords: number[][][][] = [];
+  private _animationFrames: IIntensityData[][] = [];
+  private _animationCoords: ICoordsData[] = [];
   private _nextFrameIndex: number = -1;
   private _currentFrameIndex: number = -1;
   private _totalFrames: number = 0;
@@ -91,8 +91,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _animationPlaying: boolean = false;
 
   // animation options
-  private _animationTime: number = 1000;
-  private _dataCompression: number = 2;
+  private _animationTime: number = 750;
+  private _dataCompression: number = 1;
   private _animationStepSize: number = 1;
 
   get dataCompression():number {
@@ -179,6 +179,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
+    this.fetchCoords();
     this.startNewAnimation();
 
     // Event is thrown when the map is ready
@@ -310,87 +311,90 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Loads the next frame from memory
   private loadFrame() {
-    let geojson: gj.FeatureCollection = {
-      type: "FeatureCollection",
-      features: this._animationFrames[this._nextFrameIndex].map((value, index):gj.Feature => {
-        return {
-          type: "Feature",
-          "properties": {
-            "intensity":value
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: this._animationCoords[index] as unknown as gj.Position[][]
-          },
-        }
-        // @ts-ignore
-      }).filter(value => value.properties["intensity"]>0),
-    }
-    this._lastGeoJson?.remove();
-    this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
-      let intensity: number = feature?.properties["intensity"];
-      let boarderWeights = 0.1;
-      let opacityLightColors = 0.7;
-      let opacityDarkColors = 0.6;
-      switch (true) {
-        case intensity <= 0.02/12:
+    if (this._animationCoords.length != 0) {
+      let geojson: gj.FeatureCollection = {
+        type: "FeatureCollection",
+        features: this._animationFrames[this._nextFrameIndex].map((value, index):gj.Feature => {
           return {
-            fillOpacity: 0,
-            opacity: 0,
-            weight: 0
+            type: "Feature",
+            "properties": {
+              "intensity":value.intensity
+            },
+            geometry: {
+              type: "Polygon",
+              coordinates: this._animationCoords[value.id].coords as unknown as gj.Position[][]
+            },
           }
-        case intensity <= 1/12:
-          return {
-            fillColor: "#9db6d6",
-            color: "#9db6d6",
-            weight: boarderWeights,
-            fillOpacity: opacityLightColors,
-            opacity: opacityLightColors
-          }
-        case intensity <= 2/12:
-          return {
-            fillColor: "#4c7bb5",
-            color: "#4c7bb5",
-            weight: boarderWeights,
-            fillOpacity: opacityLightColors,
-            opacity: opacityLightColors
-          }
-        case intensity <= 5/12:
-          return {
-            fillColor: "#1e00ff",
-            color: "#1e00ff",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
-        case intensity <= 10/12:
-          return {
-            fillColor: "#eb1416",
-            color: "#eb1416",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
-        case intensity <= 20/12:
-          return {
-            fillColor: "#e718aa",
-            color: "#e718aa",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
-        default:
-          return {
-            fillColor: "#000000",
-            color: "#000000",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
+          // @ts-ignore
+        }).filter(value => value.properties["intensity"]>0),
       }
-      }}).addTo(this.map);
-    this._mySelection?.bringToFront();
+      this._lastGeoJson?.remove();
+      this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
+          let intensity: number = feature?.properties["intensity"];
+          let boarderWeights = 0.1;
+          let opacityLightColors = 0.7;
+          let opacityDarkColors = 0.6;
+          switch (true) {
+            case intensity <= 0.02/12:
+              return {
+                fillOpacity: 0,
+                opacity: 0,
+                weight: 0
+              }
+            case intensity <= 1/12:
+              return {
+                fillColor: "#9db6d6",
+                color: "#9db6d6",
+                weight: boarderWeights,
+                fillOpacity: opacityLightColors,
+                opacity: opacityLightColors
+              }
+            case intensity <= 2/12:
+              return {
+                fillColor: "#4c7bb5",
+                color: "#4c7bb5",
+                weight: boarderWeights,
+                fillOpacity: opacityLightColors,
+                opacity: opacityLightColors
+              }
+            case intensity <= 5/12:
+              return {
+                fillColor: "#1e00ff",
+                color: "#1e00ff",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+            case intensity <= 10/12:
+              return {
+                fillColor: "#eb1416",
+                color: "#eb1416",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+            case intensity <= 20/12:
+              return {
+                fillColor: "#e718aa",
+                color: "#e718aa",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+            default:
+              return {
+                fillColor: "#000000",
+                color: "#000000",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+          }
+        }}).addTo(this.map);
+      this._mySelection?.bringToFront();
+    }
 
+    // update current time
     this._currentFrameIndex = this._nextFrameIndex;
     this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300);
     this.changeCurrentTimeEvent.emit({
@@ -398,22 +402,25 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     })
   }
 
+  // Fetches the coordinates for the frames
+  private fetchCoords() {
+    this.http.post("https://localhost:7187/radarimage/coords", `{
+       "CombineFields": ${this._dataCompression}}`,
+      {headers: {"Content-Type": "application/json"}}).subscribe(e => {
+      this._animationCoords = e as ICoordsData[];
+    });
+  }
+
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
   private fetchFrame(fetchTime: number, frameIndex: number, autoLoadNext: boolean) {
     // TODO fix time
-    this.http.post("https://localhost:7187/radarimage", `{
+    this.http.post("https://localhost:7187/radarimage/intensity", `{
        "CombineFields": ${this._dataCompression},
        "StartSeconds" : ${fetchTime},
        "EndSeconds" : ${fetchTime+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
-      let requestData = e as IRequestData[][];
-
-      // If the coords are not yet saved, save them. For memory performance the coords of the polygons are only saved once.
-      if (this._animationCoords.length == 0) {
-        this._animationCoords = requestData[0].map(data => data.coords);
-      }
-
-      this._animationFrames[frameIndex] = requestData[0].map(data => data.intensity);
+      let requestData = e as IIntensityData[][];
+      this._animationFrames[frameIndex] = requestData[0];
       if (autoLoadNext) this.loadFrame();
     });
   }
@@ -427,7 +434,12 @@ export interface IMapData {
   endTime:number,
 }
 
-export interface IRequestData {
-  coords: [][][number],
+export interface IIntensityData {
+  id: number,
   intensity: number
+}
+
+export interface ICoordsData {
+  id: number,
+  coords: number[][][]
 }
