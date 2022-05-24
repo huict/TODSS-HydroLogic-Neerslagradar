@@ -15,6 +15,8 @@ import { AnimationMapComponent } from './components/animation-map/animation-map.
 import { TemplateFullMapComponent } from './templates/template-full-map/template-full-map.component';
 import { ConfigurationSelectComponent } from './configuration-select/configuration-select.component';
 import {LineChartComponent} from "./components/line-chart/line-chart.component";
+import { StatisticsComponent } from './components/statistics/statistics.component';
+import { TemplateStatisticsComponent } from './templates/template-statistics/template-statistics.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import {LineChartComponent} from "./components/line-chart/line-chart.component";
     AnimationMapComponent,
     TemplateFullMapComponent,
     ConfigurationSelectComponent,
-    LineChartComponent
+    LineChartComponent,
+    StatisticsComponent,
+    TemplateStatisticsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

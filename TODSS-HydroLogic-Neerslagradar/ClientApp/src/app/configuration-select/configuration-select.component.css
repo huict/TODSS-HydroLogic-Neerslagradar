@@ -25,10 +25,10 @@
   width: 50px;
   height: 50px;
   background-color: #fff;
-  color: #333;
+  color: var(--clr-500);
   cursor: pointer;
   outline: none;
-  border: 3px solid #333;
+  border: 3px solid var(--clr-500);
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-property: background-color, color;
@@ -36,8 +36,8 @@
 }
 
 .back-to-top-button:hover{
-  background-color: #333;
-  color: #fff;
+  background-color: var(--clr-500);
+  color: white;
 }
 
 
@@ -90,21 +90,24 @@
 }
 
 .bottom{
+  width: 100px;
+  height: 40px;
   font-size: 15px;
   float: right;
   margin: 15px;
   padding: 5px;
-  border-radius: 10px;
-  border-width: 3px;
-  background-color: white;
-  border-color: 	#EEEEEE;
+  border-radius: 5px;
+  background-color: var(--clr-500);
+  border: none;
+  color: white;
   -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
   transition: 200ms ease-in-out, color 200ms ease-in-out;
 }
 
 .bottom:hover{
-  box-shadow: 0 0 40px 40px var(--hydrologic-blue) inset;
-  color: white;
+  box-shadow: 0 0 40px 40px white inset;
+  color: var(--clr-500);
+  background-color: white;
 }
 
 .button-div{
@@ -117,21 +120,24 @@
 }
 
 .empty{
+  width: 200px;
+  height: 60px;
   margin-top:40px;
   margin-right: 50px;
   padding: 10px;
   font-size: 15px;
-  border-radius: 10px;
-  border-width: 3px;
-  background-color: white;
-  border-color: #EEEEEE;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--clr-500);
+  color: white;
   -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
   transition: 200ms ease-in-out, color 200ms ease-in-out;
 }
 
 .empty:hover{
-  box-shadow: 0 0 40px 40px var(--hydrologic-blue) inset;
-  color: white;
+  box-shadow: 0 0 40px 40px white inset;
+  background-color: white;
+  color: var(--clr-500);
 }
 
 .views-container{
@@ -150,7 +156,7 @@
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 10px;
-  border-radius: 15px;
+  border-radius: 10px;
   background-color: white;
 }
 
