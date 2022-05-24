@@ -1,6 +1,4 @@
-﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.ColorSchemes;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
+﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.Reading_Data;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
@@ -12,6 +10,11 @@ public class RadarImageService : IRadarImageService
 {
     private static readonly ReadingData Pyramided = new ("neerslag_data.nc");
     // private static readonly ReadingData Original = new("neerslag.nc");
+
+    public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
+    {
+        return GenerateGeoJSON.ReduceGridcells(combineFields, Pyramided.Y, Pyramided.X);
+    }
 
     public List<List<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto)
     {
@@ -37,17 +40,17 @@ public class RadarImageService : IRadarImageService
         
         for (var i = beginZ; i < beginZ + depth; i++)
         {
-            geoDataList.Add(GenerateGeoJSON.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height)));
+            geoDataList.Add(GenerateGeoJSON.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * Pyramided.X * boundsForData.beginX)- 1));
         }
         return geoDataList;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="coords">Coords in the projection epsg:4326</param>
     /// <returns>A tuple which specifies the values where to begin the selection of the data</returns>
-    public (int beginX, int beginY, int width, int height) GetDimensionsForSpecifiedCoords(double[] coords)
+    private static (int beginX, int beginY, int width, int height) GetDimensionsForSpecifiedCoords(double[] coords)
     {
         var convertedCoords = CoordinateConversion.Deconversion(coords);
         int highestX = 0, highestY = 0, lowestX = 0, lowestY = 0; 

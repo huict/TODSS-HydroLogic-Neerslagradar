@@ -4,6 +4,6 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 public struct GeoDataDTO
 {
-    public List<List<List<double>>> coords { get; set; }
+    public long  id { get; set; }
     public float intensity { get; set; }
 }
