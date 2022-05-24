@@ -1,4 +1,5 @@
 <div id="selectContent">
+
   <div id="options">
     <p>Geef de view een naam</p>
 
@@ -7,16 +8,17 @@
       <label for="" class="form-label">Naam</label>
     </div>
 
-
   </div>
 
   <div class="seperationLine"></div>
 
-  <p>Selecteer een template</p>
-  <div id="templates">
-    <button (click)="selectTemplate($event, templateTest)">test</button>
-    <button (click)="selectTemplate($event, templateFullMap)">Map</button>
-    <button (click)="selectTemplate($event, templateStatistics)">Statistic</button>
+  <div class ="select-template">
+    <p>Selecteer een template</p>
+    <div id="templates">
+      <button (click)="selectTemplate($event, templateTest)">test</button>
+      <button (click)="selectTemplate($event, templateFullMap)">Map</button>
+      <button (click)="selectTemplate($event, templateStatistics)">Statistic</button>
+    </div>
   </div>
 
   <div class="seperationLine"></div>
@@ -24,4 +26,5 @@
   <div id="buttons">
     <button (click)="applyTemplate()">Aanmaken</button>
   </div>
+
 </div>

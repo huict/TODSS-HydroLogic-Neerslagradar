@@ -27,6 +27,7 @@
   transition: .3s;
 }
 
+/*Moves label upwards when clicked on input*/
 .form-input:focus + .form-label{
   top: -.5rem;
   font-size: 13px;
@@ -34,6 +35,7 @@
   z-index: 10;
 }
 
+/*Makes sure the label stays up when something's written in the inputfield */
 .form-input:not(:placeholder-shown).form-input:not(:focus)+ .form-label{
   top: -.5rem;
   font-size: 13px;
@@ -84,11 +86,13 @@
 }
 
 #buttons {
-  text-align: right;
+  text-align: center;
 }
 
 #buttons > * {
   padding: 3px 5px;
+  margin-top: 60px;
+  margin-bottom: 60px;
   border: none;
   border-radius: 7px;
   background-color: var(--clr-500);
@@ -103,4 +107,14 @@
   box-shadow: 0 10px 36px rgba(0,0,0, .20);
   background-color: var(--clr-300);
   color: white;
+}
+
+#options{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.select-template{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
