@@ -105,9 +105,9 @@
 }
 
 .bottom:hover{
-  box-shadow: 0 0 40px 40px white inset;
-  color: var(--clr-500);
-  background-color: white;
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-400);
+  color: white;
 }
 
 .button-div{
@@ -135,9 +135,9 @@
 }
 
 .empty:hover{
-  box-shadow: 0 0 40px 40px white inset;
-  background-color: white;
-  color: var(--clr-500);
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-400);
+  color: white;
 }
 
 .views-container{
