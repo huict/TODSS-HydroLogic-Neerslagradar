@@ -13,6 +13,7 @@ export class BarChartComponent {
 
   barChartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: true
   };
   barChartLabels: string[] = ['juli', 'augustus', 'september', 'oktober', 'november', 'december'];
   barChartType: ChartType = 'bar';
