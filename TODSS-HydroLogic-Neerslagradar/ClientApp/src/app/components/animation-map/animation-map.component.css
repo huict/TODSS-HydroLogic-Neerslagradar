@@ -1,25 +1,46 @@
-#mapContainer {
+/*sections and overlays*/
+.section {
   position: absolute;
-  height: 100%;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
 }
 
-#times {
-  background-color: white;
-  width: max-content;
-  position: relative;
+.section > * {
+  margin: 5px 0;
+}
+
+.upperRight {
   float: right;
-  top: 20px;
-  right: 20px;
-  z-index: 999;
+  top: 5px;
+  right: 10px;
+  align-items: flex-end;
+}
+
+.lowerLeft {
+  float: left;
+  bottom: 5px;
+  left: 10px;
+  align-items: flex-start;
+}
+
+.lowerRight {
+  float: right;
+  right: 5px;
+  bottom: 25px;
+  align-items: flex-end;
+}
+
+.overlay {
+  background-color: white;
   padding: 5px;
   border-radius: 5px;
   box-shadow: var(--grey-900) 0 0 .5rem;
 }
 
-#times > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/*map*/
+#mapContainer {
+  height: 100%;
 }
 
 #map {
@@ -27,26 +48,27 @@
   border-radius: 0 0 .5rem .5rem;
 }
 
-.noHover{
-  pointer-events: none;
+/*time*/
+#times > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-label{
+#times>*>label{
   font-family: var(--base-font);
   color: var(--clr-500);
   font-weight: var(--medium-weight);
-  margin-right: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 0 5px;
+  pointer-events: none;
 }
 
-input{
+.datePicker{
+  width: 10rem;
   display: inline-block;
   position: relative;
   font-family: var(--base-font);
   color: var(--clr-500);
-  margin-top: 5px;
-  margin-bottom: 5px;
   border: none;
 }
 
@@ -55,10 +77,10 @@ input{
   cursor: pointer;
 }
 
-input:after{
+.datePicker:after{
   content: '';
   position: absolute;
-  width: 75%;
+  width: 85%;
   transform: scaleX(0);
   height: 2px;
   bottom: 1px;
@@ -68,7 +90,78 @@ input:after{
   transition: transform 0.25s ease-out;
 }
 
-input:hover:after{
+.datePicker:hover:after{
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+/*legend*/
+#legend>ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.colorItem {
+  display: flex;
+  align-content: center;
+}
+
+.legendTitle {
+  margin: 0 8px 5px 8px;
+  font-size: smaller;
+}
+
+.colorItem>label {
+  margin: 0;
+  padding: 0;
+  font-size: smaller;
+}
+
+.colorPrev {
+  width: 1.5rem;
+  height: 1rem;
+  margin: 0 8px;
+  padding: 0;
+  border: solid 0.5px var(--bs-gray-600);
+}
+
+#colorPrev1 {
+  background-color: #9db6d6;
+}
+
+#colorPrev2 {
+  background-color: #4c7bb5;
+}
+
+#colorPrev3 {
+  background-color: #1e00ff;
+}
+
+#colorPrev4 {
+  background-color: #eb1416;
+}
+
+#colorPrev5 {
+  background-color: #e718aa;
+}
+
+#colorPrev6 {
+  background-color: #000000;
+}
+
+/*play/pause and slider*/
+button.play>.playIcon {
+  display: none;
+}
+
+button.pause>.pauseIcon {
+  display: none;
+}
+
+.playButton {
+  margin: 0 5px 0 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
 }
