@@ -1,10 +1,20 @@
 input{
-  height: 50px;
-  width: 200px;
-  margin: 10px;
   border-top: none;
   border-left: none;
   border-right: none;
+  background-color: transparent;
+}
+
+input:focus{
+  outline: none;
+}
+
+.input-div{
+  position: relative;
+}
+
+label{
+  position: absolute;
 }
 
 #selectContent {
@@ -40,13 +50,13 @@ input{
 }
 
 #templates > *:hover{
-  box-shadow: 0 0 40px 40px white inset;
-  background-color: white;
-  color: var(--clr-500);
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-400);
+  color: white;
 }
 
 #templates > *.selected {
-  background-color: lightgray;
+  background-color: var(--clr-400);
 }
 
 #buttons {
@@ -66,7 +76,7 @@ input{
 }
 
 #buttons > *:hover{
-  box-shadow: 0 0 40px 40px white inset;
-  background-color: white;
-  color: var(--clr-500);
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-400);
+  color: white;
 }

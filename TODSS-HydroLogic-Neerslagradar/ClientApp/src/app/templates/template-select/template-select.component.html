@@ -1,7 +1,13 @@
 <div id="selectContent">
   <div id="options">
     <p>Geef de view een naam</p>
-    <input type="text" (input)="changeNameEvent.emit($event)" placeholder="Naam">
+
+    <div class="input-div">
+      <label for="float" class="input-label">Naam</label>
+      <input  id="float" type="text" (input)="changeNameEvent.emit($event)" placeholder=" ">
+    </div>
+
+
   </div>
 
   <div class="seperationLine"></div>
