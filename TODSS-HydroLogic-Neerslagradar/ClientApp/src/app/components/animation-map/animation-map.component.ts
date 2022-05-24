@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
-import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
+import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
 import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
 
@@ -23,13 +23,14 @@ import * as gj from "geojson";
  * are recommended to show a better picture of the weather data.
  */
 @Component({
-  selector: 'animation-map',
+  selector: 'app-animation-map',
   templateUrl: './animation-map.component.html',
   styleUrls: ['./animation-map.component.css']
 })
 export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDestroy {
   @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
   @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
+  @Output() changeCurrentTimeEvent = new EventEmitter<IMoveTimeStep>();
   @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
 
   // starting options for loading map
@@ -92,7 +93,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   // animation options
   private _animationTime: number = 1000;
   private _dataCompression: number = 2;
-  private _animationStepSize: number = 2;
+  private _animationStepSize: number = 1;
 
   get dataCompression():number {
     return this._dataCompression;
@@ -186,14 +187,19 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Throws a time filter changed event
   changeTime(e: any, type: string) {
+    const min5 = 1000 * 60 * 5;
     let time = e.target.valueAsNumber;
-    if (type == "begin") this._beginTime = new Date(time);
-    if (type == "end") this._endTime = new Date(time);
+
+    if (type == "begin") this._beginTime = new Date(Math.round(time / min5) * min5);
+    if (type == "end") this._endTime = new Date(Math.round(time / min5) * min5);
+    if (this._endTime.valueOf() < this._beginTime.valueOf()) this._endTime = new Date(this._beginTime.valueOf());
+    this._currentTime = new Date(this._beginTime.valueOf());
+
     this.changeTimeFilterEvent.emit({
       stepSize:1,
       beginTimestamp: this._beginTime.valueOf(),
       endTimestamp: this._endTime.valueOf()
-    })
+    });
 
     // TODO step size automatisch aanpassen aan tijd range
     this.startNewAnimation();
@@ -290,9 +296,15 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // if frame is not yet requested -> request frame
     let frameNotYetRequested = this._animationFrames[this._nextFrameIndex].length == 0;
     if (frameNotYetRequested) {
-      this.fetchFrame();
+      this.fetchFrame(this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300, this._nextFrameIndex, true);
     } else {
       this.loadFrame();
+    }
+
+    // Allso look at the next frame and load that beforehand
+    let nextNextFrameIndex = this._nextFrameIndex+1;
+    if (this._animationFrames[nextNextFrameIndex] && this._animationFrames[nextNextFrameIndex].length == 0) {
+      this.fetchFrame(this.calculateEpochTime(this._beginTime)+nextNextFrameIndex*this._animationStepSize*300, nextNextFrameIndex, false);
     }
   }
 
@@ -378,15 +390,17 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }
       }}).addTo(this.map);
     this._mySelection?.bringToFront();
+
     this._currentFrameIndex = this._nextFrameIndex;
+    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300);
+    this.changeCurrentTimeEvent.emit({
+      currentTimestamp: this._currentTime.valueOf()
+    })
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
-  private fetchFrame() {
-    let tempNextFrame = this._nextFrameIndex;
-
+  private fetchFrame(fetchTime: number, frameIndex: number, autoLoadNext: boolean) {
     // TODO fix time
-    let fetchTime = this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300;
     this.http.post("https://localhost:7187/radarimage", `{
        "CombineFields": ${this._dataCompression},
        "StartSeconds" : ${fetchTime},
@@ -399,9 +413,9 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         this._animationCoords = requestData[0].map(data => data.coords);
       }
 
-      this._animationFrames[tempNextFrame] = requestData[0].map(data => data.intensity);
-      this.loadFrame();
-    })
+      this._animationFrames[frameIndex] = requestData[0].map(data => data.intensity);
+      if (autoLoadNext) this.loadFrame();
+    });
   }
 }
 

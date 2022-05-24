@@ -1,14 +1,14 @@
 <div id="main">
   <header id="topBar">
-      <h1 id="titleWhole" routerLink="/configurations">
+      <h1 id="titleWhole">
         <p class="titleBlue">Hydro</p>
         <p class="titleGreen">NET</p>
       </h1>
     <div id="buttons">
-      <button title="to configurations" routerLink="/configurations" class="bx bx-selection"></button>
-      <button title="save config" class='bx bxs-save' (click)="saveConfigOpen=true"></button>
-      <button title="settings" class='bx bxs-wrench' (click)="settingsOpen=true"></button>
-      <button title="add view" [disabled]="views.length==6" class='bx bxs-add-to-queue' (click)="addView()"></button>
+      <button title="naar configuraties" routerLink="/configurations" class="bx bx-selection"></button>
+      <button title="configuratie opslaan" class='bx bxs-save' (click)="saveConfigOpen=true"></button>
+      <button title="instellingen" class='bx bxs-wrench' (click)="settingsOpen=true"></button>
+      <button title="view toevoegen" [disabled]="views.length==4" class='bx bxs-add-to-queue' (click)="addView()"></button>
     </div>
   </header>
 
@@ -28,7 +28,6 @@
       <div class="content">
         <label for="title">Titel</label>
         <input name="title" id="title" type="text" placeholder="titel" [(ngModel)]="configTitle">
-
         <label for="description">Omschrijving</label>
         <textarea name="description" id="description" placeholder="omschrijving" [(ngModel)]="configDescription"></textarea>
       </div>
