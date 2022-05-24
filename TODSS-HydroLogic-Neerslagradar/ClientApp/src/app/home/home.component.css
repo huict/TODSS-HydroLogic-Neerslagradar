@@ -122,6 +122,10 @@ form>button {
   all: revert;
 }
 
+.bx:hover{
+  color: var(--clr-400);
+}
+
 @media screen and (max-width: 767px) {
   .bx, h1 {
     font-size: 1rem;
