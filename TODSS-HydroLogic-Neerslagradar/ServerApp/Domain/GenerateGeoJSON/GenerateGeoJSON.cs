@@ -17,6 +17,7 @@ public class GenerateGeoJSON
         var geoDataDtoList = new List<GeoDataDTO>();
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
+        var index = 0;
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -24,10 +25,11 @@ public class GenerateGeoJSON
                 var coords = Grid.FindByGridCoordinatesPyramided(i, j);
                 var geoDataDto = new GeoDataDTO
                 {
-                    coords = coords.coordsForGeoJson,
+                    id = index,
                     intensity = slice[0, j, i]
                 };
                 geoDataDtoList.Add(geoDataDto);
+                index++;
             }
         }
         return geoDataDtoList;
@@ -39,41 +41,71 @@ public class GenerateGeoJSON
     /// <param name="combineAmountOfFields">The amount of cells you want to merge to make one big one.</param>
     /// <param name="slice">one slice where only the width and height matters</param>
     /// <returns>A list filled with GeoData where every cell in the grid an intensity and the corner coords have.</returns>
-    public static List<GeoDataDTO> ReduceCoords(int combineAmountOfFields, float[,,] slice)
+    public static List<GeoDataDTO> ReduceCoords(int combineAmountOfFields, float[,,] slice, int optionalBeginIndex = -1)
     {
         var geoDataDtoList = new List<GeoDataDTO>();
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
         var widthToWide = width % combineAmountOfFields;
         var heightToHigh = height % combineAmountOfFields;
-
-        for (int i = 0; i < width - widthToWide; i+=combineAmountOfFields)
+        var index = optionalBeginIndex;
+        for (var i = 0; i < width - widthToWide; i+=combineAmountOfFields)
         {
-            for (int j = 0; j < height - heightToHigh; j+=combineAmountOfFields)
+            for (var j = 0; j < height - heightToHigh; j+=combineAmountOfFields)
             {
-                List<GridCell> gridCells = new List<GridCell>();
-                for (int k = i; k < i+combineAmountOfFields; k++)
-                {
-                    for (int l = j; l < j+combineAmountOfFields; l++)
-                    {
-                        gridCells.Add(Grid.FindByGridCoordinatesPyramided(k,l));
-                    }
-                }
+                var gridCells = CollectGridCells(i, j, combineAmountOfFields);
+                index++;
                 var intensity = gridCells.Average(cell => slice[0, cell.Y, cell.X]);
-                // if (intensity<=0)continue;
-                var coordTopLeft = new [] {gridCells[0].Coordinates[0], gridCells[0].Coordinates[1]};
-                var coordTopRight = new [] {gridCells[^combineAmountOfFields ].Coordinates[2], gridCells[^combineAmountOfFields].Coordinates[3]};
-                var coordBotRight = new []{gridCells[^1].Coordinates[4], gridCells[^1].Coordinates[5]};
-                var coordBotLeft = new [] {gridCells[combineAmountOfFields-1].Coordinates[6], gridCells[combineAmountOfFields-1].Coordinates[7]};
+                if (intensity<=0)continue;
                 var geoDataDto = new GeoDataDTO
                 {
-                    coords = GridCell.GenerateCoordsGeoJson(coordTopLeft.Concat(coordTopRight).Concat(coordBotRight).Concat(coordBotLeft).ToArray()),
+                    id = index,
                     intensity = intensity
                 };
                 geoDataDtoList.Add(geoDataDto);
             }
         }
+        return geoDataDtoList;
+    }
+
+    public static List<GridCellDTO> ReduceGridcells(int combineAmountOfCells, int height, int width)
+    {
+        var geoDataDtoList = new List<GridCellDTO>();
+        var widthToWide = width % combineAmountOfCells;
+        var heightToHigh = height % combineAmountOfCells;
+        var index = 0;
+        for (var i = 0; i < width - widthToWide; i += combineAmountOfCells)
+        {
+            for (var j = 0; j < height - heightToHigh; j += combineAmountOfCells)
+            {
+                var gridCells = CollectGridCells(i, j, combineAmountOfCells);
+                var coordTopLeft = new[] {gridCells[0].Coordinates[0], gridCells[0].Coordinates[1]};
+                var coordTopRight = new[] {gridCells[^combineAmountOfCells].Coordinates[2], gridCells[^combineAmountOfCells].Coordinates[3]};
+                var coordBotRight = new[] {gridCells[^1].Coordinates[4], gridCells[^1].Coordinates[5]};
+                var coordBotLeft = new[] {gridCells[combineAmountOfCells - 1].Coordinates[6], gridCells[combineAmountOfCells - 1].Coordinates[7]};
+                var cellDto = new GridCellDTO()
+                {
+                    coords = GridCell.GenerateCoordsGeoJson(coordTopLeft.Concat(coordTopRight).Concat(coordBotRight).Concat(coordBotLeft).ToArray()),
+                    id = index
+                };
+                geoDataDtoList.Add(cellDto);
+                index++;
+            }
+        }
 
         return geoDataDtoList;
+    }
+
+    private static List<GridCell> CollectGridCells(int beginI, int beginJ, int combineAmount)
+    {
+        var gridCells = new List<GridCell>();
+        for (var k = beginI; k < beginI + combineAmount; k++)
+        {
+            for (var l = beginJ; l < beginJ + combineAmount; l++)
+            {
+                gridCells.Add(Grid.FindByGridCoordinatesPyramided(k, l));
+            }
+        }
+        return gridCells;
     }
 }

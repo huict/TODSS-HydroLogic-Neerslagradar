@@ -5,5 +5,6 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 public interface IRadarImageService
 {
     List<List<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto);
+    List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields);
 
 }

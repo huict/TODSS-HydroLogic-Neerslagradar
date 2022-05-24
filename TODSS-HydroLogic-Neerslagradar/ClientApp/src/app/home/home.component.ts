@@ -20,7 +20,7 @@ export class ViewDirective {
  * and application wide settings can also be managed here.
  */
 @Component({
-  selector: 'home',
+  selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

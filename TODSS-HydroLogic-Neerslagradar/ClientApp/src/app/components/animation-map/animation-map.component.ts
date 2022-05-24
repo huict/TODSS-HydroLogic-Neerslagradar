@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
-import { ICoordinateFilter, ITimeFilter } from "../../templates/i-weather.template";
+import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
 import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
 
@@ -23,13 +23,14 @@ import * as gj from "geojson";
  * are recommended to show a better picture of the weather data.
  */
 @Component({
-  selector: 'animation-map',
+  selector: 'app-animation-map',
   templateUrl: './animation-map.component.html',
   styleUrls: ['./animation-map.component.css']
 })
 export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDestroy {
   @Output() changeTimeFilterEvent = new EventEmitter<ITimeFilter>();
   @Output() changeLocationFilterEvent = new EventEmitter<ICoordinateFilter>();
+  @Output() changeCurrentTimeEvent = new EventEmitter<IMoveTimeStep>();
   @Output() mapReadyEvent = new EventEmitter<AnimationMapComponent>();
 
   // starting options for loading map
@@ -81,8 +82,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // animation variables
   private _animationInterval: number | undefined;
-  private _animationFrames: number[][] = [];
-  private _animationCoords: number[][][][] = [];
+  private _animationFrames: IIntensityData[][] = [];
+  private _animationCoords: ICoordsData[] = [];
   private _nextFrameIndex: number = -1;
   private _currentFrameIndex: number = -1;
   private _totalFrames: number = 0;
@@ -90,9 +91,9 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _animationPlaying: boolean = false;
 
   // animation options
-  private _animationTime: number = 1000;
-  private _dataCompression: number = 2;
-  private _animationStepSize: number = 2;
+  private _animationTime: number = 750;
+  private _dataCompression: number = 1;
+  private _animationStepSize: number = 1;
 
   get dataCompression():number {
     return this._dataCompression;
@@ -178,6 +179,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.renderSelection();
+    this.fetchCoords();
     this.startNewAnimation();
 
     // Event is thrown when the map is ready
@@ -186,14 +188,19 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Throws a time filter changed event
   changeTime(e: any, type: string) {
+    const min5 = 1000 * 60 * 5;
     let time = e.target.valueAsNumber;
-    if (type == "begin") this._beginTime = new Date(time);
-    if (type == "end") this._endTime = new Date(time);
+
+    if (type == "begin") this._beginTime = new Date(Math.round(time / min5) * min5);
+    if (type == "end") this._endTime = new Date(Math.round(time / min5) * min5);
+    if (this._endTime.valueOf() < this._beginTime.valueOf()) this._endTime = new Date(this._beginTime.valueOf());
+    this._currentTime = new Date(this._beginTime.valueOf());
+
     this.changeTimeFilterEvent.emit({
       stepSize:1,
       beginTimestamp: this._beginTime.valueOf(),
       endTimestamp: this._endTime.valueOf()
-    })
+    });
 
     // TODO step size automatisch aanpassen aan tijd range
     this.startNewAnimation();
@@ -290,118 +297,132 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // if frame is not yet requested -> request frame
     let frameNotYetRequested = this._animationFrames[this._nextFrameIndex].length == 0;
     if (frameNotYetRequested) {
-      this.fetchFrame();
+      this.fetchFrame(this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300, this._nextFrameIndex, true);
     } else {
       this.loadFrame();
+    }
+
+    // Allso look at the next frame and load that beforehand
+    let nextNextFrameIndex = this._nextFrameIndex+1;
+    if (this._animationFrames[nextNextFrameIndex] && this._animationFrames[nextNextFrameIndex].length == 0) {
+      this.fetchFrame(this.calculateEpochTime(this._beginTime)+nextNextFrameIndex*this._animationStepSize*300, nextNextFrameIndex, false);
     }
   }
 
   // Loads the next frame from memory
   private loadFrame() {
-    let geojson: gj.FeatureCollection = {
-      type: "FeatureCollection",
-      features: this._animationFrames[this._nextFrameIndex].map((value, index):gj.Feature => {
-        return {
-          type: "Feature",
-          "properties": {
-            "intensity":value
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: this._animationCoords[index] as unknown as gj.Position[][]
-          },
-        }
-        // @ts-ignore
-      }).filter(value => value.properties["intensity"]>0),
-    }
-    this._lastGeoJson?.remove();
-    this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
-      let intensity: number = feature?.properties["intensity"];
-      let boarderWeights = 0.1;
-      let opacityLightColors = 0.7;
-      let opacityDarkColors = 0.6;
-      switch (true) {
-        case intensity <= 0.02/12:
+    if (this._animationCoords.length != 0) {
+      let geojson: gj.FeatureCollection = {
+        type: "FeatureCollection",
+        features: this._animationFrames[this._nextFrameIndex].map((value, index):gj.Feature => {
           return {
-            fillOpacity: 0,
-            opacity: 0,
-            weight: 0
+            type: "Feature",
+            "properties": {
+              "intensity":value.intensity
+            },
+            geometry: {
+              type: "Polygon",
+              coordinates: this._animationCoords[value.id].coords as unknown as gj.Position[][]
+            },
           }
-        case intensity <= 1/12:
-          return {
-            fillColor: "#9db6d6",
-            color: "#9db6d6",
-            weight: boarderWeights,
-            fillOpacity: opacityLightColors,
-            opacity: opacityLightColors
-          }
-        case intensity <= 2/12:
-          return {
-            fillColor: "#4c7bb5",
-            color: "#4c7bb5",
-            weight: boarderWeights,
-            fillOpacity: opacityLightColors,
-            opacity: opacityLightColors
-          }
-        case intensity <= 5/12:
-          return {
-            fillColor: "#1e00ff",
-            color: "#1e00ff",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
-        case intensity <= 10/12:
-          return {
-            fillColor: "#eb1416",
-            color: "#eb1416",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
-        case intensity <= 20/12:
-          return {
-            fillColor: "#e718aa",
-            color: "#e718aa",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
-        default:
-          return {
-            fillColor: "#000000",
-            color: "#000000",
-            weight: boarderWeights,
-            fillOpacity: opacityDarkColors,
-            opacity: opacityDarkColors
-          }
+          // @ts-ignore
+        }).filter(value => value.properties["intensity"]>0),
       }
-      }}).addTo(this.map);
-    this._mySelection?.bringToFront();
+      this._lastGeoJson?.remove();
+      this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
+          let intensity: number = feature?.properties["intensity"];
+          let boarderWeights = 0.1;
+          let opacityLightColors = 0.7;
+          let opacityDarkColors = 0.6;
+          switch (true) {
+            case intensity <= 0.02/12:
+              return {
+                fillOpacity: 0,
+                opacity: 0,
+                weight: 0
+              }
+            case intensity <= 1/12:
+              return {
+                fillColor: "#9db6d6",
+                color: "#9db6d6",
+                weight: boarderWeights,
+                fillOpacity: opacityLightColors,
+                opacity: opacityLightColors
+              }
+            case intensity <= 2/12:
+              return {
+                fillColor: "#4c7bb5",
+                color: "#4c7bb5",
+                weight: boarderWeights,
+                fillOpacity: opacityLightColors,
+                opacity: opacityLightColors
+              }
+            case intensity <= 5/12:
+              return {
+                fillColor: "#1e00ff",
+                color: "#1e00ff",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+            case intensity <= 10/12:
+              return {
+                fillColor: "#eb1416",
+                color: "#eb1416",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+            case intensity <= 20/12:
+              return {
+                fillColor: "#e718aa",
+                color: "#e718aa",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+            default:
+              return {
+                fillColor: "#000000",
+                color: "#000000",
+                weight: boarderWeights,
+                fillOpacity: opacityDarkColors,
+                opacity: opacityDarkColors
+              }
+          }
+        }}).addTo(this.map);
+      this._mySelection?.bringToFront();
+    }
+
+    // update current time
     this._currentFrameIndex = this._nextFrameIndex;
+    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300);
+    this.changeCurrentTimeEvent.emit({
+      currentTimestamp: this._currentTime.valueOf()
+    })
+  }
+
+  // Fetches the coordinates for the frames
+  private fetchCoords() {
+    this.http.post("https://localhost:7187/radarimage/coords", `{
+       "CombineFields": ${this._dataCompression}}`,
+      {headers: {"Content-Type": "application/json"}}).subscribe(e => {
+      this._animationCoords = e as ICoordsData[];
+    });
   }
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
-  private fetchFrame() {
-    let tempNextFrame = this._nextFrameIndex;
-
+  private fetchFrame(fetchTime: number, frameIndex: number, autoLoadNext: boolean) {
     // TODO fix time
-    let fetchTime = this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300;
-    this.http.post("https://localhost:7187/radarimage", `{
+    this.http.post("https://localhost:7187/radarimage/intensity", `{
        "CombineFields": ${this._dataCompression},
        "StartSeconds" : ${fetchTime},
        "EndSeconds" : ${fetchTime+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
-      let requestData = e as IRequestData[][];
-
-      // If the coords are not yet saved, save them. For memory performance the coords of the polygons are only saved once.
-      if (this._animationCoords.length == 0) {
-        this._animationCoords = requestData[0].map(data => data.coords);
-      }
-
-      this._animationFrames[tempNextFrame] = requestData[0].map(data => data.intensity);
-      this.loadFrame();
-    })
+      let requestData = e as IIntensityData[][];
+      this._animationFrames[frameIndex] = requestData[0];
+      if (autoLoadNext) this.loadFrame();
+    });
   }
 }
 
@@ -413,7 +434,12 @@ export interface IMapData {
   endTime:number,
 }
 
-export interface IRequestData {
-  coords: [][][number],
+export interface IIntensityData {
+  id: number,
   intensity: number
+}
+
+export interface ICoordsData {
+  id: number,
+  coords: number[][][]
 }
