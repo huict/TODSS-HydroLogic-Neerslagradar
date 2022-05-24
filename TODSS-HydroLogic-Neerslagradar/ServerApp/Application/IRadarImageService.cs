@@ -6,4 +6,5 @@ public interface IRadarImageService
 {
     List<List<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto);
 
+    (int beginX, int beginY, int width, int height) GetDimensionsForSpecifiedCoords(double[] coords);
 }

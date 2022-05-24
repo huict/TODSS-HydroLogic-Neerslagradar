@@ -2,8 +2,8 @@
 
 public interface IStatistiekenService
 {
-    int CalculateSum();
-    double CalculateAverageRainFallPerCellInSelectionForPeriod(long startTime, long endTime);
-    double CalculateAverageRainFallInCellForPeriod(int x, int y, long startTime, long endTime);
+    long CalculateSum(int beginX, int beginY, int width, int height, long startTime, long endTime);
+    double CalculateAverageRainFallPerCellInSelectionForPeriod(int beginX, int beginY, int width, int height, long startTime, long endTime);
+    double CalculateAverageRainFallInCellForPeriod(int beginX, int beginY, int width, int height, long startTime, long endTime);
     
 }

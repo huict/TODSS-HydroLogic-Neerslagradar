@@ -40,9 +40,9 @@ public class CoordinateConversion
     }
 
     /// <summary>
-    /// Converts coordinates from epsg:4326 to WGS84. From WGS84 convert it to X and Y points in the dataset
+    /// Converts coordinates from WGS84 to raster X and Y. From WGS84 convert it to X and Y points in the dataset
     /// </summary>
-    /// <param name="coords">array of coords in the projection epsg:4326</param>
+    /// <param name="coords">array of coords in the projection WGS84</param>
     /// <returns>the converted coords X Y coords</returns>
     public static double[] Deconversion(double[] coords)
     {
