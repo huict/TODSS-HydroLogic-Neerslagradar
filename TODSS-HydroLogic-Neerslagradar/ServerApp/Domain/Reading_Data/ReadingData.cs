@@ -33,6 +33,11 @@ public class ReadingData : IReadingData
             break;
         }
     }
+
+    public float[,,] GetSlice(int z)
+    {
+        return GetSlices(0, 0, z, X, Y, 1);
+    }
     
     public float[,,] GetSlice(int x, int y, int z, int width, int height)
     {
