@@ -1,7 +1,13 @@
 <div id="selectContent">
+
   <div id="options">
     <p>Geef de view een naam</p>
-    <label>Naam: <input type="text" (input)="changeNameEvent.emit($event)"></label>
+
+    <div class="input-div">
+      <input  class="form-input" type="text" (input)="changeNameEvent.emit($event)" placeholder=" ">
+      <label for="" class="form-label">Naam</label>
+    </div>
+
   </div>
 
   <div class="seperationLine"></div>
@@ -11,11 +17,12 @@
     <button (click)="selectTemplate($event, templateTest)">Test</button>
     <button (click)="selectTemplate($event, templateFullMap)">Kaart</button>
     <button (click)="selectTemplate($event, templateBarChart)">Kaart + grafiek</button>
-  </div>
+    <button (click)="selectTemplate($event, templateStatistics)">Statistic</button>
 
   <div class="seperationLine"></div>
 
   <div id="buttons">
     <button (click)="applyTemplate()">Aanmaken</button>
   </div>
+
 </div>

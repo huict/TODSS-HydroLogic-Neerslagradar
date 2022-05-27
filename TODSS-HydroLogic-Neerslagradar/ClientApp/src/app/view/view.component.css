@@ -97,3 +97,7 @@ button {
   border: none;
   background-color: white;
 }
+
+.bx:hover{
+  color: var(--clr-400);
+}

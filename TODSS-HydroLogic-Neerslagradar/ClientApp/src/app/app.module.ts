@@ -17,6 +17,8 @@ import { TemplateBarChartComponent} from "./templates/template-bar-chart/templat
 import { ConfigurationSelectComponent } from './configuration-select/configuration-select.component';
 import {LineChartComponent} from "./components/line-chart/line-chart.component";
 import {BarChartComponent} from "./components/bar-chart/bar-chart.component";
+import { StatisticsComponent } from './components/statistics/statistics.component';
+import { TemplateStatisticsComponent } from './templates/template-statistics/template-statistics.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import {BarChartComponent} from "./components/bar-chart/bar-chart.component";
     TemplateBarChartComponent,
     ConfigurationSelectComponent,
     LineChartComponent,
-    BarChartComponent
+    BarChartComponent,
+    StatisticsComponent,
+    TemplateStatisticsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
