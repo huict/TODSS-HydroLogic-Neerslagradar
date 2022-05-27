@@ -3,7 +3,6 @@ import { ITemplate } from "../i-template.view";
 import { TemplateTestComponent } from "../template-test/template-test.component";
 import { ITemplateChange } from "../i-template-change.view";
 import { TemplateFullMapComponent } from "../template-full-map/template-full-map.component";
-import {TemplateStatisticsComponent} from "../template-statistics/template-statistics.component";
 
 /**
  * This template is used to select a different template on the view and so it is the standard template that is loaded
@@ -17,7 +16,6 @@ import {TemplateStatisticsComponent} from "../template-statistics/template-stati
 export class TemplateSelectComponent implements ITemplateChange, OnDestroy {
   templateTest = TemplateTestComponent;
   templateFullMap = TemplateFullMapComponent;
-  templateStatistics = TemplateStatisticsComponent;
 
   @Output() changeTemplateEvent = new EventEmitter<ITemplate>();
   @Output() changeNameEvent = new EventEmitter<Event>();
