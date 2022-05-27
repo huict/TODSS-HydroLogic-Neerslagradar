@@ -1,0 +1,15 @@
+﻿.wrapper {
+  display: grid;
+  grid-template-areas:  "map"
+                        "chart";
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.map {
+  grid-area: map;
+  height: 100%;
+}
+
+.chart {
+  grid-area: chart;
+}

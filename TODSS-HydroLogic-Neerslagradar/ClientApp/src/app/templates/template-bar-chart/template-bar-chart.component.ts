@@ -9,11 +9,11 @@ import {AnimationMapComponent} from "../../components/animation-map/animation-ma
 })
 
 export class TemplateBarChartComponent implements OnInit, IWeatherTemplate {
-private _coordinatesFilter: ICoordinateFilter | undefined;
-private _timeFilter: ITimeFilter | undefined;
-private _currentTime: IMoveTimeStep | undefined;
-private _map: AnimationMapComponent | undefined;
-private _mapDataTemp: object | undefined;
+  private _coordinatesFilter: ICoordinateFilter | undefined;
+  private _timeFilter: ITimeFilter | undefined;
+  private _currentTime: IMoveTimeStep | undefined;
+  private _map: AnimationMapComponent | undefined;
+  private _mapDataTemp: object | undefined;
 
   constructor() { }
 

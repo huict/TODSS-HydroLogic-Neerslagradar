@@ -92,7 +92,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // animation options
   private _animationTime: number = 750;
-  private _dataCompression: number = 1;
+  private _dataCompression: number = 3;
   private _animationStepSize: number = 1;
 
   get dataCompression():number {
