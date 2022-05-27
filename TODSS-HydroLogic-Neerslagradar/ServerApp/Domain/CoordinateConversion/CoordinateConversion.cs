@@ -39,6 +39,29 @@ public class CoordinateConversion
         _grid.AddPyramidedGridCellList(GenerateGrid(ColumnsPyr, RowsPyr, CellWidthPyr, CellHeightPyr));
     }
 
+    /// <summary>
+    /// Converts coordinates from WGS84 to raster X and Y. From WGS84 convert it to X and Y points in the dataset
+    /// </summary>
+    /// <param name="coords">array of coords in the projection WGS84</param>
+    /// <returns>the converted coords X Y coords</returns>
+    public static double[] Deconversion(double[] coords)
+    {
+        var numberOfCoordinates = new double[coords.Length / 2];
+        Reproject.ReprojectPoints(coords, numberOfCoordinates, TargetCRF, SourceCRF, 0, numberOfCoordinates.Length);
+        for (var i = 0; i < coords.Length; i++)
+        {
+            coords[i] = Math.Round(coords[i], Precision);
+        }
+
+        var cornerPointsXY = new List<double>();
+        for (var i = 0; i < coords.Length; i+=2)
+        {
+            cornerPointsXY.Add((coords[i] + XLowerLeft) / CellWidthPyr);
+            cornerPointsXY.Add(Math.Abs((coords[i+1] - YLowerLeft - RowsPyr * CellHeightPyr) / CellHeightPyr));
+        }
+        
+        return cornerPointsXY.ToArray();
+    }
     private List<GridCell> GenerateGrid(int columnAmount, int rowAmount, double cellWidth, double cellHeight)
     {
         // generate all points that make up cells
@@ -89,7 +112,7 @@ public class CoordinateConversion
         {
             pointCoordinates[i] = Math.Round(pointCoordinates[i], Precision);
         }
-
+        
         return pointCoordinates;
     }
 }

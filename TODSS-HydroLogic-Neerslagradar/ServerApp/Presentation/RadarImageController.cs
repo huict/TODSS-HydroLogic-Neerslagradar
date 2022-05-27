@@ -16,22 +16,10 @@ public class RadarImageController :  ControllerBase
         _radarImageService = radarImageService;
     }
     
-    [HttpGet]
-    public IEnumerable<byte[]> Get()
-    {
-        return _radarImageService.LoadData();
-    }
 
     [HttpPost]
     public List<List<GeoDataDTO>> test(WeatherFiltersDTO dto)
     {
         return _radarImageService.GetSpecificSlices(dto);
     }
-    //
-    // [HttpPatch]
-    // public List<GeoDataDTO> geoJSon()
-    // {
-    //     return GenerateGeoJSON.GenerateGeo();
-    // }
-    
 }

@@ -6,6 +6,7 @@ public class ReadingData : IReadingData
 {
     private DataSet Ds { get; }
     private Variable _p;
+    public int Y, X, Time;
 
     public ReadingData(string filePath)
     {
@@ -14,8 +15,28 @@ public class ReadingData : IReadingData
         {
             if (variable.Name != "P") continue;
             _p = variable;
+            foreach (var dimension in variable.Dimensions)
+            {
+                switch (dimension.Name)
+                {
+                    case "time" : 
+                        Time = dimension.Length;
+                        break;
+                    case "x":
+                        X = dimension.Length;
+                        break;
+                    case "y" :
+                        Y = dimension.Length;
+                        break;
+                }
+            }
             break;
         }
+    }
+
+    public float[,,] GetSlice(int z)
+    {
+        return GetSlices(0, 0, z, X, Y, 1);
     }
     
     public float[,,] GetSlice(int x, int y, int z, int width, int height)
