@@ -189,6 +189,7 @@
 .bx:hover{
   cursor: pointer;
   transform: scale(1.10);
+  color:var(--clr-100);
 }
 
 #top-knop{
