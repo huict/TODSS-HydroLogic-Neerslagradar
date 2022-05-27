@@ -86,10 +86,20 @@
 }
 
 #buttons {
-  text-align: center;
+
 }
 
 #buttons > * {
+
+}
+
+.aanmaakButton:hover{
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-300);
+  color: white;
+}
+
+.aanmaakButton{
   padding: 3px 5px;
   margin-top: 60px;
   margin-bottom: 60px;
@@ -97,16 +107,11 @@
   border-radius: 7px;
   background-color: var(--clr-500);
   color: white;
-  width: 180px;
-  height: 60px;
   -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
   transition: 200ms ease-in-out, color 200ms ease-in-out;
-}
-
-#buttons > *:hover{
-  box-shadow: 0 10px 36px rgba(0,0,0, .20);
-  background-color: var(--clr-300);
-  color: white;
+  text-align: center;
+  width: 120px;
+  height: 40px;
 }
 
 #options{

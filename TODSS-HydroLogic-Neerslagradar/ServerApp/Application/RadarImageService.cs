@@ -50,7 +50,7 @@ public class RadarImageService : IRadarImageService
     /// </summary>
     /// <param name="coords">Coords in the projection epsg:4326</param>
     /// <returns>A tuple which specifies the values where to begin the selection of the data</returns>
-    private static (int beginX, int beginY, int width, int height) GetDimensionsForSpecifiedCoords(double[] coords)
+    public (int beginX, int beginY, int width, int height) GetDimensionsForSpecifiedCoords(double[] coords)
     {
         var convertedCoords = CoordinateConversion.Deconversion(coords);
         int highestX = 0, highestY = 0, lowestX = 0, lowestY = 0; 
