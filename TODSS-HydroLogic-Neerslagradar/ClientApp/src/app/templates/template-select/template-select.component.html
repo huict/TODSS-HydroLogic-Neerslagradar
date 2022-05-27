@@ -12,13 +12,18 @@
 
   <div class="seperationLine"></div>
 
-  <p>Selecteer een template</p>
-  <div id="templates">
-    <button (click)="selectTemplate($event, templateTest)">Test</button>
-    <button (click)="selectTemplate($event, templateFullMap)">Kaart</button>
-    <button (click)="selectTemplate($event, templateBarChart)">Kaart + grafiek</button>
-    <button (click)="selectTemplate($event, templateStatistics)">Statistic</button>
+  <div class ="select-template">
+    <p>Selecteer een template</p>
+    <div id="templates">
+      <button (click)="selectTemplate($event, templateTest)">test</button>
+      <button (click)="selectTemplate($event, templateFullMap)">Map</button>
+    </div>
+  </div>
 
-</div>
-  <button class="aanmaakButton" (click)="applyTemplate()">Aanmaken</button>
+  <div class="seperationLine"></div>
+
+  <div id="buttons">
+    <button (click)="applyTemplate()">Aanmaken</button>
+  </div>
+
 </div>
