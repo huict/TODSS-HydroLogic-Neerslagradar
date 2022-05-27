@@ -13,9 +13,15 @@ public class RadarImageService : IRadarImageService
 
     public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
     {
-        return GenerateGeoJSON.ReduceGridcells(combineFields, Pyramided.Y, Pyramided.X);
+        return GenerateWeatherDataDTOs.ReduceGridcells(combineFields, Pyramided.Y, Pyramided.X);
     }
 
+    /// <summary>
+    /// Calculates the amount of slices from the start- and end-seconds. If a single coord is missing the method will return the whole grid in <see cref="GeoDataDTO"/>.
+    /// else the selected grid is calculated and gets converted to <see cref="GeoDataDTO"/>.
+    /// </summary>
+    /// <param name="dto">A DTO which comes from the REST-api <see cref="WeatherFiltersDTO"/></param>
+    /// <returns>Slices of the weatherdata. Depending on the begin- and endseconds the amount of slices change.</returns>
     public List<List<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto)
     {
         var geoDataList = new List<List<GeoDataDTO>>();
@@ -31,7 +37,7 @@ public class RadarImageService : IRadarImageService
         {
             for (var i = beginZ; i < beginZ + depth; i++)
             {
-                geoDataList.Add(GenerateGeoJSON.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(i)));
+                geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(i)));
             }
             return geoDataList;
         }
@@ -40,13 +46,13 @@ public class RadarImageService : IRadarImageService
         
         for (var i = beginZ; i < beginZ + depth; i++)
         {
-            geoDataList.Add(GenerateGeoJSON.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * Pyramided.X * boundsForData.beginX)- 1));
+            geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * Pyramided.X * boundsForData.beginX)- 1));
         }
         return geoDataList;
     }
 
     /// <summary>
-    /// 
+    /// Calculates the BeginX, BeginY, width and height which can be used to select specific part of a slice. Of the given coords. 
     /// </summary>
     /// <param name="coords">Coords in the projection epsg:4326</param>
     /// <returns>A tuple which specifies the values where to begin the selection of the data</returns>

@@ -3,7 +3,7 @@ using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
 
-public class GenerateGeoJSON
+public class GenerateWeatherDataDTOs
 {
     private static readonly GridSingelton Grid = GridSingelton.Grid;
     
@@ -18,11 +18,10 @@ public class GenerateGeoJSON
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
         var index = 0;
-        for (int i = 0; i < width; i++)
+        for (var i = 0; i < width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (var j = 0; j < height; j++)
             {
-                var coords = Grid.FindByGridCoordinatesPyramided(i, j);
                 var geoDataDto = new GeoDataDTO
                 {
                     id = index,
@@ -40,9 +39,11 @@ public class GenerateGeoJSON
     /// </summary>
     /// <param name="combineAmountOfFields">The amount of cells you want to merge to make one big one.</param>
     /// <param name="slice">one slice where only the width and height matters</param>
+    /// <param name="optionalBeginIndex">Optional parameter to determine which index the top left cell is. Used when you return a piece of the slice</param>
     /// <returns>A list filled with GeoData where every cell in the grid an intensity and the corner coords have.</returns>
-    public static List<GeoDataDTO> ReduceCoords(int combineAmountOfFields, float[,,] slice, int optionalBeginIndex = -1)
+    public static List<GeoDataDTO> ReduceCoords(int combineAmountOfFields, float[,,] slice, int optionalBeginIndex = 0)
     {
+        if (combineAmountOfFields <= 1) return GenerateGeo(slice);
         var geoDataDtoList = new List<GeoDataDTO>();
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
@@ -54,20 +55,31 @@ public class GenerateGeoJSON
             for (var j = 0; j < height - heightToHigh; j+=combineAmountOfFields)
             {
                 var gridCells = CollectGridCells(i, j, combineAmountOfFields);
-                index++;
                 var intensity = gridCells.Average(cell => slice[0, cell.Y, cell.X]);
-                if (intensity<=0)continue;
+                if (intensity <= 0)
+                {
+                    index++;
+                    continue;
+                }
                 var geoDataDto = new GeoDataDTO
                 {
                     id = index,
                     intensity = intensity
                 };
+                index++;
                 geoDataDtoList.Add(geoDataDto);
             }
         }
         return geoDataDtoList;
     }
 
+    /// <summary>
+    /// Compresses the amount of gridcells in a given height and width. Each cell has an id which is the same in <see cref="ReduceCoords"/> so the coordinates should be the same given the same id and combineAmountOfCells.
+    /// </summary>
+    /// <param name="combineAmountOfCells">The amount of cells you want to merge to make one big one. </param>
+    /// <param name="height">The height of the dataset. You want the cells for</param>
+    /// <param name="width">The width of the dataset. You want the cells for</param>
+    /// <returns>A list of <see cref="GridCellDTO"/> which is either compressed or not.</returns>
     public static List<GridCellDTO> ReduceGridcells(int combineAmountOfCells, int height, int width)
     {
         var geoDataDtoList = new List<GridCellDTO>();
@@ -95,7 +107,6 @@ public class GenerateGeoJSON
 
         return geoDataDtoList;
     }
-
     private static List<GridCell> CollectGridCells(int beginI, int beginJ, int combineAmount)
     {
         var gridCells = new List<GridCell>();
