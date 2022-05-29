@@ -396,7 +396,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
     // update current time
     this._currentFrameIndex = this._nextFrameIndex;
-    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300);
+    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300*1000);
     this.changeCurrentTimeEvent.emit({
       currentTimestamp: this._currentTime.valueOf()
     })
@@ -423,6 +423,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       this._animationFrames[frameIndex] = requestData[0];
       if (autoLoadNext) this.loadFrame();
     });
+  }
+
+  public add0ToNumberFront(number: number): string {
+    let strnum: string = String(number)
+    if (strnum.length == 1) return "0" + strnum
+    return strnum
   }
 }
 

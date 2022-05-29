@@ -14,11 +14,16 @@
     </div>
 
     <div id="slider" class="overlay">
-      <button [ngClass]="[animationPlaying?'play':'pause', 'playButton']" (click)="animationPlaying=!animationPlaying">
-        <div class='pauseIcon bx bx-pause'></div>
-        <div class='playIcon bx bx-play' ></div>
-      </button>
-      <input type="range" min="0" [max]="totalFrames-1" [(ngModel)]="currentFrameIndex" (mousedown)="pauseAnimation()" (mouseup)="resumeAnimation()">
+      <div>
+        <button [ngClass]="[animationPlaying?'play':'pause', 'playButton']" (click)="animationPlaying=!animationPlaying">
+          <div class='pauseIcon bx bx-pause'></div>
+          <div class='playIcon bx bx-play' ></div>
+        </button>
+        <input type="range" min="0" [max]="totalFrames-1" [(ngModel)]="currentFrameIndex" (mousedown)="pauseAnimation()" (mouseup)="resumeAnimation()">
+      </div>
+      <div class="text-center">
+        {{add0ToNumberFront(_currentTime.getUTCDate())}}-{{add0ToNumberFront(_currentTime.getUTCMonth())}}-{{_currentTime.getUTCFullYear()}}&nbsp;{{add0ToNumberFront(_currentTime.getUTCHours())}}:{{add0ToNumberFront(_currentTime.getUTCMinutes())}}
+      </div>
     </div>
   </div>
 
