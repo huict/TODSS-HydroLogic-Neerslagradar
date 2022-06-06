@@ -17,7 +17,7 @@ export class BarChartComponent implements OnInit {
     responsive: true,
     maintainAspectRatio: false
   };
-  barChartLabels: string[] = ['10:15', '10:30', '10:45', '11:00', '11:15', '11:30'];
+  barChartLabels: string[] = [];
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
@@ -31,21 +31,30 @@ export class BarChartComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.updateGraph();
+
   }
 
   private updateGraph() {
+    let calculateTimeFunc = (date:Date) => {
+      let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
+      return Math.round(s/300)*300;
+    }
+
+    if (this._coordinatesFilter == undefined) return;
+    let cf = this._coordinatesFilter;
+    let begin:number = <number>this._timeFilter?.beginTimestamp;
+    let end:number = <number>this._timeFilter?.endTimestamp;
     let body = {
-      "TopLeftLongitude":2.96395,
-      "TopLeftLatitude":53.98227,
-      "TopRightLongitude":4.13571,
-      "TopRightLatitude":53.97493,
-      "BotRightLongitude":4.12333,
-      "BotRightLatitude":52.87131,
-      "BotLeftLongitude":2.95208,
-      "BotLeftLatitude":52.87862,
-      "StartSeconds":0,
-      "EndSeconds":8000,
+      "TopLeftLongitude":cf.topLeft.lng,
+      "TopLeftLatitude":cf.topLeft.lat,
+      "TopRightLongitude":cf.bottomRight.lng,
+      "TopRightLatitude":cf.topLeft.lat,
+      "BotRightLongitude":cf.bottomRight.lng,
+      "BotRightLatitude":cf.bottomRight.lat,
+      "BotLeftLongitude":cf.topLeft.lng,
+      "BotLeftLatitude":cf.bottomRight.lat,
+      "StartSeconds":calculateTimeFunc(new Date(begin)),
+      "EndSeconds":calculateTimeFunc(new Date(end)),
       "CombineFields":1
     };
 
@@ -53,11 +62,11 @@ export class BarChartComponent implements OnInit {
       let data = e as RequestData[][];
       let processData = data.map(val => {
         let amountOfCells = val.length;
-        return val.reduce((total, intens) => intens.intensity, 0) / amountOfCells;
+        return val.reduce((total, intens) => total+intens.intensity, 0) / amountOfCells;
       });
 
       // @ts-ignore
-      this.barChartLabels = processData.map((value, index) => index);
+      this.barChartLabels = processData.map((_, index) => this._getDateLabelFromIndex(index));
       this.barChartData.pop();
       this.barChartData.push({
         label:"Hoeveelheid neerslag in mm",
@@ -66,14 +75,25 @@ export class BarChartComponent implements OnInit {
     })
   }
 
-  @Input() set coordinatesFilter(value: ICoordinateFilter | undefined) {
-    console.log(value)
-    this._coordinatesFilter = value;
+  private _getDateLabelFromIndex(i: number):string {
+    let add0Func = (number:number) => {
+      let strnum: string = String(number)
+      if (strnum.length == 1) return "0" + strnum
+      return strnum
+    };
+    let begin:number = <number>this._timeFilter?.beginTimestamp;
+    let d = new Date(begin + i*300000);
+    return `${add0Func(d.getUTCHours())}:${add0Func(d.getUTCMinutes())}`;
   }
 
-  @Input() set timeFilter(value: ITimeFilter | undefined) {
-    console.log("time: " + value);
+  @Input() set coordinatesFilter(value: ICoordinateFilter | undefined) {
+    this._coordinatesFilter = value;
+    this.updateGraph();
+  }
+
+  @Input() set timeFilter(value: ITimeFilter) {
     this._timeFilter = value;
+    this.updateGraph();
   }
 }
 

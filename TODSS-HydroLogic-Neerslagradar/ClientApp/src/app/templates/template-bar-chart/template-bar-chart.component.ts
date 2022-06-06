@@ -10,12 +10,16 @@ import {AnimationMapComponent} from "../../components/animation-map/animation-ma
 
 export class TemplateBarChartComponent implements OnInit, IWeatherTemplate {
   private _coordinatesFilter: ICoordinateFilter | undefined;
-  private _timeFilter: ITimeFilter | undefined;
+  private _timeFilter: ITimeFilter = {
+    beginTimestamp:1623974400000,
+    stepSize:1,
+    endTimestamp:1624060200000,
+  };
   private _currentTime: IMoveTimeStep | undefined;
   private _map: AnimationMapComponent | undefined;
   private _mapDataTemp: object | undefined;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
   }
@@ -65,11 +69,11 @@ export class TemplateBarChartComponent implements OnInit, IWeatherTemplate {
     this._coordinatesFilter = e;
   }
 
-  get timeFilter(): ITimeFilter | undefined {
+  get timeFilter(): ITimeFilter {
     return this._timeFilter;
   }
 
-  @Input() set timeFilter(value: ITimeFilter | undefined) {
+  @Input() set timeFilter(value: ITimeFilter) {
     this._timeFilter = value;
   }
 
@@ -77,7 +81,7 @@ export class TemplateBarChartComponent implements OnInit, IWeatherTemplate {
     this._timeFilter = e;
   }
 
-  get moveTimeStep(): IMoveTimeStep | undefined {
+  get currentTime(): IMoveTimeStep | undefined {
     return this._currentTime;
   }
 
