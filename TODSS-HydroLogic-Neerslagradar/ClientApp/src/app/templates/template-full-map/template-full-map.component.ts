@@ -12,7 +12,11 @@ import {AnimationMapComponent} from "../../components/animation-map/animation-ma
 })
 export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   private _coordinatesFilter: ICoordinateFilter | undefined;
-  private _timeFilter: ITimeFilter | undefined;
+  private _timeFilter: ITimeFilter = {
+    beginTimestamp:1623974400000,
+    stepSize:1,
+    endTimestamp:1624060200000,
+  };
   private _currentTime: IMoveTimeStep | undefined;
   private _map: AnimationMapComponent | undefined;
   private _mapDataTemp: object | undefined;
@@ -43,15 +47,7 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   get settings(): HTMLElement {
     // TODO settings voor template toevoegen
     let container = document.createElement("div");
-    let input = document.createElement("input");
-    input.type = "number"
-    // @ts-ignore
-    input.value = this._map?.map.getZoom();
-    // @ts-ignore
-    input.addEventListener("input", e=>this._map?.map.setZoom(e.target.value))
 
-    // TODO deze test voor template dependent settings verwijderen.
-    container.appendChild(input);
     return container;
   }
 
@@ -67,11 +63,11 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
     this._coordinatesFilter = e;
   }
 
-  get timeFilter(): ITimeFilter | undefined {
+  get timeFilter(): ITimeFilter {
     return this._timeFilter;
   }
 
-  @Input() set timeFilter(value: ITimeFilter | undefined) {
+  @Input() set timeFilter(value: ITimeFilter) {
     this._timeFilter = value;
   }
 
