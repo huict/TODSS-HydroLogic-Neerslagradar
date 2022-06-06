@@ -3,6 +3,7 @@ import {ITemplate} from "./i-template.view";
 import {TemplateFullMapComponent} from "./template-full-map/template-full-map.component";
 import {TemplateSelectComponent} from "./template-select/template-select.component";
 import {TemplateTestComponent} from "./template-test/template-test.component";
+import {TemplateBarChartComponent} from "./template-bar-chart/template-bar-chart.component";
 
 /**
  * This class is used to translate a templates classname string to a instance of that class. When a new template is
@@ -13,13 +14,15 @@ export class TemplateTranslator {
   public templates = {
     full_map: TemplateFullMapComponent.name,
     test: TemplateTestComponent.name,
-    select: TemplateSelectComponent.name
+    select: TemplateSelectComponent.name,
+    barChart: TemplateBarChartComponent.name,
   }
 
   public getTemplate(templateName: string): ITemplate {
     switch (templateName) {
       case this.templates.full_map: return new TemplateFullMapComponent;
       case this.templates.test: return new TemplateTestComponent;
+      case this.templates.barChart: return new TemplateBarChartComponent;
       case this.templates.select:
       default: return new TemplateSelectComponent;
     }
