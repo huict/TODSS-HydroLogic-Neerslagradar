@@ -1,4 +1,4 @@
-<div id="selectContent">
+<div class="selectContent">
 
   <div id="options">
     <p>Geef de view een naam</p>
@@ -17,13 +17,16 @@
     <div id="templates">
       <button (click)="selectTemplate($event, templateTest)">test</button>
       <button (click)="selectTemplate($event, templateFullMap)">Map</button>
+      <button (click)="selectTemplate($event, templateBarChart)">Grafiek</button>
     </div>
   </div>
 
   <div class="seperationLine"></div>
 
-  <div id="buttons">
-    <button (click)="applyTemplate()">Aanmaken</button>
+  <div class="buttonContainer">
+    <button id="aanmaakButton" (click)="applyTemplate()">Aanmaken</button>
   </div>
+
+
 
 </div>
