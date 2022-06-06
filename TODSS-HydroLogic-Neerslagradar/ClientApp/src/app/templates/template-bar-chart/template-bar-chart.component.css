@@ -2,12 +2,13 @@
   display: grid;
   grid-template-areas:  "map"
                         "chart";
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  background-color: lightblue;
+  min-height: 100%;
 }
 
 .map {
   grid-area: map;
-  height: 100%;
 }
 
 .chart {
