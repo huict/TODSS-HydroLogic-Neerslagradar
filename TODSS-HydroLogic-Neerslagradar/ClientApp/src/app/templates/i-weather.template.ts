@@ -7,7 +7,7 @@ import { LatLng } from 'leaflet';
 export interface IWeatherTemplate extends ITemplate {
   get coordinatesFilter():ICoordinateFilter | undefined;
   get timeFilter():ITimeFilter | undefined;
-  get moveTimeStep():IMoveTimeStep | undefined;
+  get currentTime():IMoveTimeStep | undefined;
 }
 
 /**

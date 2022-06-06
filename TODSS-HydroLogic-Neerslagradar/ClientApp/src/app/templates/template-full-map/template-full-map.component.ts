@@ -79,12 +79,16 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
     this._timeFilter = e;
   }
 
-  get moveTimeStep(): IMoveTimeStep | undefined {
+  get currentTime(): IMoveTimeStep | undefined {
     return this._currentTime;
   }
 
   set currentTime(value: IMoveTimeStep | undefined) {
     this._currentTime = value;
+  }
+
+  handleCurrentTimeEvent(e: IMoveTimeStep) {
+    this._currentTime = e;
   }
 
   handleMapReadyEvent(e: AnimationMapComponent) {
