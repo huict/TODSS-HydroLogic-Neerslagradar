@@ -14,7 +14,7 @@ export class BarChartComponent implements OnInit {
   private _timeFilter: ITimeFilter | undefined;
 
   barChartOptions: ChartOptions = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false
   };
   barChartLabels: string[] = [];

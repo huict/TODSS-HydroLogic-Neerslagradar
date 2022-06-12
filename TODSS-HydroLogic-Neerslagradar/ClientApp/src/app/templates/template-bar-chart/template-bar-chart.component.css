@@ -2,8 +2,7 @@
   display: grid;
   grid-template-areas:  "map"
                         "chart";
-  grid-template-rows: repeat(2, auto);
-  background-color: lightblue;
+  grid-template-rows: repeat(2, 1fr);
   min-height: 100%;
 }
 
@@ -13,4 +12,5 @@
 
 .chart {
   grid-area: chart;
+
 }
