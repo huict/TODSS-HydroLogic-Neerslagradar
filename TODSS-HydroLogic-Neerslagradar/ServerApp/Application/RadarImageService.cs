@@ -25,7 +25,7 @@ public class RadarImageService : IRadarImageService
     public List<List<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto)
     {
         var geoDataList = new List<List<GeoDataDTO>>();
-        var (dataset, beginZ, endDepth) = TimeConversion.GetDatasetAndDepthFromSeconds(dto.StartSeconds, dto.StartSeconds);
+        var (dataset, beginZ, endDepth) = TimeConversion.GetDatasetAndDepthFromSeconds(dto.StartTimestamp, dto.EndTimestamp);
         var depth = endDepth - beginZ;
         var coords = new []
         {

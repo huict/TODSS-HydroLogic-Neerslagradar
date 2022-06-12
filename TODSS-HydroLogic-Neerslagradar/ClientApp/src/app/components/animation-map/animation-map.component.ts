@@ -410,8 +410,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // TODO fix time
     this.http.post("https://localhost:7187/radarimage/intensity", `{
        "CombineFields": ${this._dataCompression},
-       "StartSeconds" : ${fetchTime},
-       "EndSeconds" : ${fetchTime+300}}`,
+       "StartTimestamp" : ${fetchTime},
+       "EndTimestamp" : ${fetchTime+300}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       let requestData = e as IIntensityData[][];
       this._animationFrames[frameIndex] = requestData[0];

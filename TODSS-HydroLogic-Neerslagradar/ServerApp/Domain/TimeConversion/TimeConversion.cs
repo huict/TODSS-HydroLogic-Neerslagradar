@@ -16,10 +16,10 @@ public class TimeConversion
         return depth;
     }
     
-    public static (ReadingData dataSet, int beginDepth, int endDepth) GetDatasetAndDepthFromSeconds(long startSeconds, long endSeconds)
+    public static (ReadingData dataSet, int beginDepth, int endDepth) GetDatasetAndDepthFromSeconds(long startTimestamp, long endTimestamp)
     {
-        var beginTime = GetDateTimeFromSeconds(startSeconds);
-        var endTime = GetDateTimeFromSeconds(endSeconds);
+        var beginTime = GetDateTimeFromSeconds(startTimestamp);
+        var endTime = GetDateTimeFromSeconds(endTimestamp);
         if (beginTime > endTime) throw new TimeException("Begin time is after end time ");
         return beginTime.Year switch
         {
@@ -27,7 +27,7 @@ public class TimeConversion
                 (dataSet: October2021, beginDepth: CalculateDepth(true, beginTime), endDepth:CalculateDepth(true, endTime)),
             2021 when beginTime.Month == 6 && endTime.Month == 6  && beginTime.Day == 18 && endTime.Day == 18
                 => (dataSet: June182021, beginDepth: CalculateDepth(false, beginTime), endDepth:CalculateDepth(false, endTime)),
-            _ => throw new NoDataSetAvailable($"No dataset available for the given time {beginTime} {startSeconds}  {endTime} {endSeconds}")
+            _ => throw new NoDataSetAvailable($"No dataset available for the given time {beginTime} {startTimestamp}  {endTime} {endTimestamp}")
         };
     }
 
@@ -44,7 +44,7 @@ public class TimeConversion
     private static DateTime GetDateTimeFromSeconds(long timestamplong)
     {
         var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
-        return dtDateTime.AddSeconds(timestamplong).ToLocalTime();
+        return dtDateTime.AddMilliseconds(timestamplong).ToLocalTime();
         
     }
 }
