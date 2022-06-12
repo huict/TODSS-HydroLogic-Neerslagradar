@@ -246,8 +246,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   public startNewAnimation() {
     this.clearAnimation();
 
-    let beginSeconds:number = this.calculateEpochTime(this._beginTime);
-    let endSeconds:number = this.calculateEpochTime(this._endTime);
+    let beginSeconds:number = this._beginTime.valueOf();
+    let endSeconds:number = this._endTime.valueOf();
     let totalFrames = endSeconds/300-beginSeconds/300+1;
     totalFrames = Math.floor(totalFrames/this._animationStepSize)
 
@@ -255,12 +255,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
     this._totalFrames = totalFrames;
     this.resumeAnimation();
-  }
-
-  // TODO werkend maken over meerdere dagen.
-  private calculateEpochTime(date:Date):number {
-    let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
-    return Math.round(s/300)*300;
   }
 
   public clearAnimation() {
@@ -297,7 +291,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // if frame is not yet requested -> request frame
     let frameNotYetRequested = this._animationFrames[this._nextFrameIndex].length == 0;
     if (frameNotYetRequested) {
-      this.fetchFrame(this.calculateEpochTime(this._beginTime)+this._nextFrameIndex*this._animationStepSize*300, this._nextFrameIndex, true);
+      this.fetchFrame(this._beginTime.valueOf()+this._nextFrameIndex*this._animationStepSize*300, this._nextFrameIndex, true);
     } else {
       this.loadFrame();
     }
@@ -305,7 +299,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // Allso look at the next frame and load that beforehand
     let nextNextFrameIndex = this._nextFrameIndex+1;
     if (this._animationFrames[nextNextFrameIndex] && this._animationFrames[nextNextFrameIndex].length == 0) {
-      this.fetchFrame(this.calculateEpochTime(this._beginTime)+nextNextFrameIndex*this._animationStepSize*300, nextNextFrameIndex, false);
+      this.fetchFrame(this._beginTime.valueOf()+nextNextFrameIndex*this._animationStepSize*300, nextNextFrameIndex, false);
     }
   }
 
