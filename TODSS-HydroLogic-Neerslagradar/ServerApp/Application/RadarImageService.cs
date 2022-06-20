@@ -35,7 +35,7 @@ public class RadarImageService : IRadarImageService
         
         if (coords.Any(coord => coord == 0))
         {
-            for (var i = beginZ; i < beginZ + depth; i++)
+            for (var i = beginZ; i <= beginZ + depth; i++)
             {
                 geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSlice(i)));
             }
