@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
-import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
 
 /**
@@ -66,14 +65,14 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }),
     ],
     zoom: 7,
-    center: L.latLng(52.1009274, 5.6462977)
+    center: L.latLng(52.1009274, 5.6462977),
+    doubleClickZoom: false
   };
 
   // map variables
   private _map: L.Map | undefined;
-  private _mySelection: L.Rectangle | undefined;
-  private _points: L.LatLng[] = [];
-  private _dataTemp: object | undefined;
+  private _dataTemp: IMapData | undefined;
+  private _selectedPixels: ISelectedPixels = {};
 
   // time filters
   public _beginTime: Date = new Date(1623974400000);
@@ -87,13 +86,17 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _nextFrameIndex: number = -1;
   private _currentFrameIndex: number = -1;
   private _totalFrames: number = 0;
-  private _lastGeoJson: GeoJSON | undefined;
+  private _lastGeoJson: L.GeoJSON | undefined;
   private _animationPlaying: boolean = false;
 
   // animation options
   private _animationTime: number = 750;
   private _dataCompression: number = 3;
   private _animationStepSize: number = 1;
+
+  get map(): L.Map {
+    return <L.Map>this._map;
+  }
 
   get dataCompression():number {
     return this._dataCompression;
@@ -139,7 +142,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   get data():IMapData {
     return <IMapData>{
-      points: this._points,
+      points: Object.keys(this._selectedPixels).map(value => {return {id: value, value: this._selectedPixels[value].getLatLngs() as L.LatLngExpression[]};}),
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
       beginTime: this._beginTime.valueOf(),
@@ -150,7 +153,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   @Input() set data(value: IMapData) {
     if (value) {
       this._dataTemp = value;
-      this._points = value.points;
       if (value.beginTime > 0) this._beginTime = new Date(value.beginTime);
       if (value.endTime > 0) this._endTime = new Date(value.endTime);
     }
@@ -168,17 +170,17 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   // This function is run when leaflet says the map is ready
   onReady(e: any) {
     this._map = e;
+
     this.map.on("click", e => {
       // @ts-ignore
-      let popup = L.popup().setLatLng(e.latlng).setContent("Point set").openOn(this.map);
-      // @ts-ignore
-      this.addPoint(e.latlng);
-
-      setTimeout(() => popup.remove(), 1500)
+      let coords: L.LatLng = e.latlng;
+      this.selectPixel(coords)
+      let popup = L.popup().setLatLng(coords).setContent("Point set").openOn(this.map);
+      setTimeout(() => popup.remove(), 1000);
     });
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
-    this.renderSelection();
+    this._dataTemp?.points.forEach(point => this.drawSelectPixel(point.id, point.value))
     this.fetchCoords();
     this.startNewAnimation();
 
@@ -206,41 +208,34 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.startNewAnimation();
   }
 
-  // Adds a new point to list of points and removes the first one if the list has a length of three points.
-  addPoint(newPoint: L.LatLng) {
-    this._points.push(newPoint);
-    if (this._points.length == 3) this._points.shift();
-    if (this._points.length == 2) {
-      this.renderSelection();
+  selectPixel(point: L.LatLng) {
+    let poly = this._animationCoords.find((value) => {
+      let lng = point.lng, lat = point.lat;
+      let coords = value.coords[0];
+      let inside = false;
+
+      for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
+        let xi = coords[i][0], yi = coords[i][1];
+        let xj = coords[j][0], yj = coords[j][1];
+
+        let intersect = ((yi > lat) != (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+      }
+      return inside;
+    })
+    if (poly === undefined) return;
+
+    if (this._selectedPixels.hasOwnProperty(poly.id)) {
+      this._selectedPixels[poly.id].remove();
+      delete this._selectedPixels[poly.id];
+    } else {
+      this.drawSelectPixel(poly.id.toString(), poly.coords[0].map(value => [value[1], value[0]]) as L.LatLngExpression[])
     }
   }
 
-  // Render the two selected points on the map as a rectangle.
-  private renderSelection() {
-    if (this._points.length == 2) {
-      let point1 = this._points[0];
-      let point2 = this._points[1];
-      let lats = [point1.lat, point2.lat].sort();
-      let lngs = [point1.lng, point2.lng].sort();
-      let bottom = lats[0];
-      let top = lats[1];
-      let left = lngs[0];
-      let right = lngs[1];
-
-      if (this._mySelection) this._mySelection.remove();
-      let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);
-      this._mySelection = L.rectangle(bounds, {fillOpacity: 0, color: '#EF476F'}).addTo(this.map);
-
-      const location: ICoordinateFilter = {
-        topLeft: new L.LatLng(top, left),
-        bottomRight: new L.LatLng(bottom, right)
-      };
-      this.changeLocationFilterEvent.emit(location);
-    }
-  }
-
-  get map(): L.Map {
-    return <L.Map>this._map;
+  private drawSelectPixel(id: string, coords: L.LatLngExpression[]) {
+    this._selectedPixels[id] = L.polygon(coords, {fillOpacity: 0, color: '#EF476F'});
+    this._selectedPixels[id].addTo(this.map);
   }
 
   public startNewAnimation() {
@@ -391,7 +386,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
               }
           }
         }}).addTo(this.map);
-      this._mySelection?.bringToFront();
+      Object.values(this._selectedPixels).forEach(value => value.bringToFront());
     }
 
     // update current time
@@ -433,9 +428,9 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 }
 
 export interface IMapData {
-  points: LatLng[],
+  points: ISelectedPixelsPersistence[],
   zoom: number,
-  centerLocation: LatLng,
+  centerLocation: L.LatLng,
   beginTime: number,
   endTime:number,
 }
@@ -448,4 +443,13 @@ export interface IIntensityData {
 export interface ICoordsData {
   id: number,
   coords: number[][][]
+}
+
+interface ISelectedPixels {
+  [key: string]: L.Polygon
+}
+
+interface ISelectedPixelsPersistence {
+  id: string,
+  value: L.LatLngExpression[]
 }
