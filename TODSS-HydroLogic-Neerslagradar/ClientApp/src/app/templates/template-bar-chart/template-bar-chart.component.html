@@ -1,0 +1,19 @@
+﻿<div class="wrapper">
+  <app-animation-map
+    class="map"
+    (changeLocationFilterEvent)="handleCoordEvent($event)"
+    (changeTimeFilterEvent)="handleTimeEvent($event)"
+    (mapReadyEvent)="handleMapReadyEvent($event)"
+    (changeCurrentTimeEvent)="handleCurrentTimeEvent($event)"
+    [data]="dataTemp"
+  >
+  </app-animation-map>
+
+  <app-bar-chart
+    class="chart"
+    [timeFilter]="timeFilter"
+    [coordinatesFilter]="coordinatesFilter"
+  ></app-bar-chart>
+</div>
+
+

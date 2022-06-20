@@ -12,12 +12,12 @@ public class GridCell
     public GridCell(double[] coordinates, int x, int y)
     {
         Coordinates = coordinates;
-        this.X = x;
-        this.Y = y;
+        X = x;
+        Y = y;
         coordsForGeoJson = GenerateCoordsGeoJson(coordinates);
     }
 
-    private List<List<List<double>>> GenerateCoordsGeoJson(IReadOnlyList<double> coordinates)
+    public static List<List<List<double>>> GenerateCoordsGeoJson(IReadOnlyList<double> coordinates)
     {
         var list2 = new List<List<double>>();
         for (var k = 0; k < coordinates.Count; k+=2)

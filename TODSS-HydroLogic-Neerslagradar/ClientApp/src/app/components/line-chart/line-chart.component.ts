@@ -42,5 +42,7 @@ export class LineChartComponent implements AfterViewInit {
         }
       }
     });
+
+    this.chart.update();
   }
 }

@@ -15,23 +15,18 @@ public class RadarImageController :  ControllerBase
     {
         _radarImageService = radarImageService;
     }
-    
-    [HttpGet]
-    public IEnumerable<byte[]> Get()
+
+    [HttpPost]
+    [Route("coords")]
+    public List<GridCellDTO> GetAllGridCells(InGridCellsDTO dto)
     {
-        return _radarImageService.loadData();
+        return _radarImageService.GetGridCellCoords(dto.LargeDataset, dto.CombineFields);
     }
 
     [HttpPost]
-    public IEnumerable<IEnumerable<GeoDataDTO>> test(WeatherFiltersDTO dto)
+    [Route("intensity")]
+    public List<List<GeoDataDTO>> GetWeatherData(WeatherFiltersDTO dto)
     {
         return _radarImageService.GetSpecificSlices(dto);
     }
-    //
-    // [HttpPatch]
-    // public List<GeoDataDTO> geoJSon()
-    // {
-    //     return GenerateGeoJSON.GenerateGeo();
-    // }
-    
 }

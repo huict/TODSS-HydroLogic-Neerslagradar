@@ -1,10 +1,80 @@
-#selectContent {
+.input-div{
+  position: relative;
+  height: 48px;
+  margin-bottom: 1.5rem;
+}
+
+#aanmaakButton:hover{
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-300);
+  color: white;
+}
+
+#aanmaakButton{
+  padding: 3px 5px;
+  margin-top: 60px;
+  margin-bottom: 60px;
+  border: none;
+  border-radius: 7px;
+  background-color: var(--clr-500);
+  color: white;
+  -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
+  transition: 200ms ease-in-out, color 200ms ease-in-out;
+  text-align: center;
+  height: 60px;
+  width: 160px;
+}
+
+.buttonContainer{
+  text-align: center;
+}
+
+.form-input{
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--clr-500);
+  border-bottom-color: var(--clr-500);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  padding: 1rem;
+  background-color: transparent;
+  z-index: 1;
+}
+
+.form-label{
+  position: absolute;
+  top: 1rem;
+  padding: 0 .25rem;
+  background-color: transparent;
+  transition: .3s;
+}
+
+/*Moves label upwards when clicked on input*/
+.form-input:focus + .form-label{
+  top: -.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 10;
+}
+
+/*Makes sure the label stays up when something's written in the inputfield */
+.form-input:not(:placeholder-shown).form-input:not(:focus)+ .form-label{
+  top: -.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 10;
+}
+
+.selectContent {
   padding: 10px;
   display: flex;
   flex-direction: column;
 }
 
-#selectContent > * {
+.selectContent > * {
   width: 80%;
   transform: translateX(10%);
 }
@@ -19,25 +89,33 @@
 }
 
 #templates > * {
-  height: 4rem;
-  width: 4rem;
+  width: 120px;
+  height: 50px;
   margin: 10px;
-  border: 1px solid var(--bs-gray-500);
+  border: none;
   border-radius: 7px;
-  background-color: white;
+  color: white;
+  background-color: var(--clr-500);
+  -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
+  transition: 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+#templates > *:hover{
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-400);
+  color: white;
 }
 
 #templates > *.selected {
-  background-color: lightgray;
+  background-color: var(--clr-400);
 }
 
-#buttons {
-  text-align: right;
+#options{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-#buttons > * {
-  padding: 3px 5px;
-  border: 1px solid var(--bs-gray-500);
-  border-radius: 7px;
-  background-color: white;
+.select-template{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

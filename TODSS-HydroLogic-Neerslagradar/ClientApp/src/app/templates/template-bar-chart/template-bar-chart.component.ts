@@ -1,16 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+﻿import {Component, Input, OnInit} from "@angular/core";
 import {ICoordinateFilter, IMoveTimeStep, ITimeFilter, IWeatherTemplate} from "../i-weather.template";
 import {AnimationMapComponent} from "../../components/animation-map/animation-map.component";
 
-/**
- * This template is for a full screen map.
- */
 @Component({
-  selector: 'app-template-full-map',
-  templateUrl: './template-full-map.component.html',
-  styleUrls: ['./template-full-map.component.css']
+  selector: 'app-template-bar-chart',
+  templateUrl: './template-bar-chart.component.html',
+  styleUrls: ['./template-bar-chart.component.css']
 })
-export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
+
+export class TemplateBarChartComponent implements OnInit, IWeatherTemplate {
   private _coordinatesFilter: ICoordinateFilter | undefined;
   private _timeFilter: ITimeFilter = {
     beginTimestamp:1623974400000,
@@ -21,7 +19,7 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   private _map: AnimationMapComponent | undefined;
   private _mapDataTemp: object | undefined;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
   }
@@ -45,9 +43,7 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   }
 
   get settings(): HTMLElement {
-    // TODO settings voor template toevoegen
     let container = document.createElement("div");
-
     return container;
   }
 
