@@ -2,11 +2,23 @@
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 
-public class TimeConversion
+public static class TimeConversion
 {
-    private static readonly ReadingData October2021 = new ("Knmi.Radar.Uncorrected_P_2021-10-01T00h00m00s_2021-11-01T00h00m00s.nc");
-    private static readonly ReadingData June182021 = new ("neerslag_data.nc");
-    
+    private static readonly IReadingData? October2021;
+    private static readonly IReadingData? June182021;
+
+    static TimeConversion()
+    {
+        if (File.Exists("Knmi.Radar.Uncorrected_P_2021-10-01T00h00m00s_2021-11-01T00h00m00s.nc"))
+        {
+            October2021 = new ReadingData("Knmi.Radar.Uncorrected_P_2021-10-01T00h00m00s_2021-11-01T00h00m00s.nc");
+        }
+        if (File.Exists("neerslag_data.nc"))
+        {
+            June182021 = new ReadingData("neerslag_data.nc");
+        }
+        
+    }
     //todo delete this function
     public static int GetDepthFromSeconds(long timestamplong)
     {
@@ -32,14 +44,20 @@ public class TimeConversion
         var beginTime = GetDateTimeFromSeconds(startTimestamp);
         var endTime = GetDateTimeFromSeconds(endTimestamp);
         if (beginTime > endTime) throw new TimeException("Begin time is after end time ");
-        return beginTime.Year switch
+        switch (beginTime.Year)
         {
-            2021 when beginTime.Month == 10 && endTime.Month == 10 => 
-                (dataSet: October2021, beginDepth: CalculateDepth(true, beginTime), endDepth:CalculateDepth(true, endTime)),
-            2021 when beginTime.Month == 6 && endTime.Month == 6  && beginTime.Day == 18 && endTime.Day == 18
-                => (dataSet: June182021, beginDepth: CalculateDepth(false, beginTime), endDepth:CalculateDepth(false, endTime)),
-            _ => throw new NoDataSetAvailable($"No dataset available for the given time {beginTime} {startTimestamp}  {endTime} {endTimestamp}")
-        };
+            case 2021 when beginTime.Month == 10 && endTime.Month == 10:
+                if (October2021 == null) throw new NoDataSetAvailable("Dataset for October 2021 is not present");
+                return (dataSet: October2021, beginDepth: CalculateDepth(true, beginTime), endDepth: CalculateDepth(true, endTime));
+            case 2021 when beginTime.Month == 6 && beginTime.Day == 18:
+                if (June182021 == null) throw new NoDataSetAvailable("Dataset for June 18th 2021 is not present");
+                var endDepth = CalculateDepth(false, endTime);
+                if (endDepth >= June182021.GetMaxDepth() - 1 || endDepth == 0) endDepth = June182021.GetMaxDepth() - 1;
+                return (dataSet: June182021, beginDepth: CalculateDepth(false, beginTime), endDepth );
+            default:
+                throw new NoDataSetAvailable(
+                    $"No dataset available for the given time {beginTime} {startTimestamp}  {endTime} {endTimestamp}");
+        }
     }
 
     /// <summary>
