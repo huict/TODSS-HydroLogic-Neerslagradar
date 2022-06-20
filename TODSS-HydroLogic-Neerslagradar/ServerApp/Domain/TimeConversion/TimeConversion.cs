@@ -1,4 +1,4 @@
-﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.Reading_Data;
+﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 

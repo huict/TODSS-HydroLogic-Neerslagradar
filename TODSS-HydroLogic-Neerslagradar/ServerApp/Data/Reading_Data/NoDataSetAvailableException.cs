@@ -1,4 +1,4 @@
-﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.Reading_Data;
+﻿namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 
 public class NoDataSetAvailable : Exception
 {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Rewrite_NetCdf_test.classes.colorSchemes;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.ColorSchemes;
 
 public interface IColorScheme
 { 
