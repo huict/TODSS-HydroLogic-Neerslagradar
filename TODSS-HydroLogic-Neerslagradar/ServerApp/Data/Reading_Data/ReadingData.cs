@@ -5,8 +5,10 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 public class ReadingData : IReadingData
 {
     private DataSet Ds { get; }
-    private Variable _p;
-    private int Y, X, Time;
+    private readonly Variable _p;
+    private readonly int _y;
+    private readonly int _x;
+    private readonly int _time;
 
     public ReadingData(string filePath)
     {
@@ -20,13 +22,13 @@ public class ReadingData : IReadingData
                 switch (dimension.Name)
                 {
                     case "time" : 
-                        Time = dimension.Length;
+                        _time = dimension.Length;
                         break;
                     case "x":
-                        X = dimension.Length;
+                        _x = dimension.Length;
                         break;
                     case "y" :
-                        Y = dimension.Length;
+                        _y = dimension.Length;
                         break;
                 }
             }
@@ -36,17 +38,17 @@ public class ReadingData : IReadingData
 
     public int GetTotalWidth()
     {
-        return X;
+        return _x;
     }
 
     public int GetTotalHeight()
     {
-        return Y;
+        return _y;
     }
 
     public int GetMaxDepth()
     {
-        return Time;
+        return _time;
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ public class ReadingData : IReadingData
     /// <returns>One whole slice of the dataset on a specific depth</returns>
     public float[,,] GetSliceWithDepth(int z)
     {
-        return GetSlicesWithCoordsAreaAndDepth(0, 0, z, X, Y, 1);
+        return GetSlicesWithCoordsAreaAndDepth(0, 0, z, _x, _y, 1);
     }
     /// <summary>
     ///   Gets one slice of the dataset
@@ -84,6 +86,12 @@ public class ReadingData : IReadingData
     /// <returns>Multiple slices with the specified width, height, and depth</returns>
     public float[,,] GetSlicesWithCoordsAreaAndDepth(int x, int y, int z, int width, int height, int depth)
     {
+        if (x < 0 ) x = 0;
+        if ( x + width > _x) width -= Math.Abs(_x - (x + width));
+        if (y < 0) y = 0;
+        if (y + height > _y) height -= Math.Abs(_y - (y + height));
+        if (z < 0) z = 0;
+        if (z + depth > _time) depth -= Math.Abs(_time - (z + depth));
         return (float[,,])_p.GetData(new []{z, y, x},null , new []{depth, height, width});
     }
 }
