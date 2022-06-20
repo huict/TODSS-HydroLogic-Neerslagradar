@@ -27,7 +27,7 @@ public class TimeConversion
     /// <returns>The Dataset that contains the needed data and the begin- and endDepth to fetch the data</returns>
     /// <exception cref="TimeException">Thrown when th beginTime is after the endTime</exception>
     /// <exception cref="NoDataSetAvailable">Thrown when there is no available dataset for the specified time</exception>
-    public static (ReadingData dataSet, int beginDepth, int endDepth) GetDatasetAndDepthFromSeconds(long startTimestamp, long endTimestamp)
+    public static (IReadingData dataSet, int beginDepth, int endDepth) GetDatasetAndDepthFromSeconds(long startTimestamp, long endTimestamp)
     {
         var beginTime = GetDateTimeFromSeconds(startTimestamp);
         var endTime = GetDateTimeFromSeconds(endTimestamp);

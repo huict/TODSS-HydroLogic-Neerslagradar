@@ -13,7 +13,7 @@ public class RadarImageService : IRadarImageService
 
     public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
     {
-        return GenerateWeatherDataDTOs.ReduceGridcells(combineFields, Pyramided.Y, Pyramided.X);
+        return GenerateWeatherDataDTOs.ReduceGridcells(combineFields, Pyramided.GetTotalHeight(), Pyramided.GetTotalWidth());
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class RadarImageService : IRadarImageService
         {
             for (var i = beginZ; i <= beginZ + depth; i++)
             {
-                geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSlice(i)));
+                geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSliceWithDepth(i)));
             }
             return geoDataList;
         }
@@ -46,7 +46,7 @@ public class RadarImageService : IRadarImageService
         
         for (var i = beginZ; i < beginZ + depth; i++)
         {
-            geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSlice(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * dataset.X * boundsForData.beginX)- 1));
+            geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSliceWithCoordsAndArea(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * dataset.GetTotalWidth() * boundsForData.beginX)- 1));
         }
         return geoDataList;
     }
