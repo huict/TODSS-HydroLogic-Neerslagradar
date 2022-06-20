@@ -95,6 +95,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _dataCompression: number = 3;
   private _animationStepSize: number = 1;
 
+  get map(): L.Map {
+    return <L.Map>this._map;
+  }
+
   get dataCompression():number {
     return this._dataCompression;
   }
@@ -239,16 +243,12 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
-  get map(): L.Map {
-    return <L.Map>this._map;
-  }
-
   public startNewAnimation() {
     this.clearAnimation();
 
     let beginSeconds:number = this._beginTime.valueOf();
     let endSeconds:number = this._endTime.valueOf();
-    let totalFrames = endSeconds/300-beginSeconds/300+1;
+    let totalFrames = endSeconds/300000-beginSeconds/300000+1;
     totalFrames = Math.floor(totalFrames/this._animationStepSize)
 
     for (let i = 0; i < totalFrames; i++) this._animationFrames.push([]);
@@ -291,7 +291,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // if frame is not yet requested -> request frame
     let frameNotYetRequested = this._animationFrames[this._nextFrameIndex].length == 0;
     if (frameNotYetRequested) {
-      this.fetchFrame(this._beginTime.valueOf()+this._nextFrameIndex*this._animationStepSize*300, this._nextFrameIndex, true);
+      this.fetchFrame(this._beginTime.valueOf()+this._nextFrameIndex*this._animationStepSize*300000, this._nextFrameIndex, true);
     } else {
       this.loadFrame();
     }
@@ -299,7 +299,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     // Allso look at the next frame and load that beforehand
     let nextNextFrameIndex = this._nextFrameIndex+1;
     if (this._animationFrames[nextNextFrameIndex] && this._animationFrames[nextNextFrameIndex].length == 0) {
-      this.fetchFrame(this._beginTime.valueOf()+nextNextFrameIndex*this._animationStepSize*300, nextNextFrameIndex, false);
+      this.fetchFrame(this._beginTime.valueOf()+nextNextFrameIndex*this._animationStepSize*300000, nextNextFrameIndex, false);
     }
   }
 
@@ -390,7 +390,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
     // update current time
     this._currentFrameIndex = this._nextFrameIndex;
-    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300);
+    this._currentTime = new Date(this._beginTime.valueOf()+ this._currentFrameIndex*this._animationStepSize*300000);
     this.changeCurrentTimeEvent.emit({
       currentTimestamp: this._currentTime.valueOf()
     })
@@ -407,11 +407,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
   private fetchFrame(fetchTime: number, frameIndex: number, autoLoadNext: boolean) {
-    // TODO fix time
     this.http.post("https://localhost:7187/radarimage/intensity", `{
        "CombineFields": ${this._dataCompression},
        "StartTimestamp" : ${fetchTime},
-       "EndTimestamp" : ${fetchTime+300}}`,
+       "EndTimestamp" : ${fetchTime+300000}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       let requestData = e as IIntensityData[][];
       this._animationFrames[frameIndex] = requestData[0];
