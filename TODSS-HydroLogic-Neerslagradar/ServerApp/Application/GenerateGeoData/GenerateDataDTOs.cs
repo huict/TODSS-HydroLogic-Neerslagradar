@@ -1,9 +1,9 @@
 ﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
-namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoData;
 
-public class GenerateWeatherDataDTOs
+public class GenerateDataDTOs
 {
     private static readonly GridSingelton Grid = GridSingelton.Grid;
     
@@ -18,14 +18,14 @@ public class GenerateWeatherDataDTOs
         var width = slice.GetLength(2);
         var height = slice.GetLength(1);
         var index = 0;
-        for (var i = 0; i < width; i++)
+        for (var x = 0; x < width; x++)
         {
-            for (var j = 0; j < height; j++)
+            for (var y = 0; y < height; y++)
             {
                 var geoDataDto = new GeoDataDTO
                 {
                     id = index,
-                    intensity = slice[0, j, i]
+                    intensity = slice[0, y, x]
                 };
                 geoDataDtoList.Add(geoDataDto);
                 index++;
@@ -41,7 +41,7 @@ public class GenerateWeatherDataDTOs
     /// <param name="slice">one slice where only the width and height matters</param>
     /// <param name="optionalBeginIndex">Optional parameter to determine which index the top left cell is. Used when you return a piece of the slice</param>
     /// <returns>A list filled with GeoData where every cell in the grid an intensity and the corner coords have.</returns>
-    public static List<GeoDataDTO> ReduceCoords(int combineAmountOfFields, float[,,] slice, int optionalBeginIndex = 0)
+    public static List<GeoDataDTO> ReduceGeoData(int combineAmountOfFields, float[,,] slice, int optionalBeginIndex = 0)
     {
         if (combineAmountOfFields <= 1) return GenerateGeo(slice);
         var geoDataDtoList = new List<GeoDataDTO>();
@@ -50,11 +50,11 @@ public class GenerateWeatherDataDTOs
         var widthToWide = width % combineAmountOfFields;
         var heightToHigh = height % combineAmountOfFields;
         var index = optionalBeginIndex;
-        for (var i = 0; i < width - widthToWide; i+=combineAmountOfFields)
+        for (var y = 0; y < width - widthToWide; y+=combineAmountOfFields)
         {
-            for (var j = 0; j < height - heightToHigh; j+=combineAmountOfFields)
+            for (var x = 0; x < height - heightToHigh; x+=combineAmountOfFields)
             {
-                var gridCells = CollectGridCells(i, j, combineAmountOfFields);
+                var gridCells = CollectGridCells(y, x, combineAmountOfFields);
                 var intensity = gridCells.Average(cell => slice[0, cell.Y, cell.X]);
                 if (intensity <= 0)
                 {
@@ -74,7 +74,7 @@ public class GenerateWeatherDataDTOs
     }
 
     /// <summary>
-    /// Compresses the amount of gridcells in a given height and width. Each cell has an id which is the same in <see cref="ReduceCoords"/> so the coordinates should be the same given the same id and combineAmountOfCells.
+    /// Compresses the amount of gridcells in a given height and width. Each cell has an id which is the same in <see cref="ReduceGeoData"/> so the coordinates should be the same given the same id and combineAmountOfCells.
     /// </summary>
     /// <param name="combineAmountOfCells">The amount of cells you want to merge to make one big one. </param>
     /// <param name="height">The height of the dataset. You want the cells for</param>
@@ -86,11 +86,11 @@ public class GenerateWeatherDataDTOs
         var widthToWide = width % combineAmountOfCells;
         var heightToHigh = height % combineAmountOfCells;
         var index = 0;
-        for (var i = 0; i < width - widthToWide; i += combineAmountOfCells)
+        for (var y = 0; y < width - widthToWide; y += combineAmountOfCells)
         {
-            for (var j = 0; j < height - heightToHigh; j += combineAmountOfCells)
+            for (var x = 0; x < height - heightToHigh; x += combineAmountOfCells)
             {
-                var gridCells = CollectGridCells(i, j, combineAmountOfCells);
+                var gridCells = CollectGridCells(y, x, combineAmountOfCells);
                 var coordTopLeft = new[] {gridCells[0].Coordinates[0], gridCells[0].Coordinates[1]};
                 var coordTopRight = new[] {gridCells[^combineAmountOfCells].Coordinates[2], gridCells[^combineAmountOfCells].Coordinates[3]};
                 var coordBotRight = new[] {gridCells[^1].Coordinates[4], gridCells[^1].Coordinates[5]};
@@ -107,12 +107,20 @@ public class GenerateWeatherDataDTOs
 
         return geoDataDtoList;
     }
-    private static List<GridCell> CollectGridCells(int beginI, int beginJ, int combineAmount)
+    
+    /// <summary>
+    ///     Collects all the gridcells in a given area
+    /// </summary>
+    /// <param name="beginY">Where to start looking for gridcells on the y-axis</param>
+    /// <param name="beginX">Where to start looking for gridcells on the x-asis</param>
+    /// <param name="combineAmount">The width and height of selection</param>
+    /// <returns>A list of gridcells in the selected area</returns>
+    private static List<GridCell> CollectGridCells(int beginY, int beginX, int combineAmount)
     {
         var gridCells = new List<GridCell>();
-        for (var k = beginI; k < beginI + combineAmount; k++)
+        for (var k = beginY; k < beginY + combineAmount; k++)
         {
-            for (var l = beginJ; l < beginJ + combineAmount; l++)
+            for (var l = beginX; l < beginX + combineAmount; l++)
             {
                 gridCells.Add(Grid.FindByGridCoordinatesPyramided(k, l));
             }
