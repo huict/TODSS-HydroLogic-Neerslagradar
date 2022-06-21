@@ -127,4 +127,14 @@ public class GenerateDataDTOs
         }
         return gridCells;
     }
+
+    // public static List<GridCell> ConvertFromIdToCells(int id, int combineAmount)
+    // {
+    //     int datasetWidth = readingData.GetTotalWidth();
+    //     int datasetHeight = readingData.GetTotalHeight();
+    //     int widthToWide = datasetWidth % informationNeededForCellInformation.CombineFields;
+    //     int heightToHigh = datasetHeight % informationNeededForCellInformation.CombineFields;
+    //
+    //     int pyramidedWidth = 0
+    // }
 }
