@@ -1,7 +1,9 @@
 ﻿using Microsoft.Research.Science.Data;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
-
+/// <summary>
+///     Responsible for reading the perception data. And returning it in a 3-dim array with time in the 3rd dimension.
+/// </summary>
 public class ReadingData : IReadingData
 {
     private DataSet Ds { get; }
