@@ -57,10 +57,11 @@ public class ReadingData : IReadingData
     ///     Gets one slice of the dataset
     /// </summary>
     /// <param name="z">Which slice you want in terms of time depth</param>
+    /// <param name="depth">How many slices you want starting from z. Defaults to 1</param>
     /// <returns>One whole slice of the dataset on a specific depth</returns>
-    public float[,,] GetSliceWithDepth(int z)
+    public float[,,] GetSliceWithDepth(int z, int depth = 1)
     {
-        return GetSlicesWithCoordsAreaAndDepth(0, 0, z, _x, _y, 1);
+        return GetSlicesWithCoordsAreaAndDepth(0, 0, z, _x, _y, depth);
     }
     /// <summary>
     ///   Gets one slice of the dataset
