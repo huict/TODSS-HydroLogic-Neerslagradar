@@ -1,6 +1,6 @@
 ﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoJSON;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
@@ -13,7 +13,7 @@ public class RadarImageService : IRadarImageService
 
     public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
     {
-        return GenerateWeatherDataDTOs.ReduceGridcells(combineFields, Pyramided.GetTotalHeight(), Pyramided.GetTotalWidth());
+        return GenerateDataDTOs.ReduceGridcells(combineFields, Pyramided.GetTotalHeight(), Pyramided.GetTotalWidth());
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class RadarImageService : IRadarImageService
         {
             for (var i = beginZ; i <= beginZ + depth; i++)
             {
-                geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSliceWithDepth(i)));
+                geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.CombineFields ,dataset.GetSliceWithDepth(i)));
             }
             return geoDataList;
         }
@@ -46,7 +46,7 @@ public class RadarImageService : IRadarImageService
         
         for (var i = beginZ; i < beginZ + depth; i++)
         {
-            geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,dataset.GetSliceWithCoordsAndArea(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * dataset.GetTotalWidth() * boundsForData.beginX)- 1));
+            geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.CombineFields ,dataset.GetSliceWithCoordsAndArea(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * dataset.GetTotalWidth() + boundsForData.beginX)- 1));
         }
         return geoDataList;
     }
