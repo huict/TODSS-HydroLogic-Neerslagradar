@@ -1,40 +1,35 @@
-﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
+﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoData;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 
-public class CellInformationService
+public class CellInformationService : ICellInformationService
 {
-    // Id RadarImageService regel 49
-    //(boundsForData.beginY * dataset.GetTotalWidth() + boundsForData.beginX)- 1)
-
-
-
-   
-    // pyramiding uitvogelen
-    // stats uitrekenen voor die bepaalde cell
-
-    public void GetInformationForCell(InformationNeededForCellInformationDTO informationNeededForCellInformation)
+    /// <summary>
+    ///     Gets calculated information for a single pyramided cell
+    /// </summary>
+    /// <param name="dto">Contains id, pyramiding amount, start and end in seconds</param>
+    public void GetCellInformation(InformationNeededForCellInformationDTO dto)
     {
         // Retrieving slices
-        var dataset = TimeConversion.GetDatasetAndDepthFromSeconds(informationNeededForCellInformation.StartSeconds, informationNeededForCellInformation.EndSeconds);
+        var dataset = TimeConversion.GetDatasetAndDepthFromSeconds(dto.StartSeconds, dto.EndSeconds);
         IReadingData readingData = dataset.dataSet;
-        int depth = dataset.endDepth - dataset.beginDepth;
+        List<GridCell> cellsInPyramidedCell = GenerateDataDTOs.ConvertFromIdToGridCells(readingData.GetTotalHeight(), dto.CombineFields, dto.CellId);
+
+        var slices = readingData.GetSlicesWithCoordsAreaAndDepth(
+            x: cellsInPyramidedCell[0].X,
+            y: cellsInPyramidedCell[0].Y,
+            z: dataset.beginDepth,
+            width: dto.CombineFields,
+            height: dto.CombineFields,
+            dept: dataset.endDepth - dataset.beginDepth
+            );
         
-        // result:
-        var slices = readingData.GetSliceWithDepth(dataset.beginDepth, depth);
-
-        // Calculating pyramided dataset
-        int datasetWidth = readingData.GetTotalWidth();
-        int datasetHeight = readingData.GetTotalHeight();
-        int combineFields = informationNeededForCellInformation.CombineFields;
-        int widthToWide = datasetWidth % combineFields;
-        int heightToHigh = datasetHeight % combineFields;
-
-        // result:
-        int pyramidedWidth = (datasetWidth - widthToWide) / combineFields;
-        int pyramidedHeight = (datasetHeight - heightToHigh) / combineFields;
-
+        // TODO: Figure out return type
+        // Defenitly a List<List<DTO>>
+        // GeoDataDTO or a different DTO
     }
 }
