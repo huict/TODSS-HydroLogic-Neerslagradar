@@ -110,14 +110,14 @@ public class GenerateDataDTOs
     /// <summary>
     /// Gives back all the cells that are in a pyramided gridcell
     /// </summary>
-    /// <param name="pyramidedGridHeight">The height of pyramided grid</param>
+    /// <param name="GridHeight">The height of the data grid</param>
     /// <param name="combineAmount">The amount of pyramiding</param>
     /// <param name="id">Id of the cell</param>
     /// <returns></returns>
-    public static List<GridCell> ConvertFromIdToGridCells(int pyramidedGridHeight, int combineAmount, int id)
+    public static List<GridCell> ConvertFromIdToGridCells(int GridHeight, int combineAmount, int id)
     {
-        int heightToHigh = pyramidedGridHeight % combineAmount;
-        int pyramidedHeight = (pyramidedGridHeight - heightToHigh) / combineAmount;
+        int heightToHigh = GridHeight % combineAmount;
+        int pyramidedHeight = (GridHeight - heightToHigh) / combineAmount;
 
         // Given id = x * height + y
         // Means x = rounddown(index / height) 
