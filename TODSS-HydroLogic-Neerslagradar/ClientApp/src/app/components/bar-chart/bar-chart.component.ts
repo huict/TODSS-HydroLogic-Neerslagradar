@@ -44,15 +44,8 @@ export class BarChartComponent implements OnInit {
     let cf = this._coordinatesFilter;
     let begin:number = <number>this._timeFilter?.beginTimestamp;
     let end:number = <number>this._timeFilter?.endTimestamp;
+    // TODO convert selection to points
     let body = {
-      "TopLeftLongitude":cf.topLeft.lng,
-      "TopLeftLatitude":cf.topLeft.lat,
-      "TopRightLongitude":cf.bottomRight.lng,
-      "TopRightLatitude":cf.topLeft.lat,
-      "BotRightLongitude":cf.bottomRight.lng,
-      "BotRightLatitude":cf.bottomRight.lat,
-      "BotLeftLongitude":cf.topLeft.lng,
-      "BotLeftLatitude":cf.bottomRight.lat,
       "StartSeconds":calculateTimeFunc(new Date(begin)),
       "EndSeconds":calculateTimeFunc(new Date(end)),
       "CombineFields":1
