@@ -174,9 +174,42 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.map.on("click", e => {
       // @ts-ignore
       let coords: L.LatLng = e.latlng;
-      this.selectPixel(coords)
-      let popup = L.popup().setLatLng(coords).setContent("Point set").openOn(this.map);
-      setTimeout(() => popup.remove(), 1000);
+
+      // pixel detection:
+      let pixel = this.selectPixel(coords);
+      if (pixel === null) return;
+      if (!this._selectedPixels.hasOwnProperty(pixel.id)) return;
+
+      // popup generation:
+      let popup = L.popup().setLatLng(coords);
+
+      let container = document.createElement("div");
+
+      let removeBtn = document.createElement("button");
+      removeBtn.innerText = "X"
+      removeBtn.addEventListener("click", e => popup.remove());
+      container.appendChild(removeBtn);
+
+      let id = document.createElement("div");
+      id.innerText = `Id: ${pixel.id}`;
+      container.appendChild(id);
+
+      let area = document.createElement("div");
+      let areaValue = Math.round(this.calculateArea([...pixel.coords[0], pixel.coords[0][0]])*100)/100;
+      area.innerText = `Area (km): ${areaValue}`
+      container.appendChild(area);
+
+      let intensity = document.createElement("div");
+      let frameCell = this._animationFrames[this.currentFrameIndex].find(v=>v.id===pixel?.id);
+      let intensityValue = frameCell !== undefined ? frameCell.intensity : 0;
+      intensityValue *= 12;
+      intensityValue = Math.round(intensityValue*100)/100;
+      intensity.innerText = `Intensity: ${intensityValue}mm/h`;
+      container.appendChild(intensity);
+
+      popup.options.closeButton = false;
+      popup.setContent(container).openOn(this.map);
+      // setTimeout(() => popup.remove(), 1000);
     });
     // @ts-ignore
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
@@ -208,7 +241,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.startNewAnimation();
   }
 
-  selectPixel(point: L.LatLng) {
+  selectPixel(point: L.LatLng): ICoordsData|null {
     let poly = this._animationCoords.find((value) => {
       let lng = point.lng, lat = point.lat;
       let coords = value.coords[0];
@@ -223,7 +256,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }
       return inside;
     })
-    if (poly === undefined) return;
+    if (poly === undefined) return null;
 
     if (this._selectedPixels.hasOwnProperty(poly.id)) {
       this._selectedPixels[poly.id].remove();
@@ -231,11 +264,24 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     } else {
       this.drawSelectPixel(poly.id.toString(), poly.coords[0].map(value => [value[1], value[0]]) as L.LatLngExpression[])
     }
+    return poly;
   }
 
   private drawSelectPixel(id: string, coords: L.LatLngExpression[]) {
     this._selectedPixels[id] = L.polygon(coords, {fillOpacity: 0, color: '#EF476F'});
     this._selectedPixels[id].addTo(this.map);
+  }
+
+  private calculateArea(poly: number[][]): number {
+    let area = 0;
+    for (let i = 0; i < poly.length - 1; i++)
+    {
+      let [p1lo, p1la] = poly[i];
+      let [p2lo, p2la] = poly[i + 1];
+      area += (p2lo-p1lo)*Math.PI/180 * (2+Math.sin(p1la*Math.PI/180)+Math.sin(p2la*Math.PI/180));
+    }
+    area = area * 6378.137 * 6378.137 / 2;
+    return Math.abs(area);
   }
 
   public startNewAnimation() {
