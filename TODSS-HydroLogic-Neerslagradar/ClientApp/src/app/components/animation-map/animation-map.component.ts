@@ -71,8 +71,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // map variables
   private _map: L.Map | undefined;
+  private _mapLoaded: boolean = false;
   private _dataTemp: IMapData | undefined;
   private _selectedPixels: ISelectedPixels = {};
+  private _initialLoadedPixels: ISelectedPixelsPersistence[] = [];
 
   // time filters
   public _beginTime: Date = new Date(1623974400000);
@@ -131,6 +133,38 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
+  get coordinateFilter(): ICoordinateFilter {
+    return {
+      pixels: this.convertPolygonsToPixelJson(),
+      dataCompression: this._dataCompression,
+    }
+  }
+
+  @Input() set coordinateFilter(coordinateFilter: ICoordinateFilter) {
+    this._dataCompression = coordinateFilter.dataCompression;
+    if (this._mapLoaded) {
+      Object.keys(this._selectedPixels).forEach(v => this.removeSelectedPixel(parseInt(v)));
+      coordinateFilter.pixels.forEach(point => this.drawSelectPixel(point.id, point.value));
+    } else {
+      this._initialLoadedPixels = coordinateFilter.pixels;
+    }
+  }
+
+  get timeFilter(): ITimeFilter {
+    return {
+      beginTimestamp: this._beginTime.valueOf(),
+      endTimestamp: this._endTime.valueOf(),
+      stepSize: this._animationStepSize,
+    }
+  }
+
+  @Input() set timeFilter(timeFilter: ITimeFilter) {
+    this._beginTime = new Date(timeFilter.beginTimestamp);
+    this._endTime = new Date(timeFilter.endTimestamp);
+    this._currentTime = new Date(timeFilter.beginTimestamp);
+    this._animationStepSize = timeFilter.stepSize;
+  }
+
   get currentFrameIndex(): number {
     return this._currentFrameIndex;
   }
@@ -146,21 +180,14 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   get data():IMapData {
     return <IMapData>{
-      points: this.convertPolygonsToPixelJson(),
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
-      beginTime: this._beginTime.valueOf(),
-      endTime: this._endTime.valueOf(),
-      dataCompression: this._dataCompression,
     }
   }
 
   @Input() set data(value: IMapData) {
     if (value) {
-      this._dataCompression = value.dataCompression;
       this._dataTemp = value;
-      if (value.beginTime > 0) this._beginTime = new Date(value.beginTime);
-      if (value.endTime > 0) this._endTime = new Date(value.endTime);
     }
   }
 
@@ -186,6 +213,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   onReady(e: any) {
     this._map = e;
 
+    // add click event listener for map
     this.map.on("click", e => {
       // @ts-ignore
       let coords: L.LatLng = e.latlng;
@@ -226,13 +254,16 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       popup.setContent(container).openOn(this.map);
       // setTimeout(() => popup.remove(), 1000);
     });
-    // @ts-ignore
+    // set initial view and start animation
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
-    this._dataTemp?.points.forEach(point => this.drawSelectPixel(point.id, point.value))
     this.fetchCoords();
     this.startNewAnimation();
 
-    // Event is thrown when the map is ready
+    // load selection
+    this._initialLoadedPixels.forEach(point => this.drawSelectPixel(point.id, point.value));
+
+    // Event is thrown when the map is loaded
+    this._mapLoaded = true;
     this.mapReadyEvent.emit(this);
   }
 
@@ -494,12 +525,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 }
 
 export interface IMapData {
-  points: ISelectedPixelsPersistence[],
   zoom: number,
   centerLocation: L.LatLng,
-  beginTime: number,
-  endTime: number,
-  dataCompression: number,
 }
 
 export interface IIntensityData {

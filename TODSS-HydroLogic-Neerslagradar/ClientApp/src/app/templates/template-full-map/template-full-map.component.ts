@@ -11,7 +11,10 @@ import {AnimationMapComponent} from "../../components/animation-map/animation-ma
   styleUrls: ['./template-full-map.component.css']
 })
 export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
-  private _coordinatesFilter: ICoordinateFilter | undefined;
+  private _coordinatesFilter: ICoordinateFilter = {
+    dataCompression: 3,
+    pixels: [],
+  };
   private _timeFilter: ITimeFilter = {
     beginTimestamp:1623974400000,
     stepSize:1,
@@ -51,11 +54,11 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
     return container;
   }
 
-  get coordinatesFilter(): ICoordinateFilter | undefined {
+  get coordinatesFilter(): ICoordinateFilter {
     return this._coordinatesFilter;
   }
 
-  @Input() set coordinatesFilter(value: ICoordinateFilter | undefined) {
+  @Input() set coordinatesFilter(value: ICoordinateFilter) {
     this._coordinatesFilter = value;
   }
 
