@@ -103,7 +103,11 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   }
 
   @Input() set dataCompression(value:number) {
+    if (this._dataCompression === value) return;
     this._dataCompression = value;
+    this.clearAnimation();
+    Object.keys(this._selectedPixels).forEach(v => this.removeSelectedPixel(parseInt(v)));
+    this.changeLocationFilterEvent.emit({dataCompression: value, pixels: []});
   }
 
   get animationStepSize(): number {
@@ -142,20 +146,31 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   get data():IMapData {
     return <IMapData>{
-      points: Object.keys(this._selectedPixels).map(value => {return {id: value, value: this._selectedPixels[value].getLatLngs() as L.LatLngExpression[]};}),
+      points: this.convertPolygonsToPixelJson(),
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
       beginTime: this._beginTime.valueOf(),
       endTime: this._endTime.valueOf(),
+      dataCompression: this._dataCompression,
     }
   }
 
   @Input() set data(value: IMapData) {
     if (value) {
+      this._dataCompression = value.dataCompression;
       this._dataTemp = value;
       if (value.beginTime > 0) this._beginTime = new Date(value.beginTime);
       if (value.endTime > 0) this._endTime = new Date(value.endTime);
     }
+  }
+
+  private convertPolygonsToPixelJson(): ISelectedPixelsPersistence[] {
+    return Object.keys(this._selectedPixels).map(value => {
+      return {
+        id: value,
+        value: this._selectedPixels[value].getLatLngs() as L.LatLngExpression[]
+      };
+    });
   }
 
   constructor(private http: HttpClient) {}
@@ -259,17 +274,22 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (poly === undefined) return null;
 
     if (this._selectedPixels.hasOwnProperty(poly.id)) {
-      this._selectedPixels[poly.id].remove();
-      delete this._selectedPixels[poly.id];
+      this.removeSelectedPixel(poly.id);
     } else {
       this.drawSelectPixel(poly.id.toString(), poly.coords[0].map(value => [value[1], value[0]]) as L.LatLngExpression[])
     }
+    this.changeLocationFilterEvent.emit({dataCompression: this._dataCompression, pixels: this.convertPolygonsToPixelJson()});
     return poly;
   }
 
   private drawSelectPixel(id: string, coords: L.LatLngExpression[]) {
     this._selectedPixels[id] = L.polygon(coords, {fillOpacity: 0, color: '#EF476F'});
     this._selectedPixels[id].addTo(this.map);
+  }
+
+  private removeSelectedPixel(id: number) {
+    this._selectedPixels[id].remove();
+    delete this._selectedPixels[id];
   }
 
   private calculateArea(poly: number[][]): number {
@@ -478,7 +498,8 @@ export interface IMapData {
   zoom: number,
   centerLocation: L.LatLng,
   beginTime: number,
-  endTime:number,
+  endTime: number,
+  dataCompression: number,
 }
 
 export interface IIntensityData {
@@ -491,11 +512,11 @@ export interface ICoordsData {
   coords: number[][][]
 }
 
-interface ISelectedPixels {
+export interface ISelectedPixels {
   [key: string]: L.Polygon
 }
 
-interface ISelectedPixelsPersistence {
+export interface ISelectedPixelsPersistence {
   id: string,
   value: L.LatLngExpression[]
 }

@@ -1,5 +1,5 @@
 ﻿import { ITemplate } from "./i-template.view";
-import { LatLng } from 'leaflet';
+import {ISelectedPixelsPersistence} from "../components/animation-map/animation-map.component";
 
 /**
  * An interface for templates with weather data inside it.
@@ -14,8 +14,8 @@ export interface IWeatherTemplate extends ITemplate {
  * The interface for coordinate filtering.
  */
 export interface ICoordinateFilter {
-  topLeft: LatLng;
-  bottomRight: LatLng;
+  pixels: ISelectedPixelsPersistence[],
+  dataCompression: number,
 }
 
 /**
