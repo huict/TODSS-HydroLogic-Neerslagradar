@@ -3,7 +3,8 @@ import {IConfiguration} from "../home/home.component";
 import {ConfigurationStandardData} from "./configuration-standard.data";
 
 export interface IConfigContainer {
-  [key: number]: IConfiguration;
+  version: number,
+  configurations: IConfiguration[],
 }
 
 /**
@@ -19,9 +20,11 @@ export class ConfigurationManager {
 
   private getDataLocal(): IConfigContainer {
     let data = localStorage.getItem(this.dataName);
-    // If there is data load that. Else load and save the standard configurations.
+    // If there is config data in local storage than load that configuration (allso checks configuration version). Else load and save the standard configurations.
     if (data) {
-      return JSON.parse(data);
+      let jsonData = JSON.parse(data);
+      if (jsonData.hasOwnProperty("version") && jsonData.version === ConfigurationStandardData.configVersion) return jsonData;
+      return this.standardData.standardData;
     } else {
       const standard = this.standardData.standardData;
       this.saveDataLocal(standard);
@@ -37,7 +40,7 @@ export class ConfigurationManager {
    * Generates a new and unique id number
    */
   public getNewIndex(): number {
-    let keys = Object.keys(this.getDataLocal())
+    let keys = this.getDataLocal().configurations.map(c => c.id);
     if (keys.length == 0) return 0;
     return Number(keys.sort()[keys.length-1]) + 1;
   }
@@ -50,7 +53,12 @@ export class ConfigurationManager {
    */
   public saveConfig(configId: number, config: IConfiguration) {
     let data = this.getDataLocal();
-    data[configId] = config;
+    let existingConfigIndex = data.configurations.findIndex(c => c.id === configId);
+    if (existingConfigIndex === -1) {
+      data.configurations.push(config);
+    } else {
+      data.configurations[existingConfigIndex] = config;
+    }
     this.saveDataLocal(data)
   }
 
@@ -59,7 +67,8 @@ export class ConfigurationManager {
    * @param configId id
    */
   public getConfig(configId: number): IConfiguration {
-    return this.getDataLocal()[configId];
+    // @ts-ignore
+    return this.getDataLocal().configurations.find(c => c.id == configId);
   }
 
   /**
@@ -75,7 +84,7 @@ export class ConfigurationManager {
    */
   public removeConfig(configId: number) {
     let data = this.getDataLocal();
-    delete data[configId];
+    data.configurations = data.configurations.filter(c => c.id !== configId);
     this.saveDataLocal(data)
   }
 }

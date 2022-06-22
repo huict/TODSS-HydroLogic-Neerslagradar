@@ -86,14 +86,13 @@ export class HomeComponent implements OnInit {
 
   private loadConfig() {
     if (this.configId) {
-      let data = this.configManager.getConfig(this.configId);
-      console.log(data);
-      if (data) {
-        for (const viewData of data.views) {
+      let config = this.configManager.getConfig(this.configId);
+      if (config) {
+        for (const viewData of config.views) {
           this.addView(viewData);
         }
-        this.configTitle = data.title;
-        this.configDescription = data.description;
+        this.configTitle = config.title;
+        this.configDescription = config.description;
       }
     }
   }
@@ -109,7 +108,6 @@ export class HomeComponent implements OnInit {
 
     // Construct the configuration
     let obj = {id:this.configId, title:this.configTitle, description:this.configDescription, views:this.views.map(v => v.data)};
-    console.log(obj)
     this.configManager.saveConfig(this.configId, obj);
 
     // If this is a new configuration, change the url to match the new configuration
