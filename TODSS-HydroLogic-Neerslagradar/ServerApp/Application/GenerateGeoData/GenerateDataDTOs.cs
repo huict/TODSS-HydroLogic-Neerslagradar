@@ -50,9 +50,9 @@ public class GenerateDataDTOs
         var widthToWide = width % combineAmountOfFields;
         var heightToHigh = height % combineAmountOfFields;
         var index = optionalBeginIndex;
-        for (var y = 0; y < width - widthToWide; y+=combineAmountOfFields)
+        for (var x = 0; x < width - widthToWide; x+=combineAmountOfFields)
         {
-            for (var x = 0; x < height - heightToHigh; x+=combineAmountOfFields)
+            for (var y = 0; y < height - heightToHigh; y+=combineAmountOfFields)
             {
                 var gridCells = CollectGridCells(y, x, combineAmountOfFields);
                 var intensity = gridCells.Average(cell => slice[0, cell.Y, cell.X]);
@@ -107,6 +107,35 @@ public class GenerateDataDTOs
 
         return geoDataDtoList;
     }
+    /// <summary>
+    /// Gives back all the cells that are in a pyramided gridcell
+    /// </summary>
+    /// <param name="pyramidedGridHeight">The height of pyramided grid</param>
+    /// <param name="combineAmount">The amount of pyramiding</param>
+    /// <param name="id">Id of the cell</param>
+    /// <returns></returns>
+    public static List<GridCell> ConvertFromIdToGridCells(int pyramidedGridHeight, int combineAmount, int id)
+    {
+        int heightToHigh = pyramidedGridHeight % combineAmount;
+        int pyramidedHeight = (pyramidedGridHeight - heightToHigh) / combineAmount;
+
+        // Given id = x * height + y
+        // Means x = rounddown(index / height) 
+        int x = id / pyramidedHeight; //Integer division rounds down
+        // And means y = index % height
+        int y = id % pyramidedHeight;
+        
+        var gridCells = new List<GridCell>();
+        for (var currentx = x; x < x + combineAmount; x++)
+        {
+            for (var currenty = y; y < y + combineAmount; y++)
+            {
+                gridCells.Add(Grid.FindByGridCoordinatesPyramided(currentx, currenty));
+            }
+        }
+
+        return gridCells;
+    }
 
     /// <summary>
     ///     Collects all the gridcells in a given area
@@ -118,9 +147,9 @@ public class GenerateDataDTOs
     private static List<GridCell> CollectGridCells(int beginY, int beginX, int combineAmount)
     {
         var gridCells = new List<GridCell>();
-        for (var y = beginY; y < beginY + combineAmount; y++)
+        for (var x = beginX; x < beginX + combineAmount; x++)
         {
-            for (var x = beginX; x < beginX + combineAmount; x++)
+            for (var y = beginY; y < beginY + combineAmount; y++)
             {
                 gridCells.Add(Grid.FindByGridCoordinatesPyramided(x, y));
             }
