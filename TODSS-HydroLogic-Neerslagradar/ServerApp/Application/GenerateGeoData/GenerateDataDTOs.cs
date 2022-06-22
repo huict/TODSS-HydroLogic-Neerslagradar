@@ -86,9 +86,9 @@ public class GenerateDataDTOs
         var widthToWide = width % combineAmountOfCells;
         var heightToHigh = height % combineAmountOfCells;
         var index = 0;
-        for (var y = 0; y < width - widthToWide; y += combineAmountOfCells)
+        for (var x = 0; x < width - widthToWide; x += combineAmountOfCells)
         {
-            for (var x = 0; x < height - heightToHigh; x += combineAmountOfCells)
+            for (var y = 0; y < height - heightToHigh; y += combineAmountOfCells)
             {
                 var gridCells = CollectGridCells(y, x, combineAmountOfCells);
                 var coordTopLeft = new[] {gridCells[0].Coordinates[0], gridCells[0].Coordinates[1]};
@@ -107,7 +107,7 @@ public class GenerateDataDTOs
 
         return geoDataDtoList;
     }
-    
+
     /// <summary>
     ///     Collects all the gridcells in a given area
     /// </summary>
@@ -118,23 +118,15 @@ public class GenerateDataDTOs
     private static List<GridCell> CollectGridCells(int beginY, int beginX, int combineAmount)
     {
         var gridCells = new List<GridCell>();
-        for (var k = beginY; k < beginY + combineAmount; k++)
+        for (var y = beginY; y < beginY + combineAmount; y++)
         {
-            for (var l = beginX; l < beginX + combineAmount; l++)
+            for (var x = beginX; x < beginX + combineAmount; x++)
             {
-                gridCells.Add(Grid.FindByGridCoordinatesPyramided(k, l));
+                gridCells.Add(Grid.FindByGridCoordinatesPyramided(x, y));
             }
         }
+
         return gridCells;
     }
 
-    // public static List<GridCell> ConvertFromIdToCells(int id, int combineAmount)
-    // {
-    //     int datasetWidth = readingData.GetTotalWidth();
-    //     int datasetHeight = readingData.GetTotalHeight();
-    //     int widthToWide = datasetWidth % informationNeededForCellInformation.CombineFields;
-    //     int heightToHigh = datasetHeight % informationNeededForCellInformation.CombineFields;
-    //
-    //     int pyramidedWidth = 0
-    // }
 }
