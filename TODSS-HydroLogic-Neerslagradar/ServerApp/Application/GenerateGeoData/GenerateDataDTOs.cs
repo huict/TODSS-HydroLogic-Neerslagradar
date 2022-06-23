@@ -116,6 +116,11 @@ public class GenerateDataDTOs
     /// <returns></returns>
     public static List<GridCell> ConvertFromIdToGridCells(int GridHeight, int combineAmount, int id)
     {
+        if (combineAmount <= 0)
+        {
+            combineAmount = 1;
+        }
+        
         int heightToHigh = GridHeight % combineAmount;
         int pyramidedHeight = (GridHeight - heightToHigh) / combineAmount;
 
