@@ -15,7 +15,8 @@ public class GraphController : ControllerBase
         _graphService = graphService;
     }
     
-    public List<GeoDataDTO> GetInformationForGridCellWithId(IdBasedWeatherFilterDTO dto)
+    [HttpGet]
+    public List<float> GetInformationForGridCellWithId(IdBasedWeatherFilterDTO dto)
     {
         return _graphService.GetGraphInformation(dto);
     }
