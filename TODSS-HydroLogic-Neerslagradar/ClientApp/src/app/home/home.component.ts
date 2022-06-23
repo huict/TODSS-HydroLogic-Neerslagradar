@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this._routeParamSubscription = this.route.queryParams.subscribe(params => {
       if (params.hasOwnProperty("config")) {
-        this.configId = params.config;
+        this.configId = parseInt(params.config);
         this.loadConfig();
         this._routeParamSubscription?.unsubscribe();
       }

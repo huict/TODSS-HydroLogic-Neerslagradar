@@ -42,7 +42,7 @@ export class ConfigurationManager {
   public getNewIndex(): number {
     let keys = this.getDataLocal().configurations.map(c => c.id);
     if (keys.length == 0) return 0;
-    return Number(keys.sort()[keys.length-1]) + 1;
+    return keys.sort()[keys.length-1] + 1;
   }
 
   /**
