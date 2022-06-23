@@ -28,6 +28,7 @@ if (startWebsite)
 
     builder.Services.AddScoped<IRadarImageService, RadarImageService>();
     builder.Services.AddScoped<IStatistiekenService, StatistiekenService>();
+    builder.Services.AddScoped<IGraphService, GraphService>();
 
     var app = builder.Build();
     builder.Services.AddControllers();

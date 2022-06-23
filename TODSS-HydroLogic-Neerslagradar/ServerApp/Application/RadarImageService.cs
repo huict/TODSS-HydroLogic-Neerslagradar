@@ -1,6 +1,6 @@
-﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.GenerateGeoJSON;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.Reading_Data;
+﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoData;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
@@ -13,7 +13,7 @@ public class RadarImageService : IRadarImageService
 
     public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
     {
-        return GenerateWeatherDataDTOs.ReduceGridcells(combineFields, Pyramided.Y, Pyramided.X);
+        return GenerateDataDTOs.ReduceGridcells(combineFields, Pyramided.GetTotalHeight(), Pyramided.GetTotalWidth());
     }
 
     /// <summary>
@@ -25,8 +25,8 @@ public class RadarImageService : IRadarImageService
     public List<List<GeoDataDTO>> GetSpecificSlices(WeatherFiltersDTO dto)
     {
         var geoDataList = new List<List<GeoDataDTO>>();
-        var beginZ = TimeConversion.GetDepthFromSeconds(dto.StartSeconds);
-        var depth = TimeConversion.GetDepthFromSeconds(dto.EndSeconds) - beginZ;
+        var (dataset, beginZ, endDepth) = TimeConversion.GetDatasetAndDepthFromSeconds(dto.StartTimestamp, dto.EndTimestamp);
+        var depth = endDepth - beginZ;
         var coords = new []
         {
             dto.TopLeftLongitude, dto.TopLeftLatitude,  dto.TopRightLongitude ,dto.TopRightLatitude,  
@@ -35,9 +35,9 @@ public class RadarImageService : IRadarImageService
         
         if (coords.Any(coord => coord == 0))
         {
-            for (var i = beginZ; i < beginZ + depth; i++)
+            for (var i = beginZ; i <= beginZ + depth; i++)
             {
-                geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(i)));
+                geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.CombineFields ,dataset.GetSliceWithDepth(i)));
             }
             return geoDataList;
         }
@@ -46,7 +46,7 @@ public class RadarImageService : IRadarImageService
         
         for (var i = beginZ; i < beginZ + depth; i++)
         {
-            geoDataList.Add(GenerateWeatherDataDTOs.ReduceCoords(dto.CombineFields ,Pyramided.GetSlice(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * Pyramided.X * boundsForData.beginX)- 1));
+            geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.CombineFields ,dataset.GetSliceWithCoordsAndArea(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * dataset.GetTotalWidth() + boundsForData.beginX)- 1));
         }
         return geoDataList;
     }
