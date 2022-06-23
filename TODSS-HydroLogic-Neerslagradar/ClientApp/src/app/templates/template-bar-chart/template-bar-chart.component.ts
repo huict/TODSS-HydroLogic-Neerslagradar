@@ -47,6 +47,30 @@ export class TemplateBarChartComponent implements OnInit, IWeatherTemplate {
 
   get settings(): HTMLElement {
     let container = document.createElement("div");
+
+    {
+      let combineContainer = document.createElement("div");
+      combineContainer.style.display = "flex";
+      {
+        let combineLabel = document.createElement("label");
+        combineLabel.style.flexGrow = "2";
+        combineLabel.innerText = "Pyramiding: ";
+        combineLabel.title = "De hoeveelheid cellen die samengevoegd worden";
+        combineContainer.appendChild(combineLabel);
+      }
+      {
+        let combineInput = document.createElement("input");
+        combineInput.type = "number";
+        combineInput.min = "1";
+        combineInput.max = "6";
+        combineInput.value = this._coordinatesFilter.dataCompression.toString();
+        // @ts-ignore
+        combineInput.addEventListener("input", e => this._map.dataCompression = e.target.value);
+        combineContainer.appendChild(combineInput);
+      }
+      container.appendChild(combineContainer);
+    }
+
     return container;
   }
 

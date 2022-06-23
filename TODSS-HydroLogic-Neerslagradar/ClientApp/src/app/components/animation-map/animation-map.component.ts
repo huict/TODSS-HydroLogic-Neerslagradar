@@ -107,7 +107,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   @Input() set dataCompression(value:number) {
     if (this._dataCompression === value) return;
     this._dataCompression = value;
-    this.clearAnimation();
+    this.fetchCoords();
+    this.startNewAnimation();
     Object.keys(this._selectedPixels).forEach(v => this.removeSelectedPixel(parseInt(v)));
     this.changeLocationFilterEvent.emit({dataCompression: value, pixels: []});
   }
@@ -141,7 +142,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   }
 
   @Input() set coordinateFilter(coordinateFilter: ICoordinateFilter) {
-    this._dataCompression = coordinateFilter.dataCompression;
+    this.dataCompression = coordinateFilter.dataCompression;
     if (this._mapLoaded) {
       Object.keys(this._selectedPixels).forEach(v => this.removeSelectedPixel(parseInt(v)));
       coordinateFilter.pixels.forEach(point => this.drawSelectPixel(point.id, point.value));
@@ -490,6 +491,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Fetches the coordinates for the frames
   private fetchCoords() {
+    this._animationCoords = [];
     this.http.post("https://localhost:7187/radarimage/coords", `{
        "CombineFields": ${this._dataCompression}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
