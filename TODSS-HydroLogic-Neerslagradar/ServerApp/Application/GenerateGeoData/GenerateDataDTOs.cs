@@ -110,30 +110,30 @@ public class GenerateDataDTOs
     /// <summary>
     /// Gives back all the cells that are in a pyramided gridcell
     /// </summary>
-    /// <param name="GridHeight">The height of the data grid</param>
+    /// <param name="gridWidth">The height of the data grid</param>
     /// <param name="combineAmount">The amount of pyramiding</param>
     /// <param name="id">Id of the cell</param>
     /// <returns></returns>
-    public static List<GridCell> ConvertFromIdToGridCells(int GridHeight, int combineAmount, int id)
+    public static List<GridCell> ConvertFromIdToGridCells(int gridWidth, int combineAmount, int id)
     {
         if (combineAmount <= 0)
         {
             combineAmount = 1;
         }
         
-        int heightToHigh = GridHeight % combineAmount;
-        int pyramidedHeight = (GridHeight - heightToHigh) / combineAmount;
+        int widthToWide = gridWidth % combineAmount;
+        int pyramidedWidth = (gridWidth - widthToWide) / combineAmount;
 
         // Given id = x * height + y
         // Means x = rounddown(index / height) 
-        int x = id / pyramidedHeight; //Integer division rounds down
+        int x = id / pyramidedWidth; //Integer division rounds down
         // And means y = index % height
-        int y = id % pyramidedHeight;
+        int y = id % pyramidedWidth;
         
         var gridCells = new List<GridCell>();
-        for (var currentx = x; x < x + combineAmount; x++)
+        for (var currentx = x; currentx < x + combineAmount; currentx++)
         {
-            for (var currenty = y; y < y + combineAmount; y++)
+            for (var currenty = y; currenty < y + combineAmount; currenty++)
             {
                 gridCells.Add(Grid.FindByGridCoordinatesPyramided(currentx, currenty));
             }
