@@ -35,16 +35,16 @@ public class GraphService : IGraphService
         List<float> values = new List<float>();
         for (int i = 0; i < foundSlices[0].GetLength(0); i++)
         {
+            List<float> intensities = new List<float>();
             foreach (var slice in foundSlices)
             {
-                List<float> intensities = new List<float>();
                 for (int x = 0; x < slice.GetLength(1) - 1; x++)
                 for (int y = 0; y < slice.GetLength(2) - 1; y++)
                 {
                    intensities.Add(slice[i, x, y]);
                 }
-                values.Add(intensities.Count > 0 ? intensities.Average() : (float) 0.0);
             }
+            values.Add(intensities.Count > 0 ? intensities.Average() : (float) 0.0);
         }
 
         return values;
