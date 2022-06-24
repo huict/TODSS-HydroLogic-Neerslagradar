@@ -22,7 +22,7 @@
         <input type="range" min="0" [max]="totalFrames-1" [(ngModel)]="currentFrameIndex" (mousedown)="pauseAnimation()" (mouseup)="resumeAnimation()">
       </div>
       <div class="text-center">
-        {{add0ToNumberFront(_currentTime.getUTCDate())}}-{{add0ToNumberFront(_currentTime.getUTCMonth())}}-{{_currentTime.getUTCFullYear()}}&nbsp;{{add0ToNumberFront(_currentTime.getUTCHours())}}:{{add0ToNumberFront(_currentTime.getUTCMinutes())}}
+        {{add0ToNumberFront(_currentTime.getUTCDate())}}-{{add0ToNumberFront(_currentTime.getUTCMonth()+1)}}-{{_currentTime.getUTCFullYear()}}&nbsp;{{add0ToNumberFront(_currentTime.getUTCHours())}}:{{add0ToNumberFront(_currentTime.getUTCMinutes())}}
       </div>
     </div>
   </div>

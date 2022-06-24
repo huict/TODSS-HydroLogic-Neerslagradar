@@ -35,43 +35,25 @@ export class BarChartComponent implements OnInit {
   }
 
   private updateGraph() {
-    let calculateTimeFunc = (date:Date) => {
-      let s:number = date.getUTCHours()*3600 + date.getUTCMinutes()*60;
-      return Math.round(s/300)*300;
-    }
-
-    if (this._coordinatesFilter == undefined) return;
     let cf = this._coordinatesFilter;
+    if (cf == undefined) return;
+    if (cf.pixels.length === 0) {return;}
     let begin:number = <number>this._timeFilter?.beginTimestamp;
     let end:number = <number>this._timeFilter?.endTimestamp;
     let body = {
-      "TopLeftLongitude":cf.topLeft.lng,
-      "TopLeftLatitude":cf.topLeft.lat,
-      "TopRightLongitude":cf.bottomRight.lng,
-      "TopRightLatitude":cf.topLeft.lat,
-      "BotRightLongitude":cf.bottomRight.lng,
-      "BotRightLatitude":cf.bottomRight.lat,
-      "BotLeftLongitude":cf.topLeft.lng,
-      "BotLeftLatitude":cf.bottomRight.lat,
-      "StartSeconds":calculateTimeFunc(new Date(begin)),
-      "EndSeconds":calculateTimeFunc(new Date(end)),
-      "CombineFields":1
+      "ids": cf.pixels.map(v => v.id),
+      "StartSeconds":begin,
+      "EndSeconds":end,
+      "CombineFields":cf.dataCompression
     };
 
-    this.http.post("https://localhost:7187/radarimage/intensity", body, {headers: {"Content-Type": "application/json"}}).subscribe(e => {
-      let data = e as RequestData[][];
-      let processData = data.map(val => {
-        let amountOfCells = val.length;
-        return val.reduce((total, intens) => total+intens.intensity, 0) / amountOfCells;
-      });
+    this.http.post("https://localhost:7187/graph", body, {headers: {"Content-Type": "application/json"}}).subscribe(e => {
+      let data = e as number[];
 
       // @ts-ignore
-      this.barChartLabels = processData.map((_, index) => this._getDateLabelFromIndex(index));
+      this.barChartLabels = data.map((_, index) => this._getDateLabelFromIndex(index));
       this.barChartData.pop();
-      this.barChartData.push({
-        label:"Hoeveelheid neerslag in mm",
-        data: processData
-      });
+      this.barChartData.push({label:"Hoeveelheid neerslag in mm", data: data});
     })
   }
 

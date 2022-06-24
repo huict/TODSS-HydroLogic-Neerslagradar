@@ -3,5 +3,7 @@
   (changeTimeFilterEvent)="handleTimeEvent($event)"
   (mapReadyEvent)="handleMapReadyEvent($event)"
   (changeCurrentTimeEvent)="handleCurrentTimeEvent($event)"
+  [coordinateFilter]="coordinatesFilter"
+  [timeFilter]="timeFilter"
   [data]="dataTemp">
 </app-animation-map>

@@ -1,7 +1,6 @@
-import {Component, ElementRef, HostListener, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {ConfigurationManager} from "./configuration.manager";
 import {IConfiguration} from "../home/home.component";
-import {DOCUMENT} from "@angular/common";
 
 /**
  * A selection component that gives a brief summary of each saved configuration that can be selected or removed.
@@ -23,7 +22,7 @@ export class ConfigurationSelectComponent implements OnInit {
   }
 
   getAllConfigs() : IConfiguration[]{
-    return Object.values(this.manager.getAllConfigs())
+    return Object.values(this.manager.getAllConfigs().configurations);
   }
 
   @HostListener("window:scroll", [])

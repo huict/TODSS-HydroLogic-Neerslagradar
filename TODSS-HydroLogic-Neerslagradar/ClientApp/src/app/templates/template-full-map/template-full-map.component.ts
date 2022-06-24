@@ -11,7 +11,10 @@ import {AnimationMapComponent} from "../../components/animation-map/animation-ma
   styleUrls: ['./template-full-map.component.css']
 })
 export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
-  private _coordinatesFilter: ICoordinateFilter | undefined;
+  private _coordinatesFilter: ICoordinateFilter = {
+    dataCompression: 3,
+    pixels: [],
+  };
   private _timeFilter: ITimeFilter = {
     beginTimestamp:1623974400000,
     stepSize:1,
@@ -45,17 +48,75 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
   }
 
   get settings(): HTMLElement {
-    // TODO settings voor template toevoegen
     let container = document.createElement("div");
+
+    {
+      let combineContainer = document.createElement("div");
+      combineContainer.style.display = "flex";
+      {
+        let combineLabel = document.createElement("label");
+        combineLabel.style.flexGrow = "2";
+        combineLabel.innerText = "Pyramiding: ";
+        combineLabel.title = "De hoeveelheid cellen die samengevoegd worden";
+        combineContainer.appendChild(combineLabel);
+      }
+      {
+        let combineInput = document.createElement("input");
+        combineInput.type = "number";
+        combineInput.min = "1";
+        combineInput.max = "6";
+        combineInput.value = this._coordinatesFilter.dataCompression.toString();
+        // @ts-ignore
+        combineInput.addEventListener("input", e => this._map.dataCompression = e.target.value);
+        combineContainer.appendChild(combineInput);
+      }
+      container.appendChild(combineContainer);
+    }
+
+    {
+      let mapTypeContainer = document.createElement("div");
+      mapTypeContainer.style.display = "flex";
+      {
+        let mapTypeLabel = document.createElement("label");
+        mapTypeLabel.style.flexGrow = "2";
+        mapTypeLabel.innerText = "Map type: ";
+        mapTypeLabel.title = "De type projectie van de map";
+        mapTypeContainer.appendChild(mapTypeLabel);
+      }
+      {
+        let mapTypeCombo = document.createElement("select");
+        // @ts-ignore
+        mapTypeCombo.addEventListener("change", e => this._map.mapType = e.target.value);
+        {
+          let optionOpenStreetBW = document.createElement("option");
+          optionOpenStreetBW.selected = true;
+          optionOpenStreetBW.value = "OpenStreetBW"
+          optionOpenStreetBW.innerText = "OpenStreetMap zwart/wit"
+          mapTypeCombo.appendChild(optionOpenStreetBW);
+
+          let optionOpenStreetColor = document.createElement("option");
+          optionOpenStreetColor.value = "OpenStreetColor"
+          optionOpenStreetColor.innerText = "OpenStreetMap color"
+          mapTypeCombo.appendChild(optionOpenStreetColor);
+
+          let optionStadia = document.createElement("option");
+          optionStadia.value = "Stadia"
+          optionStadia.innerText = "Stadia maps"
+          mapTypeCombo.appendChild(optionStadia);
+        }
+        mapTypeContainer.appendChild(mapTypeCombo);
+      }
+      container.appendChild(mapTypeContainer);
+    }
 
     return container;
   }
 
-  get coordinatesFilter(): ICoordinateFilter | undefined {
+  get coordinatesFilter(): ICoordinateFilter {
     return this._coordinatesFilter;
   }
 
-  @Input() set coordinatesFilter(value: ICoordinateFilter | undefined) {
+  @Input() set coordinatesFilter(value: ICoordinateFilter) {
     this._coordinatesFilter = value;
   }
 
