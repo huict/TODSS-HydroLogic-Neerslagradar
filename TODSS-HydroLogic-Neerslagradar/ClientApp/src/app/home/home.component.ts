@@ -119,6 +119,8 @@ export class HomeComponent implements OnInit {
         preserveFragment: true });
       this.router.navigateByUrl(urlTree);
     }
+
+    this.saveConfigOpen = false;
   }
 }
 
