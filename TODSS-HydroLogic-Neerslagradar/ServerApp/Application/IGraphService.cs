@@ -4,5 +4,5 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 
 public interface IGraphService
 {
-    List<float> GetGraphInformation(IdBasedWeatherFilterDTO dto);
+    List<GraphDTO> GetGraphInformation(IdBasedWeatherFilterDTO dto);
 }

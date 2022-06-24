@@ -12,7 +12,7 @@ public class GraphService : IGraphService
     ///     Gets the average intensity for a given set of pyramided cells per timeframe of the given period
     /// </summary>
     /// <param name="dto">Contains id, pyramiding amount, start and end in seconds</param>
-    public List<float> GetGraphInformation(IdBasedWeatherFilterDTO dto)
+    public List<GraphDTO> GetGraphInformation(IdBasedWeatherFilterDTO dto)
     {
         // Retrieving slices
         var (readingData, beginDepth, endDepth) = TimeConversion.GetDatasetAndDepthFromSeconds(dto.StartSeconds, dto.EndSeconds);
@@ -32,7 +32,7 @@ public class GraphService : IGraphService
             ));
         }
 
-        List<float> values = new List<float>();
+        List<GraphDTO> values = new List<GraphDTO>();
         for (int i = 0; i < foundSlices[0].GetLength(0); i++)
         {
             List<float> intensities = new List<float>();
@@ -44,7 +44,14 @@ public class GraphService : IGraphService
                    intensities.Add(slice[i, x, y]);
                 }
             }
-            values.Add(intensities.Count > 0 ? intensities.Average() : (float) 0.0);
+
+            float sum = intensities.Sum();
+            float count = intensities.Count;
+            values.Add( new GraphDTO
+            {
+                Cumulative = sum,
+                Average = count > 0 ? sum / count : (float) 0.0
+            });
         }
 
         return values;
