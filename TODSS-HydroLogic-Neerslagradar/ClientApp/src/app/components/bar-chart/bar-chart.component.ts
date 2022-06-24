@@ -21,12 +21,7 @@ export class BarChartComponent implements OnInit {
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
-  barChartData: ChartDataset[] = [
-    {
-      data: [],
-      label: 'Hoeveelheid neerslag in mm'
-    }
-  ];
+  barChartData: ChartDataset[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -48,12 +43,15 @@ export class BarChartComponent implements OnInit {
     };
 
     this.http.post("https://localhost:7187/graph", body, {headers: {"Content-Type": "application/json"}}).subscribe(e => {
-      let data = e as number[];
+      let data = e as RequestData[];
+      console.log(data)
 
       // @ts-ignore
       this.barChartLabels = data.map((_, index) => this._getDateLabelFromIndex(index));
       this.barChartData.pop();
-      this.barChartData.push({label:"Hoeveelheid neerslag in mm", data: data});
+      this.barChartData.pop();
+      this.barChartData.push({label:"Totale hoeveelheid neerslag in mm", data: data.map(v => v.cumulative)});
+      this.barChartData.push({label:"Gemiddelde hoeveelheid neerslag in mm", data: data.map(v => v.average)});
     })
   }
 
@@ -80,6 +78,6 @@ export class BarChartComponent implements OnInit {
 }
 
 interface RequestData {
-  id: number;
-  intensity: number;
+  cumulative: number;
+  average: number;
 }
