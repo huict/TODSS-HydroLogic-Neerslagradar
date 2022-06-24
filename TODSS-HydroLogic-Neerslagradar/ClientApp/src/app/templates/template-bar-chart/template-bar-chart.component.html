@@ -5,8 +5,9 @@
     (changeTimeFilterEvent)="handleTimeEvent($event)"
     (mapReadyEvent)="handleMapReadyEvent($event)"
     (changeCurrentTimeEvent)="handleCurrentTimeEvent($event)"
-    [data]="dataTemp"
-  >
+    [coordinateFilter]="coordinatesFilter"
+    [timeFilter]="timeFilter"
+    [data]="dataTemp">
   </app-animation-map>
 
   <app-bar-chart

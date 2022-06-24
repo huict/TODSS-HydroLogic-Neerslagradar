@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
 import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
-import {GeoJSON, LatLng} from "leaflet";
 import * as gj from "geojson";
 
 /**
@@ -35,45 +34,19 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // starting options for loading map
   options = {
-    layers: [
-
-      // Original
-      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      //   { maxZoom: 18,
-      //     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      //   }
-      // )
-
-      // Kadaster waterkaart
-      // L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/water/EPSG:3857/{z}/{x}/{y}.png', {
-      //   minZoom: 6,
-      //   maxZoom: 19,
-      //   bounds: [[50.5, 3.25], [54, 7.6]],
-      //   attribution: 'Kaartgegevens &copy; <a href="https://www.kadaster.nl">Kadaster</a>'
-      // })
-
-      // Less contrast 1
-      // L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-      //   maxZoom: 20,
-      //   attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-      // })
-
-      // Less contrast 2
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20
-      }),
-    ],
+    layers: <L.Layer[]>[],
     zoom: 7,
-    center: L.latLng(52.1009274, 5.6462977)
+    center: L.latLng(52.1009274, 5.6462977),
+    doubleClickZoom: false
   };
 
   // map variables
   private _map: L.Map | undefined;
-  private _mySelection: L.Rectangle | undefined;
-  private _points: L.LatLng[] = [];
-  private _dataTemp: object | undefined;
+  private _mapLoaded: boolean = false;
+  private _dataTemp: IMapData | undefined;
+  private _selectedPixels: ISelectedPixels = {};
+  private _initialLoadedPixels: ISelectedPixelsPersistence[] = [];
+  private _lastMapLayer: L.Layer | undefined;
 
   // time filters
   public _beginTime: Date = new Date(1623974400000);
@@ -87,7 +60,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _nextFrameIndex: number = -1;
   private _currentFrameIndex: number = -1;
   private _totalFrames: number = 0;
-  private _lastGeoJson: GeoJSON | undefined;
+  private _lastGeoJson: L.GeoJSON | undefined;
   private _animationPlaying: boolean = false;
 
   // animation options
@@ -99,12 +72,46 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     return <L.Map>this._map;
   }
 
+  @Input() set mapType(type: string) {
+    if (this._lastMapLayer) this.map.removeLayer(this._lastMapLayer);
+
+    switch (type) {
+      case "OpenStreetColor":
+        this._lastMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        });
+        break;
+      case "Stadia":
+        this._lastMapLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        });
+        break;
+      case "OpenStreetBW":
+      default:
+        this._lastMapLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 18,
+        });
+        break;
+    }
+
+    if (this._mapLoaded) this.map.addLayer(this._lastMapLayer);
+  }
+
   get dataCompression():number {
     return this._dataCompression;
   }
 
   @Input() set dataCompression(value:number) {
+    if (this._dataCompression === value) return;
     this._dataCompression = value;
+    this.fetchCoords();
+    this.startNewAnimation();
+    Object.keys(this._selectedPixels).forEach(v => this.removeSelectedPixel(parseInt(v)));
+    this.changeLocationFilterEvent.emit({dataCompression: value, pixels: []});
   }
 
   get animationStepSize(): number {
@@ -128,6 +135,38 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
+  get coordinateFilter(): ICoordinateFilter {
+    return {
+      pixels: this.convertPolygonsToPixelJson(),
+      dataCompression: this._dataCompression,
+    }
+  }
+
+  @Input() set coordinateFilter(coordinateFilter: ICoordinateFilter) {
+    this.dataCompression = coordinateFilter.dataCompression;
+    if (this._mapLoaded) {
+      Object.keys(this._selectedPixels).forEach(v => this.removeSelectedPixel(parseInt(v)));
+      coordinateFilter.pixels.forEach(point => this.drawSelectPixel(point.id, point.value));
+    } else {
+      this._initialLoadedPixels = coordinateFilter.pixels;
+    }
+  }
+
+  get timeFilter(): ITimeFilter {
+    return {
+      beginTimestamp: this._beginTime.valueOf(),
+      endTimestamp: this._endTime.valueOf(),
+      stepSize: this._animationStepSize,
+    }
+  }
+
+  @Input() set timeFilter(timeFilter: ITimeFilter) {
+    this._beginTime = new Date(timeFilter.beginTimestamp);
+    this._endTime = new Date(timeFilter.endTimestamp);
+    this._currentTime = new Date(timeFilter.beginTimestamp);
+    this._animationStepSize = timeFilter.stepSize;
+  }
+
   get currentFrameIndex(): number {
     return this._currentFrameIndex;
   }
@@ -143,24 +182,30 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   get data():IMapData {
     return <IMapData>{
-      points: this._points,
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
-      beginTime: this._beginTime.valueOf(),
-      endTime: this._endTime.valueOf(),
     }
   }
 
   @Input() set data(value: IMapData) {
     if (value) {
       this._dataTemp = value;
-      this._points = value.points;
-      if (value.beginTime > 0) this._beginTime = new Date(value.beginTime);
-      if (value.endTime > 0) this._endTime = new Date(value.endTime);
     }
   }
 
-  constructor(private http: HttpClient) {}
+  private convertPolygonsToPixelJson(): ISelectedPixelsPersistence[] {
+    return Object.keys(this._selectedPixels).map(value => {
+      return {
+        id: value,
+        value: this._selectedPixels[value].getLatLngs() as L.LatLngExpression[]
+      };
+    });
+  }
+
+  constructor(private http: HttpClient) {
+    this.mapType = "OpenStreetBW";
+    if (this._lastMapLayer) this.options.layers.push(this._lastMapLayer);
+  }
 
   ngOnDestroy(): void {
     this.changeLocationFilterEvent.unsubscribe();
@@ -172,21 +217,58 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   // This function is run when leaflet says the map is ready
   onReady(e: any) {
     this._map = e;
+
+    // add click event listener for map
     this.map.on("click", e => {
       // @ts-ignore
-      let popup = L.popup().setLatLng(e.latlng).setContent("Point set").openOn(this.map);
-      // @ts-ignore
-      this.addPoint(e.latlng);
+      let coords: L.LatLng = e.latlng;
 
-      setTimeout(() => popup.remove(), 1500)
+      // pixel detection:
+      let pixel = this.selectPixel(coords);
+      if (pixel === null) return;
+      if (!this._selectedPixels.hasOwnProperty(pixel.id)) return;
+
+      // popup generation:
+      let popup = L.popup().setLatLng(coords);
+
+      let container = document.createElement("div");
+
+      let removeBtn = document.createElement("button");
+      removeBtn.innerText = "X"
+      removeBtn.addEventListener("click", e => popup.remove());
+      container.appendChild(removeBtn);
+
+      let id = document.createElement("div");
+      id.innerText = `Id: ${pixel.id}`;
+      container.appendChild(id);
+
+      let area = document.createElement("div");
+      let areaValue = Math.round(this.calculateArea([...pixel.coords[0], pixel.coords[0][0]])*100)/100;
+      area.innerText = `Area (km): ${areaValue}`
+      container.appendChild(area);
+
+      let intensity = document.createElement("div");
+      let frameCell = this._animationFrames[this.currentFrameIndex].find(v=>v.id===pixel?.id);
+      let intensityValue = frameCell !== undefined ? frameCell.intensity : 0;
+      intensityValue *= 12;
+      intensityValue = Math.round(intensityValue*100)/100;
+      intensity.innerText = `Intensity: ${intensityValue}mm/h`;
+      container.appendChild(intensity);
+
+      popup.options.closeButton = false;
+      popup.setContent(container).openOn(this.map);
+      // setTimeout(() => popup.remove(), 1000);
     });
-    // @ts-ignore
+    // set initial view and start animation
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
-    this.renderSelection();
     this.fetchCoords();
     this.startNewAnimation();
 
-    // Event is thrown when the map is ready
+    // load selection
+    this._initialLoadedPixels.forEach(point => this.drawSelectPixel(point.id, point.value));
+
+    // Event is thrown when the map is loaded
+    this._mapLoaded = true;
     this.mapReadyEvent.emit(this);
   }
 
@@ -210,37 +292,52 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.startNewAnimation();
   }
 
-  // Adds a new point to list of points and removes the first one if the list has a length of three points.
-  addPoint(newPoint: L.LatLng) {
-    this._points.push(newPoint);
-    if (this._points.length == 3) this._points.shift();
-    if (this._points.length == 2) {
-      this.renderSelection();
+  selectPixel(point: L.LatLng): ICoordsData|null {
+    let poly = this._animationCoords.find((value) => {
+      let lng = point.lng, lat = point.lat;
+      let coords = value.coords[0];
+      let inside = false;
+
+      for (let i = 0, j = coords.length - 1; i < coords.length; j = i++) {
+        let xi = coords[i][0], yi = coords[i][1];
+        let xj = coords[j][0], yj = coords[j][1];
+
+        let intersect = ((yi > lat) != (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+      }
+      return inside;
+    })
+    if (poly === undefined) return null;
+
+    if (this._selectedPixels.hasOwnProperty(poly.id)) {
+      this.removeSelectedPixel(poly.id);
+    } else {
+      this.drawSelectPixel(poly.id.toString(), poly.coords[0].map(value => [value[1], value[0]]) as L.LatLngExpression[])
     }
+    this.changeLocationFilterEvent.emit({dataCompression: this._dataCompression, pixels: this.convertPolygonsToPixelJson()});
+    return poly;
   }
 
-  // Render the two selected points on the map as a rectangle.
-  private renderSelection() {
-    if (this._points.length == 2) {
-      let point1 = this._points[0];
-      let point2 = this._points[1];
-      let lats = [point1.lat, point2.lat].sort();
-      let lngs = [point1.lng, point2.lng].sort();
-      let bottom = lats[0];
-      let top = lats[1];
-      let left = lngs[0];
-      let right = lngs[1];
+  private drawSelectPixel(id: string, coords: L.LatLngExpression[]) {
+    this._selectedPixels[id] = L.polygon(coords, {fillOpacity: 0, color: '#EF476F'});
+    this._selectedPixels[id].addTo(this.map);
+  }
 
-      if (this._mySelection) this._mySelection.remove();
-      let bounds = L.latLngBounds([[ top, left], [ bottom, right]]);
-      this._mySelection = L.rectangle(bounds, {fillOpacity: 0, color: '#EF476F'}).addTo(this.map);
+  private removeSelectedPixel(id: number) {
+    this._selectedPixels[id].remove();
+    delete this._selectedPixels[id];
+  }
 
-      const location: ICoordinateFilter = {
-        topLeft: new L.LatLng(top, left),
-        bottomRight: new L.LatLng(bottom, right)
-      };
-      this.changeLocationFilterEvent.emit(location);
+  private calculateArea(poly: number[][]): number {
+    let area = 0;
+    for (let i = 0; i < poly.length - 1; i++)
+    {
+      let [p1lo, p1la] = poly[i];
+      let [p2lo, p2la] = poly[i + 1];
+      area += (p2lo-p1lo)*Math.PI/180 * (2+Math.sin(p1la*Math.PI/180)+Math.sin(p2la*Math.PI/180));
     }
+    area = area * 6378.137 * 6378.137 / 2;
+    return Math.abs(area);
   }
 
   public startNewAnimation() {
@@ -385,7 +482,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
               }
           }
         }}).addTo(this.map);
-      this._mySelection?.bringToFront();
+      Object.values(this._selectedPixels).forEach(value => value.bringToFront());
     }
 
     // update current time
@@ -398,6 +495,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // Fetches the coordinates for the frames
   private fetchCoords() {
+    this._animationCoords = [];
     this.http.post("https://localhost:7187/radarimage/coords", `{
        "CombineFields": ${this._dataCompression}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
@@ -426,11 +524,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 }
 
 export interface IMapData {
-  points: LatLng[],
   zoom: number,
-  centerLocation: LatLng,
-  beginTime: number,
-  endTime:number,
+  centerLocation: L.LatLng,
 }
 
 export interface IIntensityData {
@@ -441,4 +536,13 @@ export interface IIntensityData {
 export interface ICoordsData {
   id: number,
   coords: number[][][]
+}
+
+export interface ISelectedPixels {
+  [key: string]: L.Polygon
+}
+
+export interface ISelectedPixelsPersistence {
+  id: string,
+  value: L.LatLngExpression[]
 }
