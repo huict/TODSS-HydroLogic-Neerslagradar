@@ -73,6 +73,42 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
       container.appendChild(combineContainer);
     }
 
+    {
+      let mapTypeContainer = document.createElement("div");
+      mapTypeContainer.style.display = "flex";
+      {
+        let mapTypeLabel = document.createElement("label");
+        mapTypeLabel.style.flexGrow = "2";
+        mapTypeLabel.innerText = "Map type: ";
+        mapTypeLabel.title = "De type projectie van de map";
+        mapTypeContainer.appendChild(mapTypeLabel);
+      }
+      {
+        let mapTypeCombo = document.createElement("select");
+        // @ts-ignore
+        mapTypeCombo.addEventListener("change", e => this._map.mapType = e.target.value);
+        {
+          let optionOpenStreetBW = document.createElement("option");
+          optionOpenStreetBW.selected = true;
+          optionOpenStreetBW.value = "OpenStreetBW"
+          optionOpenStreetBW.innerText = "OpenStreetMap zwart/wit"
+          mapTypeCombo.appendChild(optionOpenStreetBW);
+
+          let optionOpenStreetColor = document.createElement("option");
+          optionOpenStreetColor.value = "OpenStreetColor"
+          optionOpenStreetColor.innerText = "OpenStreetMap color"
+          mapTypeCombo.appendChild(optionOpenStreetColor);
+
+          let optionStadia = document.createElement("option");
+          optionStadia.value = "Stadia"
+          optionStadia.innerText = "Stadia maps"
+          mapTypeCombo.appendChild(optionStadia);
+        }
+        mapTypeContainer.appendChild(mapTypeCombo);
+      }
+      container.appendChild(mapTypeContainer);
+    }
+
     return container;
   }
 

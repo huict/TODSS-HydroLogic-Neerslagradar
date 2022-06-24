@@ -34,36 +34,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   // starting options for loading map
   options = {
-    layers: [
-
-      // Original
-      // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      //   { maxZoom: 18,
-      //     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      //   }
-      // )
-
-      // Kadaster waterkaart
-      // L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/water/EPSG:3857/{z}/{x}/{y}.png', {
-      //   minZoom: 6,
-      //   maxZoom: 19,
-      //   bounds: [[50.5, 3.25], [54, 7.6]],
-      //   attribution: 'Kaartgegevens &copy; <a href="https://www.kadaster.nl">Kadaster</a>'
-      // })
-
-      // Less contrast 1
-      // L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-      //   maxZoom: 20,
-      //   attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-      // })
-
-      // Less contrast 2
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20
-      }),
-    ],
+    layers: <L.Layer[]>[],
     zoom: 7,
     center: L.latLng(52.1009274, 5.6462977),
     doubleClickZoom: false
@@ -75,6 +46,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _dataTemp: IMapData | undefined;
   private _selectedPixels: ISelectedPixels = {};
   private _initialLoadedPixels: ISelectedPixelsPersistence[] = [];
+  private _lastMapLayer: L.Layer | undefined;
 
   // time filters
   public _beginTime: Date = new Date(1623974400000);
@@ -98,6 +70,35 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
   get map(): L.Map {
     return <L.Map>this._map;
+  }
+
+  @Input() set mapType(type: string) {
+    if (this._lastMapLayer) this.map.removeLayer(this._lastMapLayer);
+
+    switch (type) {
+      case "OpenStreetColor":
+        this._lastMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        });
+        break;
+      case "Stadia":
+        this._lastMapLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        });
+        break;
+      case "OpenStreetBW":
+      default:
+        this._lastMapLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 18,
+        });
+        break;
+    }
+
+    if (this._mapLoaded) this.map.addLayer(this._lastMapLayer);
   }
 
   get dataCompression():number {
@@ -201,7 +202,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     });
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.mapType = "OpenStreetBW";
+    if (this._lastMapLayer) this.options.layers.push(this._lastMapLayer);
+  }
 
   ngOnDestroy(): void {
     this.changeLocationFilterEvent.unsubscribe();
