@@ -1,12 +1,9 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import * as L from 'leaflet';
-import {GeoJSON, LatLng} from 'leaflet';
 import {IChangesCoords, IChangesTime} from "../ComponentInterfaces";
 import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
 import * as gj from "geojson";
-// @ts-ignore
-import Gradient from "javascript-color-gradient";
 
 /**
  * This component is a map on which filters can be set and an animation of the weather can be viewed.
@@ -87,7 +84,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         break;
       case "Stadia":
         this._lastMapLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
           maxZoom: 18,
         });
         break;
@@ -266,7 +263,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
     this.fetchCoords();
     this.startNewAnimation();
-    this.generateColorLegend();
 
     // load selection
     this._initialLoadedPixels.forEach(point => this.drawSelectPixel(point.id, point.value));
@@ -551,33 +547,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       this._animationFrames[frameIndex] = requestData[0];
       if (autoLoadNext) this.loadFrame();
     });
-  }
-
-  private generateColorLegend(){
-    const legendBlock = document.getElementById("colorPrev1");
-
-
-    const colorGradient = new Gradient();
-    colorGradient.setColorGradient("#e6062d", "#408247"); // from red to green
-    colorGradient.setMidpoint(8); // set to 8 color steps
-    colorGradient.getColor(1); // #bd2534
-
-    // @ts-ignore
-   legendBlock.style.backgroundColor = colorGradient.getColor(1);
-
-    var ul = document.getElementById("colorList");
-
-    // @ts-ignore
-    var items = ul.getElementsByTagName("li");
-    console.log(items)
-    for (var i = 0; i < items.length; ++i) {
-      // console.log(items[0]);
-    }
-
-
-
-
-
   }
 
   public add0ToNumberFront(number: number): string {
