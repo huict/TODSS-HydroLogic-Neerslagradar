@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
   }
 
   private loadConfig() {
-    if (this.configId) {
+    if (this.configId !== undefined) {
       let config = this.configManager.getConfig(this.configId);
       if (config) {
         for (const viewData of config.views) {
