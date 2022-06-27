@@ -88,8 +88,6 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
         let mapType = "";
         // @ts-ignore
         if (this._mapDataTemp && this._mapDataTemp.hasOwnProperty("mapType")) mapType = this._mapDataTemp["mapType"];
-        console.log(mapType === "OpenStreetBW" || mapType === "")
-        console.log(mapType === "OpenStreetColor")
         // @ts-ignore
         mapTypeCombo.addEventListener("change", e => this._map.mapType = e.target.value);
         {
