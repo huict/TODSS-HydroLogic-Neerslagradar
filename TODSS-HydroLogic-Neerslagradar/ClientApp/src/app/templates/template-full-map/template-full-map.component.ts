@@ -85,21 +85,26 @@ export class TemplateFullMapComponent implements OnInit, IWeatherTemplate {
       }
       {
         let mapTypeCombo = document.createElement("select");
+        let mapType = "";
+        // @ts-ignore
+        if (this._mapDataTemp && this._mapDataTemp.hasOwnProperty("mapType")) mapType = this._mapDataTemp["mapType"];
         // @ts-ignore
         mapTypeCombo.addEventListener("change", e => this._map.mapType = e.target.value);
         {
           let optionOpenStreetBW = document.createElement("option");
-          optionOpenStreetBW.selected = true;
+          optionOpenStreetBW.selected = mapType === "OpenStreetBW" || mapType === "";
           optionOpenStreetBW.value = "OpenStreetBW"
           optionOpenStreetBW.innerText = "OpenStreetMap zwart/wit"
           mapTypeCombo.appendChild(optionOpenStreetBW);
 
           let optionOpenStreetColor = document.createElement("option");
+          optionOpenStreetColor.selected = mapType === "OpenStreetColor";
           optionOpenStreetColor.value = "OpenStreetColor"
           optionOpenStreetColor.innerText = "OpenStreetMap color"
           mapTypeCombo.appendChild(optionOpenStreetColor);
 
           let optionStadia = document.createElement("option");
+          optionStadia.selected = mapType === "Stadia";
           optionStadia.value = "Stadia"
           optionStadia.innerText = "Stadia maps"
           mapTypeCombo.appendChild(optionStadia);

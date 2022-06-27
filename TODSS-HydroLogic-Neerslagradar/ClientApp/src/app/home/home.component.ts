@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
     let configIdWasSet = true;
 
     // Check if a new config was selected
-    if (!this.configId) {
+    if (this.configId === undefined) {
       this.configId = this.configManager.getNewIndex();
       configIdWasSet = false;
     }
