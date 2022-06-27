@@ -47,6 +47,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _selectedPixels: ISelectedPixels = {};
   private _initialLoadedPixels: ISelectedPixelsPersistence[] = [];
   private _lastMapLayer: L.Layer | undefined;
+  private _mapType: string = "";
 
   // time filters
   public _beginTime: Date = new Date(1623974400000);
@@ -98,6 +99,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         break;
     }
 
+    this._mapType = type;
     if (this._mapLoaded) this.map.addLayer(this._lastMapLayer);
   }
 
@@ -184,6 +186,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     return <IMapData>{
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
+      mapType: this._mapType,
     }
   }
 
@@ -269,6 +272,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
     // Event is thrown when the map is loaded
     this._mapLoaded = true;
+    if (this._dataTemp) this.mapType = this._dataTemp.mapType;
     this.mapReadyEvent.emit(this);
   }
 
@@ -559,6 +563,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 export interface IMapData {
   zoom: number,
   centerLocation: L.LatLng,
+  mapType: string,
 }
 
 export interface IIntensityData {
