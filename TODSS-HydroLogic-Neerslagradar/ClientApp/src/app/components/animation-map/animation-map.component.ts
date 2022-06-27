@@ -425,10 +425,11 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }
       this._lastGeoJson?.remove();
       this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
-          let intensity: number = feature?.properties["intensity"];
+          let intensity: number = feature?.properties["intensity"]*12;
           let boarderWeights = 0.1;
           let opacityLightColors = 0.7;
-          let opacityDarkColors = 0.6;
+          let opacityDarkColors = 0.55;
+          let color:string = "#000000"
           switch (true) {
             case intensity <= 0.02/12:
               return {
@@ -436,50 +437,55 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
                 opacity: 0,
                 weight: 0
               }
-            case intensity <= 1/12:
+            case intensity <= 1:
+              color = this.getGradientColor("#9db6d6", "#4c7bb5", intensity);
               return {
-                fillColor: "#9db6d6",
-                color: "#9db6d6",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityLightColors,
                 opacity: opacityLightColors
               }
-            case intensity <= 2/12:
+            case intensity <= 2:
+              color = this.getGradientColor("#4c7bb5", "#1e00ff", intensity-1);
               return {
-                fillColor: "#4c7bb5",
-                color: "#4c7bb5",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityLightColors,
                 opacity: opacityLightColors
               }
-            case intensity <= 5/12:
+            case intensity <= 5:
+              color = this.getGradientColor("#1e00ff", "#eb1416", (intensity-2)/3);
               return {
-                fillColor: "#1e00ff",
-                color: "#1e00ff",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
               }
-            case intensity <= 10/12:
+            case intensity <= 10:
+              color = this.getGradientColor("#eb1416", "#e718aa", (intensity-5)/5);
               return {
-                fillColor: "#eb1416",
-                color: "#eb1416",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
               }
-            case intensity <= 20/12:
+            case intensity <= 20:
+              color = this.getGradientColor("#e718aa", "#000000", (intensity-10)/10);
               return {
-                fillColor: "#e718aa",
-                color: "#e718aa",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
               }
             default:
               return {
-                fillColor: "#000000",
-                color: "#000000",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
@@ -496,6 +502,33 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       currentTimestamp: this._currentTime.valueOf()
     })
   }
+
+  private getGradientColor = function(start_color: string, end_color: string, percent: number): string {
+    let addZero = (hex: string) => hex.length===2 ? hex : "0"+hex;
+
+    start_color = start_color.replace("#", "");
+    end_color = end_color.replace("#", "");
+
+    // get colors
+    let start_red = parseInt(start_color.substring(0, 2), 16);
+    let start_green = parseInt(start_color.substring(2, 4), 16);
+    let start_blue = parseInt(start_color.substring(4, 6), 16);
+
+    let end_red = parseInt(end_color.substring(0, 2), 16);
+    let end_green = parseInt(end_color.substring(2, 4), 16);
+    let end_blue = parseInt(end_color.substring(4, 6), 16);
+
+    // calculate new color
+    let diff_red = end_red - start_red;
+    let diff_green = end_green - start_green;
+    let diff_blue = end_blue - start_blue;
+
+    let red_hex = addZero(((diff_red * percent) + start_red ).toString(16).split('.')[0]);
+    let green_hex = addZero(((diff_green * percent) + start_green ).toString(16).split('.')[0]);
+    let blue_hex = addZero(((diff_blue * percent) + start_blue ).toString(16).split('.')[0]);
+
+    return '#' + red_hex + green_hex + blue_hex;
+  };
 
   // Fetches the coordinates for the frames
   private fetchCoords() {
