@@ -237,26 +237,41 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       let container = document.createElement("div");
 
       let removeBtn = document.createElement("button");
-      removeBtn.innerText = "X"
+      removeBtn.innerText = "x"
+
+      if (true) {
+        removeBtn.style.border = "none";
+        removeBtn.style.backgroundColor = "transparent";
+        removeBtn.style.fontSize = "20px";
+        removeBtn.style.marginBottom = "10px";
+      }
+
       removeBtn.addEventListener("click", e => popup.remove());
       container.appendChild(removeBtn);
 
-      let id = document.createElement("div");
-      id.innerText = `Id: ${pixel.id}`;
-      container.appendChild(id);
-
       let area = document.createElement("div");
+      let areaKm = document.createElement("div");
+      let areaBreak = document.createElement("br");
       let areaValue = Math.round(this.calculateArea([...pixel.coords[0], pixel.coords[0][0]])*100)/100;
-      area.innerText = `Area (km): ${areaValue}`
+      area.innerText = `Oppervlakte (km²): `
+      area.style.fontSize = "18px";
+      areaKm.innerText = areaValue.toString();
       container.appendChild(area);
+      container.appendChild(areaKm);
+      container.appendChild(areaBreak);
+
 
       let intensity = document.createElement("div");
+      let intensityText = document.createElement("div");
       let frameCell = this._animationFrames[this.currentFrameIndex].find(v=>v.id===pixel?.id);
       let intensityValue = frameCell !== undefined ? frameCell.intensity : 0;
       intensityValue *= 12;
       intensityValue = Math.round(intensityValue*100)/100;
-      intensity.innerText = `Intensity: ${intensityValue}mm/h`;
+      intensity.innerText = `Intensiteit: `;
+      intensity.style.fontSize = "18px";
+      intensityText.innerText = `${intensityValue}mm/h`
       container.appendChild(intensity);
+      container.appendChild(intensityText);
 
       popup.options.closeButton = false;
       popup.setContent(container).openOn(this.map);
