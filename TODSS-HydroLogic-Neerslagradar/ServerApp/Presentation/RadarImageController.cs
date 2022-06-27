@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation;

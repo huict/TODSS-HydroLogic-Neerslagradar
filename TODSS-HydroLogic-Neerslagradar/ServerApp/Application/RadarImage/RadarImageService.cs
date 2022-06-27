@@ -3,7 +3,7 @@ using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
-namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
 
 public class RadarImageService : IRadarImageService
 {
@@ -15,7 +15,7 @@ public class RadarImageService : IRadarImageService
     }
 
     /// <summary>
-    /// Calculates the amount of slices from the start- and end-seconds. If a single coord is missing the method will return the whole grid in <see cref="GeoDataDTO"/>.
+    /// Calculates the amount of slices from the start- and end-seconds. The method will return the whole grid in <see cref="GeoDataDTO"/>.
     /// else the selected grid is calculated and gets converted to <see cref="GeoDataDTO"/>.
     /// </summary>
     /// <param name="dto">A DTO which comes from the REST-api <see cref="WeatherFiltersDTO"/></param>

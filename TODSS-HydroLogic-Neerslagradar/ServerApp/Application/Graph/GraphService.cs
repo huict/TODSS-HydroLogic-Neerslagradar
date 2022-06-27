@@ -1,10 +1,9 @@
 ﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoData;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
-namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.Graph;
 
 public class GraphService : IGraphService
 {

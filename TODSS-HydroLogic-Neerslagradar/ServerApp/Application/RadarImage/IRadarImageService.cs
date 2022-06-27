@@ -1,6 +1,6 @@
 ﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
-namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
 
 public interface IRadarImageService
 {
