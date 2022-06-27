@@ -128,6 +128,11 @@ export class ViewComponent implements OnInit, OnDestroy {
     // Insert template dependant settings
     this.templateSettings = component.settings;
     this.templateDiv.nativeElement.innerHTML = "";
+    const children = this.templateSettings.children;
+    Array.from(children).forEach((child) => {
+      // @ts-ignore
+      child.style.margin = "10px";
+    })
     this.templateDiv.nativeElement.appendChild(this.templateSettings)
   }
 
