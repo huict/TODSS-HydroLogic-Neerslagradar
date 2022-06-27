@@ -1,5 +1,4 @@
 ﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoData;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
@@ -7,11 +6,9 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
 
 public class RadarImageService : IRadarImageService
 {
-    private static readonly ReadingData Pyramided = new ("neerslag_data.nc");
-
     public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
     {
-        return GenerateDataDTOs.ReduceGridcells(combineFields, Pyramided.GetTotalHeight(), Pyramided.GetTotalWidth());
+        return GenerateDataDTOs.ReduceGridcells(combineFields);
     }
 
     /// <summary>

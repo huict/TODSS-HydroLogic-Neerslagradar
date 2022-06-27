@@ -82,7 +82,7 @@ public class GenerateDataDTOs
     /// <param name="height">The height of the dataset. You want the cells for</param>
     /// <param name="width">The width of the dataset. You want the cells for</param>
     /// <returns>A list of <see cref="GridCellDTO"/> which is either compressed or not.</returns>
-    public static List<GridCellDTO> ReduceGridcells(int pyramidingAmount, int height, int width)
+    public static List<GridCellDTO> ReduceGridcells(int pyramidingAmount, int height = 192, int width = 175)
     {
         var geoDataDtoList = new List<GridCellDTO>();
         var widthToWide = width % pyramidingAmount;
