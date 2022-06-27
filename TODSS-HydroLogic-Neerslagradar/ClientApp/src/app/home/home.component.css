@@ -126,7 +126,7 @@ button:disabled {
 
 .close {
   position: relative;
-  top: -20px;
+  top: -10px;
   font-size: xx-large;
   background-color: transparent;
 }
