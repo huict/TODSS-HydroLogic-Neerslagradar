@@ -28,10 +28,10 @@
       <div class="content">
         <label for="title">Titel</label>
         <input name="title" id="title" type="text" placeholder="titel" [(ngModel)]="configTitle">
-        <label for="description">Omschrijving</label>
+        <label id="descLabel" for="description">Omschrijving</label>
         <textarea name="description" id="description" placeholder="omschrijving" [(ngModel)]="configDescription"></textarea>
       </div>
-      <button type="submit">Opslaan</button>
+      <button id="submitButton" type="submit">Opslaan</button>
     </form>
   </div>
 </div>
