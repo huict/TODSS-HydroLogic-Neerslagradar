@@ -43,7 +43,6 @@ public class RadarImageService : IRadarImageService
         }
         
         var boundsForData = GetDimensionsForSpecifiedCoords(coords);
-        
         for (var i = beginZ; i < beginZ + depth; i++)
         {
             geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.CombineFields ,dataset.GetSliceWithCoordsAndArea(boundsForData.beginX, boundsForData.beginY, i, boundsForData.width, boundsForData.height), (boundsForData.beginY * dataset.GetTotalWidth() + boundsForData.beginX)- 1));

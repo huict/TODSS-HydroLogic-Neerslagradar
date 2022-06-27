@@ -12,7 +12,8 @@
   <div id="template">
     <div id="settings" [ngClass]="{'active':settingsOpened, 'notActive':!settingsOpened}">
       <h3 class="underlineTitle">Settings</h3>
-      <label>View naam <input type="text" [(ngModel)]="name"></label>
+      <label>View naam:<input type="text" [(ngModel)]="name"></label>
+
       <div class="templateSettings" #templateSettings></div>
     </div>
     <ng-template template></ng-template>
