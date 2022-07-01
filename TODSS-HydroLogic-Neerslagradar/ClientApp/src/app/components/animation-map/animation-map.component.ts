@@ -176,6 +176,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   set currentFrameIndex(value: number) {
     this._currentFrameIndex = value;
     this._nextFrameIndex = value;
+    this._currentTime = new Date(this._beginTime.valueOf()+ value*this._animationStepSize*300000);
   }
 
   get totalFrames(): number {
