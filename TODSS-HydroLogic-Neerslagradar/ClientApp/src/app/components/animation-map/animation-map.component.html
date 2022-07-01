@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="animation-map.component.css">
 <div id="mainContainer">
   <div id="map" leaflet (leafletMapReady)="onReady($event)" [leafletOptions]="options"></div>
 
@@ -32,23 +33,29 @@
       <label class="legendTitle" for="colorList">Neerslag in&nbsp;mm/uur</label>
       <ul id="colorList">
         <li class="colorItem">
-          <div class="colorPrev" id="colorPrev1"></div>
-          <label for="colorPrev1">0-1</label></li>
+          <div class="colorPrev colorPrev1"></div>
+          <label>0</label>
+        </li>
         <li class="colorItem">
-          <div class="colorPrev" id="colorPrev2"></div>
-          <label for="colorPrev2">1-2</label></li>
+          <div class="colorPrev colorPrev2"></div>
+          <label>1</label>
+        </li>
         <li class="colorItem">
-          <div class="colorPrev" id="colorPrev3"></div>
-          <label for="colorPrev3">2-5</label></li>
+          <div class="colorPrev colorPrev3"></div>
+          <label>2</label>
+        </li>
         <li class="colorItem">
-          <div class="colorPrev" id="colorPrev4"></div>
-          <label for="colorPrev4">5-10</label></li>
+          <div class="colorPrev colorPrev4"></div>
+          <label>5</label>
+        </li>
         <li class="colorItem">
-          <div class="colorPrev" id="colorPrev5"></div>
-          <label for="colorPrev5">10-20</label></li>
+          <div class="colorPrev colorPrev5"></div>
+          <label>10</label>
+        </li>
         <li class="colorItem">
-          <div class="colorPrev" id="colorPrev6"></div>
-          <label for="colorPrev6">20+</label></li>
+          <div class="colorEmpty"></div>
+          <label>20+</label>
+        </li>
       </ul>
     </div>
   </div>
