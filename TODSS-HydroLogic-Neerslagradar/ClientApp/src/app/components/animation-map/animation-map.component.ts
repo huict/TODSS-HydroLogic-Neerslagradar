@@ -458,8 +458,8 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
                 fillColor: color,
                 color: color,
                 weight: boarderWeights,
-                fillOpacity: opacityLightColors,
-                opacity: opacityLightColors
+                fillOpacity: opacityLightColors*intensity/4*3 + opacityLightColors/4,
+                opacity: opacityLightColors*intensity/4*3 + opacityLightColors/4
               }
             case intensity <= 2:
               color = this.getGradientColor("#4c7bb5", "#1e00ff", intensity-1);
@@ -480,7 +480,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
                 opacity: opacityDarkColors
               }
             case intensity <= 10:
-              color = this.getGradientColor("#eb1416", "#e718aa", (intensity-5)/5);
+              color = this.getGradientColor("#e718aa", "#eb1416", (intensity-5)/5);
               return {
                 fillColor: color,
                 color: color,
@@ -489,7 +489,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
                 opacity: opacityDarkColors
               }
             case intensity <= 20:
-              color = this.getGradientColor("#e718aa", "#000000", (intensity-10)/10);
+              color = this.getGradientColor("#eb1416", "#000000", (intensity-10)/10);
               return {
                 fillColor: color,
                 color: color,

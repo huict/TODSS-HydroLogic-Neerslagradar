@@ -125,39 +125,45 @@
 .colorItem>label {
   margin: 0;
   padding: 0;
-  font-size: smaller;
+  font-size: 0.8em;
 }
 
 .colorPrev {
   width: 1.5rem;
-  height: 1rem;
   margin: 0 8px;
   padding: 0;
-  border: solid 0.5px var(--bs-gray-600);
+  border-left: solid 1px var(--bs-gray-600);
+  border-right: solid 1px var(--bs-gray-600);
+  transform: translateY(0.4em);
 }
 
-#colorPrev1 {
-  background-color: #9db6d6;
+.colorEmpty {
+  width: 1.5rem;
+  height: 0;
+  margin: 0 8px;
+  padding: 0;
 }
 
-#colorPrev2 {
-  background-color: #4c7bb5;
+.colorPrev1 {
+  border-top: solid 0.5px var(--bs-gray-600);
+  background-image: linear-gradient(#9db6d6, #4c7bb5);
 }
 
-#colorPrev3 {
-  background-color: #1e00ff;
+.colorPrev2 {
+  background-image: linear-gradient(#4c7bb5, #1e00ff);
 }
 
-#colorPrev4 {
-  background-color: #eb1416;
+.colorPrev3 {
+  background-image: linear-gradient(#1e00ff, #e718aa);
 }
 
-#colorPrev5 {
-  background-color: #e718aa;
+.colorPrev4 {
+  background-image: linear-gradient(#e718aa, #eb1416);
 }
 
-#colorPrev6 {
-  background-color: #000000;
+.colorPrev5 {
+  border-bottom: solid 0.5px var(--bs-gray-600);
+  background-image: linear-gradient(#eb1416, #000000);
 }
 
 /*play/pause and slider*/
