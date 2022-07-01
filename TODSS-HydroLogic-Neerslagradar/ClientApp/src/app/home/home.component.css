@@ -51,6 +51,31 @@ p {
   column-gap: 2rem;
 }
 
+#descLabel{
+  margin-top: 10px;
+}
+
+#submitButton{
+  padding: 3px 5px;
+  border: none;
+  border-radius: 7px;
+  background-color: var(--clr-500);
+  color: white;
+  -webkit-transition: 200ms ease-in-out, color 200ms ease-in-out;
+  transition: 200ms ease-in-out, color 200ms ease-in-out;
+  text-align: center;
+  height: 40px;
+  width: 100px;
+  margin-left: 35%;
+  margin-top: 10px;
+}
+
+#submitButton:hover{
+  box-shadow: 0 10px 36px rgba(0,0,0, .20);
+  background-color: var(--clr-300);
+  color: white;
+}
+
 button {
   border: none;
   color: var(--clr-500);
@@ -101,7 +126,7 @@ button:disabled {
 
 .close {
   position: relative;
-  top: -20px;
+  top: -10px;
   font-size: xx-large;
   background-color: transparent;
 }

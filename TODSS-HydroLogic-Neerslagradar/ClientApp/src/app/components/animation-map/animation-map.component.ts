@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import * as L from 'leaflet';
-import { IChangesCoords, IChangesTime } from "../ComponentInterfaces";
+import {IChangesCoords, IChangesTime} from "../ComponentInterfaces";
 import {ICoordinateFilter, IMoveTimeStep, ITimeFilter} from "../../templates/i-weather.template";
 import * as gj from "geojson";
 
@@ -47,6 +47,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private _selectedPixels: ISelectedPixels = {};
   private _initialLoadedPixels: ISelectedPixelsPersistence[] = [];
   private _lastMapLayer: L.Layer | undefined;
+  private _mapType: string = "";
 
   // time filters
   public _beginTime: Date = new Date(1623974400000);
@@ -84,7 +85,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         break;
       case "Stadia":
         this._lastMapLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
           maxZoom: 18,
         });
         break;
@@ -98,6 +99,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
         break;
     }
 
+    this._mapType = type;
     if (this._mapLoaded) this.map.addLayer(this._lastMapLayer);
   }
 
@@ -184,6 +186,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     return <IMapData>{
       zoom: this._map?.getZoom(),
       centerLocation: this._map?.getCenter(),
+      mapType: this._mapType,
     }
   }
 
@@ -234,26 +237,41 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       let container = document.createElement("div");
 
       let removeBtn = document.createElement("button");
-      removeBtn.innerText = "X"
+      removeBtn.innerText = "x"
+
+      if (true) {
+        removeBtn.style.border = "none";
+        removeBtn.style.backgroundColor = "transparent";
+        removeBtn.style.fontSize = "20px";
+        removeBtn.style.marginBottom = "10px";
+      }
+
       removeBtn.addEventListener("click", e => popup.remove());
       container.appendChild(removeBtn);
 
-      let id = document.createElement("div");
-      id.innerText = `Id: ${pixel.id}`;
-      container.appendChild(id);
-
       let area = document.createElement("div");
+      let areaKm = document.createElement("div");
+      let areaBreak = document.createElement("br");
       let areaValue = Math.round(this.calculateArea([...pixel.coords[0], pixel.coords[0][0]])*100)/100;
-      area.innerText = `Area (km): ${areaValue}`
+      area.innerText = `Oppervlakte (km²): `
+      area.style.fontSize = "18px";
+      areaKm.innerText = areaValue.toString();
       container.appendChild(area);
+      container.appendChild(areaKm);
+      container.appendChild(areaBreak);
+
 
       let intensity = document.createElement("div");
+      let intensityText = document.createElement("div");
       let frameCell = this._animationFrames[this.currentFrameIndex].find(v=>v.id===pixel?.id);
       let intensityValue = frameCell !== undefined ? frameCell.intensity : 0;
       intensityValue *= 12;
       intensityValue = Math.round(intensityValue*100)/100;
-      intensity.innerText = `Intensity: ${intensityValue}mm/h`;
+      intensity.innerText = `Intensiteit: `;
+      intensity.style.fontSize = "18px";
+      intensityText.innerText = `${intensityValue}mm/h`
       container.appendChild(intensity);
+      container.appendChild(intensityText);
 
       popup.options.closeButton = false;
       popup.setContent(container).openOn(this.map);
@@ -269,6 +287,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
     // Event is thrown when the map is loaded
     this._mapLoaded = true;
+    if (this._dataTemp) this.mapType = this._dataTemp.mapType;
     this.mapReadyEvent.emit(this);
   }
 
@@ -421,10 +440,11 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       }
       this._lastGeoJson?.remove();
       this._lastGeoJson = new L.GeoJSON(geojson, {interactive: false, style: feature => {
-          let intensity: number = feature?.properties["intensity"];
+          let intensity: number = feature?.properties["intensity"]*12;
           let boarderWeights = 0.1;
           let opacityLightColors = 0.7;
-          let opacityDarkColors = 0.6;
+          let opacityDarkColors = 0.55;
+          let color:string = "#000000"
           switch (true) {
             case intensity <= 0.02/12:
               return {
@@ -432,50 +452,55 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
                 opacity: 0,
                 weight: 0
               }
-            case intensity <= 1/12:
+            case intensity <= 1:
+              color = this.getGradientColor("#9db6d6", "#4c7bb5", intensity);
               return {
-                fillColor: "#9db6d6",
-                color: "#9db6d6",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityLightColors,
                 opacity: opacityLightColors
               }
-            case intensity <= 2/12:
+            case intensity <= 2:
+              color = this.getGradientColor("#4c7bb5", "#1e00ff", intensity-1);
               return {
-                fillColor: "#4c7bb5",
-                color: "#4c7bb5",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityLightColors,
                 opacity: opacityLightColors
               }
-            case intensity <= 5/12:
+            case intensity <= 5:
+              color = this.getGradientColor("#1e00ff", "#eb1416", (intensity-2)/3);
               return {
-                fillColor: "#1e00ff",
-                color: "#1e00ff",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
               }
-            case intensity <= 10/12:
+            case intensity <= 10:
+              color = this.getGradientColor("#eb1416", "#e718aa", (intensity-5)/5);
               return {
-                fillColor: "#eb1416",
-                color: "#eb1416",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
               }
-            case intensity <= 20/12:
+            case intensity <= 20:
+              color = this.getGradientColor("#e718aa", "#000000", (intensity-10)/10);
               return {
-                fillColor: "#e718aa",
-                color: "#e718aa",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
               }
             default:
               return {
-                fillColor: "#000000",
-                color: "#000000",
+                fillColor: color,
+                color: color,
                 weight: boarderWeights,
                 fillOpacity: opacityDarkColors,
                 opacity: opacityDarkColors
@@ -492,6 +517,33 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       currentTimestamp: this._currentTime.valueOf()
     })
   }
+
+  private getGradientColor = function(start_color: string, end_color: string, percent: number): string {
+    let addZero = (hex: string) => hex.length===2 ? hex : "0"+hex;
+
+    start_color = start_color.replace("#", "");
+    end_color = end_color.replace("#", "");
+
+    // get colors
+    let start_red = parseInt(start_color.substring(0, 2), 16);
+    let start_green = parseInt(start_color.substring(2, 4), 16);
+    let start_blue = parseInt(start_color.substring(4, 6), 16);
+
+    let end_red = parseInt(end_color.substring(0, 2), 16);
+    let end_green = parseInt(end_color.substring(2, 4), 16);
+    let end_blue = parseInt(end_color.substring(4, 6), 16);
+
+    // calculate new color
+    let diff_red = end_red - start_red;
+    let diff_green = end_green - start_green;
+    let diff_blue = end_blue - start_blue;
+
+    let red_hex = addZero(((diff_red * percent) + start_red ).toString(16).split('.')[0]);
+    let green_hex = addZero(((diff_green * percent) + start_green ).toString(16).split('.')[0]);
+    let blue_hex = addZero(((diff_blue * percent) + start_blue ).toString(16).split('.')[0]);
+
+    return '#' + red_hex + green_hex + blue_hex;
+  };
 
   // Fetches the coordinates for the frames
   private fetchCoords() {
@@ -526,6 +578,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 export interface IMapData {
   zoom: number,
   centerLocation: L.LatLng,
+  mapType: string,
 }
 
 export interface IIntensityData {

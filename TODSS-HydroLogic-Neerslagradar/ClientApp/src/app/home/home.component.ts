@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
   }
 
   private loadConfig() {
-    if (this.configId) {
+    if (this.configId !== undefined) {
       let config = this.configManager.getConfig(this.configId);
       if (config) {
         for (const viewData of config.views) {
@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
     let configIdWasSet = true;
 
     // Check if a new config was selected
-    if (!this.configId) {
+    if (this.configId === undefined) {
       this.configId = this.configManager.getNewIndex();
       configIdWasSet = false;
     }
@@ -119,6 +119,8 @@ export class HomeComponent implements OnInit {
         preserveFragment: true });
       this.router.navigateByUrl(urlTree);
     }
+
+    this.saveConfigOpen = false;
   }
 }
 

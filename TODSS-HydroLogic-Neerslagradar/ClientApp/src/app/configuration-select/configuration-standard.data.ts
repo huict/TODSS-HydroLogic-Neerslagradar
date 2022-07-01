@@ -7,7 +7,7 @@ import {IConfigContainer} from "./configuration.manager";
 @Injectable({providedIn: "root"})
 export class ConfigurationStandardData {
   // used to check the version of configurations. Must be updated if a change is made to the persistence of configurations.
-  static configVersion: number = 0.1;
+  static configVersion: number = 0.2;
 
   constructor() {}
 
@@ -23,7 +23,11 @@ export class ConfigurationStandardData {
             name: "Amsterdam",
             templateType: "TemplateFullMapComponent",
             data: {
-              map: {zoom: 9, centerLocation: {lat: 52.36039955194229, lng: 4.843579939146779}},
+              map: {
+                zoom: 9,
+                mapType: "OpenStreetColor",
+                centerLocation: {lat: 52.36039955194229, lng: 4.843579939146779}
+              },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
@@ -46,7 +50,11 @@ export class ConfigurationStandardData {
             name: "Utrecht",
             templateType: "TemplateFullMapComponent",
             data: {
-              map: {zoom: 9, centerLocation: {lat: 52.081178792670705, lng: 5.107253561443007}},
+              map: {
+                zoom: 9,
+                mapType: "OpenStreetColor",
+                centerLocation: {lat: 52.081178792670705, lng: 5.107253561443007}
+              },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
@@ -74,7 +82,11 @@ export class ConfigurationStandardData {
             name: "Utrecht",
             templateType: "TemplateBarChartComponent",
             data: {
-              map: {zoom: 9, centerLocation: {lat: 52.09283685579781, lng: 5.220108046200851}},
+              map: {
+                zoom: 9,
+                mapType: "OpenStreetBW",
+                centerLocation: {lat: 52.09283685579781, lng: 5.220108046200851}
+              },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
@@ -97,7 +109,11 @@ export class ConfigurationStandardData {
             name: "Amersfoort",
             templateType: "TemplateBarChartComponent",
             data: {
-              map: {zoom: 9, centerLocation: {lat: 52.231163984032676, lng: 5.359954833984375}},
+              map: {
+                zoom: 9,
+                mapType: "OpenStreetBW",
+                centerLocation: {lat: 52.231163984032676, lng: 5.359954833984375}
+              },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
