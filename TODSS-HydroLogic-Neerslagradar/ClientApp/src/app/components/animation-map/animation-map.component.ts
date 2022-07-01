@@ -472,7 +472,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
                 opacity: opacityLightColors
               }
             case intensity <= 5:
-              color = this.getGradientColor("#1e00ff", "#eb1416", (intensity-2)/3);
+              color = this.getGradientColor("#1e00ff", "#e718aa", (intensity-2)/3);
               return {
                 fillColor: color,
                 color: color,
