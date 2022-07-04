@@ -25,7 +25,7 @@ public class RadarImageService : IRadarImageService
         
         for (var i = beginZ; i <= beginZ + depth; i++)
         {
-            geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.CombineFields ,dataset.GetSliceWithDepth(i)));
+            geoDataList.Add(GenerateDataDTOs.ReduceGeoData(dto.PyramidingAmount ,dataset.GetSliceWithDepth(i)));
         }
         return geoDataList;
     }

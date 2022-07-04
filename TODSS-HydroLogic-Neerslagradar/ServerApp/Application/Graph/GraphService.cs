@@ -20,13 +20,13 @@ public class GraphService : IGraphService
         List<float[,,]> foundSlices = new List<float[,,]>();
         foreach (int id in dto.ids)
         {
-            GridCell topLeftCell = GenerateDataDTOs.ConvertFromIdToGridCells(readingData.GetTotalWidth(), dto.CombineFields, id)[0];
+            GridCell topLeftCell = GenerateDataDTOs.ConvertFromIdToGridCells(readingData.GetTotalWidth(), dto.PyramidingAmount, id)[0];
             foundSlices.Add(readingData.GetSlicesWithCoordsAreaAndDepth(
                 x: topLeftCell.X,
                 y: topLeftCell.Y,
                 z: beginDepth,
-                width: dto.CombineFields,
-                height: dto.CombineFields,
+                width: dto.PyramidingAmount,
+                height: dto.PyramidingAmount,
                 dept: endDepth - beginDepth
             ));
         }

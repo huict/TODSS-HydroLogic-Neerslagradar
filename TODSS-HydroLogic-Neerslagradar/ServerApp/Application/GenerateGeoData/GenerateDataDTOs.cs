@@ -25,8 +25,8 @@ public class GenerateDataDTOs
         {
             var geoDataDto = new GeoDataDTO
             {
-                id = index,
-                intensity = slice[0, y, x]
+                Id = index,
+                Intensity = slice[0, y, x]
             };
             geoDataDtoList.Add(geoDataDto);
             index++;
@@ -65,8 +65,8 @@ public class GenerateDataDTOs
 
             var geoDataDto = new GeoDataDTO
             {
-                id = index,
-                intensity = intensity
+                Id = index,
+                Intensity = intensity
             };
             index++;
             geoDataDtoList.Add(geoDataDto);
