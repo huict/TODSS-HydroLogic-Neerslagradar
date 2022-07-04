@@ -101,7 +101,7 @@ public class GenerateDataDTOs
 
             var cellDto = new GridCellDTO()
             {
-                coords = GridCell.GenerateCoordsGeoJson(coordTopLeft.Concat(coordTopRight).Concat(coordBotRight)
+                coords = GenerateCoordsGeoJson(coordTopLeft.Concat(coordTopRight).Concat(coordBotRight)
                     .Concat(coordBotLeft).ToArray()),
                 id = index
             };
@@ -110,6 +110,25 @@ public class GenerateDataDTOs
         }
 
         return geoDataDtoList;
+    }
+    
+    /// <summary>
+    /// Puts the given coordinates in an easy format that the front-end can use to generate geoJSON
+    /// </summary>
+    /// <param name="coordinates">coordinates</param>
+    /// <returns>An easy format to generate geoJSON</returns>
+    private static List<List<List<double>>> GenerateCoordsGeoJson(IReadOnlyList<double> coordinates)
+    {
+        var list2 = new List<List<double>>();
+        for (var k = 0; k < coordinates.Count; k+=2)
+        {
+            var list = new List<double>()
+            {
+                coordinates[k], coordinates[k+1]
+            };
+            list2.Add(list);
+        }
+        return new List<List<List<double>>>{list2};
     }
 
     /// <summary>
