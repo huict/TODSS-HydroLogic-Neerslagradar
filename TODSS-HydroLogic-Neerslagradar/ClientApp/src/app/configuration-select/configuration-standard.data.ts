@@ -7,9 +7,10 @@ import {IConfigContainer} from "./configuration.manager";
 @Injectable({providedIn: "root"})
 export class ConfigurationStandardData {
   // used to check the version of configurations. Must be updated if a change is made to the persistence of configurations.
-  static configVersion: number = 0.2;
+  static configVersion: number = 0.3;
 
-  constructor() {}
+  constructor() {
+  }
 
   get standardData(): IConfigContainer {
     return {
@@ -25,26 +26,30 @@ export class ConfigurationStandardData {
             data: {
               map: {
                 zoom: 9,
-                mapType: "OpenStreetColor",
-                centerLocation: {lat: 52.36039955194229, lng: 4.843579939146779}
+                centerLocation: {lat: 52.40403015294171, lng: 5.026245117187501},
+                mapType: "OpenStreetColor"
               },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
-                  id: 1825,
-                  value: [[{lat: 52.42549, lng: 4.75075}, {lat: 52.41676, lng: 4.9196}, {
-                    lat: 52.31357,
-                    lng: 4.90511
-                  }, {lat: 52.32228, lng: 4.73675}]]
+                  id: "1942",
+                  value: [[
+                    {lat: 52.42549, lng: 4.75075},
+                    {lat: 52.41676, lng: 4.9196},
+                    {lat: 52.31357, lng: 4.90511},
+                    {lat: 52.32228, lng: 4.73675}
+                  ]]
                 }, {
-                  id: 1889,
-                  value: [[{lat: 52.41676, lng: 4.9196}, {lat: 52.40773, lng: 5.08836}, {
-                    lat: 52.30457,
-                    lng: 5.07338
-                  }, {lat: 52.31357, lng: 4.90511}]]
+                  id: "1943",
+                  value: [[
+                    {lat: 52.41676, lng: 4.9196},
+                    {lat: 52.40773, lng: 5.08836},
+                    {lat: 52.30457, lng: 5.07338},
+                    {lat: 52.31357, lng: 4.90511}
+                  ]]
                 }]
               },
-              timeFilter: {beginTimestamp: 1623974400000, stepSize: 1, endTimestamp: 1624060200000}
+              timeFilter: {stepSize: 1, beginTimestamp: 1623981600000, endTimestamp: 1623996000000}
             }
           }, {
             name: "Utrecht",
@@ -52,26 +57,30 @@ export class ConfigurationStandardData {
             data: {
               map: {
                 zoom: 9,
-                mapType: "OpenStreetColor",
-                centerLocation: {lat: 52.081178792670705, lng: 5.107253561443007}
+                centerLocation: {lat: 52.1434188244645, lng: 5.155334472656251},
+                mapType: "OpenStreetColor"
               },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
-                  id: 1955,
-                  value: [[{lat: 52.20147, lng: 5.05849}, {lat: 52.1922, lng: 5.22619}, {
-                    lat: 52.08919,
-                    lng: 5.2109
-                  }, {lat: 52.09844, lng: 5.04369}]]
+                  id: "2060",
+                  value: [[
+                    {lat: 52.20147, lng: 5.05849},
+                    {lat: 52.1922, lng: 5.22619},
+                    {lat: 52.08919, lng: 5.2109},
+                    {lat: 52.09844, lng: 5.04369}
+                  ]]
                 }, {
-                  id: 1956,
-                  value: [[{lat: 52.09844, lng: 5.04369}, {lat: 52.08919, lng: 5.2109}, {
-                    lat: 51.98625,
-                    lng: 5.1957
-                  }, {lat: 51.99546, lng: 5.02897}]]
+                  id: "2118",
+                  value: [[
+                    {lat: 52.09844, lng: 5.04369},
+                    {lat: 52.08919, lng: 5.2109},
+                    {lat: 51.98625, lng: 5.1957},
+                    {lat: 51.99546, lng: 5.02897}
+                  ]]
                 }]
               },
-              timeFilter: {beginTimestamp: 1623974400000, stepSize: 1, endTimestamp: 1624060200000}
+              timeFilter: {stepSize: 1, beginTimestamp: 1623981600000, endTimestamp: 1623996000000}
             }
           }]
         }, {
@@ -83,24 +92,28 @@ export class ConfigurationStandardData {
             templateType: "TemplateBarChartComponent",
             data: {
               map: {
-                zoom: 9,
-                mapType: "OpenStreetBW",
-                centerLocation: {lat: 52.09283685579781, lng: 5.220108046200851}
+                zoom: 8,
+                centerLocation: {lat: 52.12681515631792, lng: 5.251464843750001},
+                mapType: "OpenStreetBW"
               },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
-                  id: 1955,
-                  value: [[{lat: 52.20147, lng: 5.05849}, {lat: 52.1922, lng: 5.22619}, {
-                    lat: 52.08919,
-                    lng: 5.2109
-                  }, {lat: 52.09844, lng: 5.04369}]]
+                  id: "2060",
+                  value: [[
+                    {lat: 52.20147, lng: 5.05849},
+                    {lat: 52.1922, lng: 5.22619},
+                    {lat: 52.08919, lng: 5.2109},
+                    {lat: 52.09844, lng: 5.04369}
+                  ]]
                 }, {
-                  id: 1956,
-                  value: [[{lat: 52.09844, lng: 5.04369}, {lat: 52.08919, lng: 5.2109}, {
-                    lat: 51.98625,
-                    lng: 5.1957
-                  }, {lat: 51.99546, lng: 5.02897}]]
+                  id: "2118",
+                  value: [[
+                    {lat: 52.09844, lng: 5.04369},
+                    {lat: 52.08919, lng: 5.2109},
+                    {lat: 51.98625, lng: 5.1957},
+                    {lat: 51.99546, lng: 5.02897}
+                  ]]
                 }]
               },
               timeFilter: {beginTimestamp: 1623974400000, stepSize: 1, endTimestamp: 1624060200000}
@@ -110,36 +123,44 @@ export class ConfigurationStandardData {
             templateType: "TemplateBarChartComponent",
             data: {
               map: {
-                zoom: 9,
-                mapType: "OpenStreetBW",
-                centerLocation: {lat: 52.231163984032676, lng: 5.359954833984375}
+                zoom: 8,
+                centerLocation: {lat: 52.19091907418051, lng: 5.51513671875},
+                mapType: "OpenStreetBW"
               },
               coordinatesFilter: {
                 dataCompression: 3,
                 pixels: [{
-                  id: 2018,
-                  value: [[{lat: 52.29526, lng: 5.24157}, {lat: 52.28566, lng: 5.40966}, {
-                    lat: 52.18262,
-                    lng: 5.3938
-                  }, {lat: 52.1922, lng: 5.22619}]]
+                  id: "2003",
+                  value: [[
+                    {lat: 52.29526, lng: 5.24157},
+                    {lat: 52.28566, lng: 5.40966},
+                    {lat: 52.18262, lng: 5.3938},
+                    {lat: 52.1922, lng: 5.22619}
+                  ]]
                 }, {
-                  id: 2019,
-                  value: [[{lat: 52.1922, lng: 5.22619}, {lat: 52.18262, lng: 5.3938}, {
-                    lat: 52.07965,
-                    lng: 5.37802
-                  }, {lat: 52.08919, lng: 5.2109}]]
+                  id: "2004",
+                  value: [[
+                    {lat: 52.28566, lng: 5.40966},
+                    {lat: 52.27574, lng: 5.57767},
+                    {lat: 52.17275, lng: 5.56131},
+                    {lat: 52.18262, lng: 5.3938}
+                  ]]
                 }, {
-                  id: 2082,
-                  value: [[{lat: 52.28566, lng: 5.40966}, {lat: 52.27574, lng: 5.57767}, {
-                    lat: 52.17275,
-                    lng: 5.56131
-                  }, {lat: 52.18262, lng: 5.3938}]]
+                  id: "2061",
+                  value: [[
+                    {lat: 52.1922, lng: 5.22619},
+                    {lat: 52.18262, lng: 5.3938},
+                    {lat: 52.07965, lng: 5.37802},
+                    {lat: 52.08919, lng: 5.2109}
+                  ]]
                 }, {
-                  id: 2083,
-                  value: [[{lat: 52.18262, lng: 5.3938}, {lat: 52.17275, lng: 5.56131}, {
-                    lat: 52.06981,
-                    lng: 5.54505
-                  }, {lat: 52.07965, lng: 5.37802}]]
+                  id: "2062",
+                  value: [[
+                    {lat: 52.18262, lng: 5.3938},
+                    {lat: 52.17275, lng: 5.56131},
+                    {lat: 52.06981, lng: 5.54505},
+                    {lat: 52.07965, lng: 5.37802}
+                  ]]
                 }]
               },
               timeFilter: {beginTimestamp: 1623974400000, stepSize: 1, endTimestamp: 1624060200000}
