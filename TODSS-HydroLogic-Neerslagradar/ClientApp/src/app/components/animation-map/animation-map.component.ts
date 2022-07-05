@@ -550,7 +550,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   private fetchCoords() {
     this._animationCoords = [];
     this.http.post("https://localhost:7187/radarimage/coords", `{
-       "CombineFields": ${this._dataCompression}}`,
+       "PyramidingAmount": ${this._dataCompression}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {
       this._animationCoords = e as ICoordsData[];
     });
@@ -559,7 +559,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
   // Fetches the next frame from the server, loads it into memory and loads the next frame.
   private fetchFrame(fetchTime: number, frameIndex: number, autoLoadNext: boolean) {
     this.http.post("https://localhost:7187/radarimage/intensity", `{
-       "CombineFields": ${this._dataCompression},
+       "PyramidingAmount": ${this._dataCompression},
        "StartTimestamp" : ${fetchTime},
        "EndTimestamp" : ${fetchTime+300000}}`,
       {headers: {"Content-Type": "application/json"}}).subscribe(e => {

@@ -25,8 +25,8 @@ public class GenerateDataDTOs
         {
             var geoDataDto = new GeoDataDTO
             {
-                id = index,
-                intensity = slice[0, y, x]
+                Id = index,
+                Intensity = slice[0, y, x]
             };
             geoDataDtoList.Add(geoDataDto);
             index++;
@@ -65,8 +65,8 @@ public class GenerateDataDTOs
 
             var geoDataDto = new GeoDataDTO
             {
-                id = index,
-                intensity = intensity
+                Id = index,
+                Intensity = intensity
             };
             index++;
             geoDataDtoList.Add(geoDataDto);
@@ -82,7 +82,7 @@ public class GenerateDataDTOs
     /// <param name="height">The height of the dataset. You want the cells for</param>
     /// <param name="width">The width of the dataset. You want the cells for</param>
     /// <returns>A list of <see cref="GridCellDTO"/> which is either compressed or not.</returns>
-    public static List<GridCellDTO> ReduceGridcells(int pyramidingAmount, int height, int width)
+    public static List<GridCellDTO> ReduceGridcells(int pyramidingAmount, int height = 192, int width = 175)
     {
         var geoDataDtoList = new List<GridCellDTO>();
         var widthToWide = width % pyramidingAmount;
@@ -101,7 +101,7 @@ public class GenerateDataDTOs
 
             var cellDto = new GridCellDTO()
             {
-                coords = GridCell.GenerateCoordsGeoJson(coordTopLeft.Concat(coordTopRight).Concat(coordBotRight)
+                coords = GenerateCoordsGeoJson(coordTopLeft.Concat(coordTopRight).Concat(coordBotRight)
                     .Concat(coordBotLeft).ToArray()),
                 id = index
             };
@@ -110,6 +110,25 @@ public class GenerateDataDTOs
         }
 
         return geoDataDtoList;
+    }
+    
+    /// <summary>
+    /// Puts the given coordinates in an easy format that the front-end can use to generate geoJSON
+    /// </summary>
+    /// <param name="coordinates">coordinates</param>
+    /// <returns>An easy format to generate geoJSON</returns>
+    private static List<List<List<double>>> GenerateCoordsGeoJson(IReadOnlyList<double> coordinates)
+    {
+        var list2 = new List<List<double>>();
+        for (var k = 0; k < coordinates.Count; k+=2)
+        {
+            var list = new List<double>()
+            {
+                coordinates[k], coordinates[k+1]
+            };
+            list2.Add(list);
+        }
+        return new List<List<List<double>>>{list2};
     }
 
     /// <summary>
@@ -128,12 +147,11 @@ public class GenerateDataDTOs
 
         int widthToWide = gridWidth % pyramidingAmount;
         int pyramidedWidth = (gridWidth - widthToWide) / pyramidingAmount;
-
         // Given id = pyramdidedY * pyramidedWidth + pyramdidedx
-        // Means x = rounddown(index / width) * pyramidingAmount 
-        int x = id / pyramidedWidth * pyramidingAmount; //Integer division rounds down
-        // And means y = index % width * pyramidingAmount 
-        int y = id % pyramidedWidth * pyramidingAmount;
+        // Means y = rounddown(index / width) * pyramidingAmount 
+        int y = id / pyramidedWidth * pyramidingAmount; //Integer division rounds down
+        // And means x = index % width * pyramidingAmount 
+        int x = id % pyramidedWidth * pyramidingAmount;
         
         var gridCells = new List<GridCell>();
         for (var currenty = y; currenty < y + pyramidingAmount; currenty++)
