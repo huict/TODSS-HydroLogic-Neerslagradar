@@ -25,7 +25,7 @@ public class RadarImageController :  ControllerBase
     [Route("coords")]
     public List<GridCellDTO> GetAllGridCells(InGridCellsDTO dto)
     {
-        return _radarDataService.GetGridCellCoords(dto.LargeDataset, dto.CombineFields);
+        return _radarDataService.GetGridCellCoords(dto.LargeDataset, dto.PyramidingAmount);
     }
     
     /// <summary>
