@@ -2,9 +2,9 @@
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
-namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarData;
 
-public class RadarImageService : IRadarImageService
+public class RadarDataService : IRadarDataService
 {
     public List<GridCellDTO> GetGridCellCoords(bool largeDataset, int combineFields)
     {
