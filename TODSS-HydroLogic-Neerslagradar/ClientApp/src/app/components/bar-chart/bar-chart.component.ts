@@ -39,7 +39,7 @@ export class BarChartComponent implements OnInit {
       "ids": cf.pixels.map(v => v.id),
       "StartSeconds":begin,
       "EndSeconds":end,
-      "CombineFields":cf.dataCompression
+      "PyramidingAmount":cf.dataCompression
     };
 
     this.http.post("https://localhost:7187/graph", body, {headers: {"Content-Type": "application/json"}}).subscribe(e => {
