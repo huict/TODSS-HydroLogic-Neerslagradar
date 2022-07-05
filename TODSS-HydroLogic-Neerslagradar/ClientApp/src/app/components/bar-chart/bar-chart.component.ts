@@ -15,7 +15,8 @@ export class BarChartComponent implements OnInit {
 
   barChartOptions: ChartOptions = {
     responsive: false,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
+    backgroundColor: '#eb1416',
   };
   barChartLabels: string[] = [];
   barChartType: ChartType = 'bar';
@@ -50,7 +51,7 @@ export class BarChartComponent implements OnInit {
       this.barChartLabels = data.map((_, index) => this._getDateLabelFromIndex(index));
       this.barChartData.pop();
       this.barChartData.pop();
-      this.barChartData.push({label:"Totale hoeveelheid neerslag in mm", data: data.map(v => v.cumulative)});
+      // this.barChartData.push({label:"Totale hoeveelheid neerslag in mm", data: data.map(v => v.cumulative)});
       this.barChartData.push({label:"Gemiddelde hoeveelheid neerslag in mm", data: data.map(v => v.average)});
     })
   }
