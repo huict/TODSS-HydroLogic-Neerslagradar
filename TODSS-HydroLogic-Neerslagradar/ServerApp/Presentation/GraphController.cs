@@ -16,6 +16,11 @@ public class GraphController : ControllerBase
         _graphService = graphService;
     }
     
+    /// <summary>
+    ///     Gets the graph data for given cells
+    /// </summary>
+    /// <param name="dto">DTO with the needed information</param>
+    /// <returns>List of every datapoint over the timeperiod with information</returns>
     [HttpPost]
     public List<GraphDTO> GetInformationForGridCellWithId(IdBasedWeatherFilterDTO dto)
     {
