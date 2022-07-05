@@ -1,17 +1,13 @@
 <div class="selectContent">
-
   <div id="options">
     <p>Geef de view een naam</p>
-
     <div class="input-div">
-      <input  class="form-input" type="text" (input)="changeNameEvent.emit($event)" placeholder=" ">
-      <label for="" class="form-label">Naam</label>
+      <input id="viewNameInput" class="form-input" type="text" (input)="changeNameEvent.emit($event)" placeholder=" ">
+      <label for="viewNameInput" class="form-label">Naam</label>
     </div>
-
   </div>
 
   <div class="seperationLine"></div>
-
   <div class ="select-template">
     <p>Selecteer een template</p>
     <div id="templates">
@@ -22,11 +18,7 @@
   </div>
 
   <div class="seperationLine"></div>
-
   <div class="buttonContainer">
     <button id="aanmaakButton" (click)="applyTemplate()">Aanmaken</button>
   </div>
-
-
-
 </div>
