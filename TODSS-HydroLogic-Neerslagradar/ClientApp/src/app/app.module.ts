@@ -14,7 +14,6 @@ import { TemplateTestComponent } from './templates/template-test/template-test.c
 import { AnimationMapComponent } from './components/animation-map/animation-map.component';
 import { TemplateFullMapComponent } from './templates/template-full-map/template-full-map.component';
 import { ConfigurationSelectComponent } from './configuration-select/configuration-select.component';
-import {LineChartComponent} from "./components/line-chart/line-chart.component";
 import {TemplateBarChartComponent} from "./templates/template-bar-chart/template-bar-chart.component";
 import {BarChartComponent} from "./components/bar-chart/bar-chart.component";
 
@@ -32,7 +31,6 @@ import {BarChartComponent} from "./components/bar-chart/bar-chart.component";
     TemplateBarChartComponent,
     BarChartComponent,
     ConfigurationSelectComponent,
-    LineChartComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
