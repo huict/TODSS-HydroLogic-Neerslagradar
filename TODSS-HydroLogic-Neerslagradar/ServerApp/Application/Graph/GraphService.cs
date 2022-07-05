@@ -37,8 +37,8 @@ public class GraphService : IGraphService
             List<float> intensities = new List<float>();
             foreach (var slice in foundSlices)
             {
-                for (int x = 0; x < slice.GetLength(1) - 1; x++)
-                for (int y = 0; y < slice.GetLength(2) - 1; y++)
+                for (int x = 0; x < slice.GetLength(1); x++)
+                for (int y = 0; y < slice.GetLength(2); y++)
                 {
                    intensities.Add(slice[i, x, y]);
                 }

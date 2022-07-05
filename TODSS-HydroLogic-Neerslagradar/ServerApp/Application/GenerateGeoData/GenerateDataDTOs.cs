@@ -128,12 +128,11 @@ public class GenerateDataDTOs
 
         int widthToWide = gridWidth % pyramidingAmount;
         int pyramidedWidth = (gridWidth - widthToWide) / pyramidingAmount;
-
         // Given id = pyramdidedY * pyramidedWidth + pyramdidedx
-        // Means x = rounddown(index / width) * pyramidingAmount 
-        int x = id / pyramidedWidth * pyramidingAmount; //Integer division rounds down
-        // And means y = index % width * pyramidingAmount 
-        int y = id % pyramidedWidth * pyramidingAmount;
+        // Means y = rounddown(index / width) * pyramidingAmount 
+        int y = id / pyramidedWidth * pyramidingAmount; //Integer division rounds down
+        // And means x = index % width * pyramidingAmount 
+        int x = id % pyramidedWidth * pyramidingAmount;
         
         var gridCells = new List<GridCell>();
         for (var currenty = y; currenty < y + pyramidingAmount; currenty++)
