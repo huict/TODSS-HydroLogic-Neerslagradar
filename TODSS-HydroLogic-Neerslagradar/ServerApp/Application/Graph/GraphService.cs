@@ -43,13 +43,10 @@ public class GraphService : IGraphService
                    intensities.Add(slice[i, x, y]);
                 }
             }
-
-            float sum = intensities.Sum();
-            float count = intensities.Count;
+            
             values.Add( new GraphDTO
             {
-                Cumulative = sum,
-                Average = count > 0 ? sum / count : (float) 0.0
+                Average = intensities.Count > 0 ? intensities.Average() : (float) 0.0
             });
         }
 

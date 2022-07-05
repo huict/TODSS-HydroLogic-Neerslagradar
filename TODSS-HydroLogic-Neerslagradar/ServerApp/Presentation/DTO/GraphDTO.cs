@@ -5,6 +5,5 @@
 /// </summary>
 public class GraphDTO
 {
-    public float Cumulative { get; set; }
     public float Average { get; set; }
 }
