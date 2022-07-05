@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarData;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
 namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation;
@@ -9,24 +9,24 @@ namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation;
 public class RadarImageController :  ControllerBase
 {
     
-    private readonly IRadarImageService _radarImageService;
+    private readonly IRadarDataService _radarDataService;
 
-    public RadarImageController(IRadarImageService radarImageService)
+    public RadarImageController(IRadarDataService radarDataService)
     {
-        _radarImageService = radarImageService;
+        _radarDataService = radarDataService;
     }
 
     [HttpPost]
     [Route("coords")]
     public List<GridCellDTO> GetAllGridCells(InGridCellsDTO dto)
     {
-        return _radarImageService.GetGridCellCoords(dto.LargeDataset, dto.CombineFields);
+        return _radarDataService.GetGridCellCoords(dto.LargeDataset, dto.CombineFields);
     }
 
     [HttpPost]
     [Route("intensity")]
     public List<List<GeoDataDTO>> GetWeatherData(WeatherFiltersDTO dto)
     {
-        return _radarImageService.GetSpecificSlices(dto);
+        return _radarDataService.GetSpecificSlices(dto);
     }
 }

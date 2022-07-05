@@ -1,6 +1,5 @@
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.Graph;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarImage;
+using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.RadarData;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 
 const bool startWebsite = true;
@@ -28,7 +27,7 @@ if (startWebsite)
 
     builder.Services.AddControllersWithViews();
 
-    builder.Services.AddScoped<IRadarImageService, RadarImageService>();
+    builder.Services.AddScoped<IRadarDataService, RadarDataService>();
     builder.Services.AddScoped<IGraphService, GraphService>();
 
     var app = builder.Build();
