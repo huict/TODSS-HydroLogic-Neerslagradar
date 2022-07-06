@@ -17,19 +17,8 @@ public static class TimeConversion
         {
             June182021 = new ReadingData("neerslag_data.nc");
         }
-        
     }
-    //todo delete this function
-    public static int GetDepthFromSeconds(long timestamplong)
-    {
-        var depth = 0;
-        var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
-        dtDateTime = dtDateTime.AddMilliseconds(timestamplong).ToLocalTime();
-        depth += dtDateTime.Hour * 12;
-        depth += dtDateTime.Minute / 5;
-        return depth;
-    }
-    
+
     /// <summary>
     ///     Uses begin and end timestamps to determine which dataset to use and where to begin / end the collection
     ///     in the dataset
