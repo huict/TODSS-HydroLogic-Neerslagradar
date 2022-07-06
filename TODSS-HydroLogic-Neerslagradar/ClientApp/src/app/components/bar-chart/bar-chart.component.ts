@@ -3,6 +3,9 @@ import {ChartOptions, ChartType, ChartDataset} from 'chart.js';
 import {ICoordinateFilter, ITimeFilter} from "../../templates/i-weather.template";
 import {HttpClient} from "@angular/common/http";
 
+/**
+ * A bar-chart that shows the average intensity of all the selected pixels and on every timeframe of the selected time period.
+ */
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
@@ -25,6 +28,7 @@ export class BarChartComponent {
 
   constructor(private http: HttpClient) {}
 
+  // Update all the values of the graph
   private updateGraph() {
     let cf = this._coordinatesFilter;
     if (cf == undefined) return;
@@ -48,6 +52,7 @@ export class BarChartComponent {
     })
   }
 
+  // Generate a label for a slice of data
   private _getDateLabelFromIndex(i: number):string {
     let add0Func = (number:number) => {
       let strnum: string = String(number)

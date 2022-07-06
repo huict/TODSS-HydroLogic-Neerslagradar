@@ -124,7 +124,6 @@ export class HomeComponent implements OnInit {
   }
 }
 
-// TODO extra onderdelen toevoegen voor een configuratie
 /**
  * The interface for a configuration. Configurations can be loaded in and saved in the main view (home) component.
  */

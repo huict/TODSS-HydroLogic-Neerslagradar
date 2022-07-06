@@ -93,7 +93,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       default:
         this._lastMapLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: 'abcd',
           maxZoom: 18,
         });
         break;
@@ -197,6 +196,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     }
   }
 
+  // Convert polygons to json so it can be persisted
   private convertPolygonsToPixelJson(): ISelectedPixelsPersistence[] {
     return Object.keys(this._selectedPixels).map(value => {
       return {
@@ -239,14 +239,10 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
       let removeBtn = document.createElement("button");
       removeBtn.innerText = "x"
-
-      if (true) {
-        removeBtn.style.border = "none";
-        removeBtn.style.backgroundColor = "transparent";
-        removeBtn.style.fontSize = "20px";
-        removeBtn.style.marginBottom = "10px";
-      }
-
+      removeBtn.style.border = "none";
+      removeBtn.style.backgroundColor = "transparent";
+      removeBtn.style.fontSize = "20px";
+      removeBtn.style.marginBottom = "10px";
       removeBtn.addEventListener("click", e => popup.remove());
       container.appendChild(removeBtn);
 
@@ -276,7 +272,6 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
 
       popup.options.closeButton = false;
       popup.setContent(container).openOn(this.map);
-      // setTimeout(() => popup.remove(), 1000);
     });
     // set initial view and start animation
     if (this._dataTemp) this.map.setView(this._dataTemp.centerLocation, this._dataTemp.zoom);
@@ -312,6 +307,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.startNewAnimation();
   }
 
+  // Find a pixel by searching if the coordinate is inside of one of the polygons
   selectPixel(point: L.LatLng): ICoordsData|null {
     let poly = this._animationCoords.find((value) => {
       let lng = point.lng, lat = point.lat;
@@ -348,6 +344,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     delete this._selectedPixels[id];
   }
 
+  // Calculate the area of a polygon
   private calculateArea(poly: number[][]): number {
     let area = 0;
     for (let i = 0; i < poly.length - 1; i++)
@@ -374,6 +371,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     this.resumeAnimation();
   }
 
+  // Resets all values of the animation
   public clearAnimation() {
     if (this._animationInterval != undefined) clearInterval(this._animationInterval);
     this._animationInterval = undefined;
@@ -413,7 +411,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
       this.loadFrame();
     }
 
-    // Allso look at the next frame and load that beforehand
+    // Also look at the next frame and load that beforehand
     let nextNextFrameIndex = this._nextFrameIndex+1;
     if (this._animationFrames[nextNextFrameIndex] && this._animationFrames[nextNextFrameIndex].length == 0) {
       this.fetchFrame(this._beginTime.valueOf()+nextNextFrameIndex*this._animationStepSize*300000, nextNextFrameIndex, false);
@@ -519,6 +517,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     })
   }
 
+  // Generates a color value between two other color values using a percentage
   private getGradientColor = function(start_color: string, end_color: string, percent: number): string {
     let addZero = (hex: string) => hex.length===2 ? hex : "0"+hex;
 
@@ -569,6 +568,7 @@ export class AnimationMapComponent implements IChangesCoords, IChangesTime, OnDe
     });
   }
 
+  // Used mainly for time conversion so that a single digit number had a leading 0
   public add0ToNumberFront(number: number): string {
     let strnum: string = String(number)
     if (strnum.length == 1) return "0" + strnum
