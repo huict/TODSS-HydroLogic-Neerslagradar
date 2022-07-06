@@ -1,10 +1,9 @@
 ﻿using TODSS_HydroLogic_Neerslagradar.ServerApp.Application.GenerateGeoData;
-using TODSS_HydroLogic_Neerslagradar.ServerApp.Data.Reading_Data;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.CoordinateConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Domain.TimeConversion;
 using TODSS_HydroLogic_Neerslagradar.ServerApp.Presentation.DTO;
 
-namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application;
+namespace TODSS_HydroLogic_Neerslagradar.ServerApp.Application.Graph;
 
 public class GraphService : IGraphService
 {
@@ -21,13 +20,13 @@ public class GraphService : IGraphService
         List<float[,,]> foundSlices = new List<float[,,]>();
         foreach (int id in dto.ids)
         {
-            GridCell topLeftCell = GenerateDataDTOs.ConvertFromIdToGridCells(readingData.GetTotalWidth(), dto.CombineFields, id)[0];
+            GridCell topLeftCell = GenerateDataDTOs.ConvertFromIdToGridCells(readingData.GetTotalWidth(), dto.PyramidingAmount, id)[0];
             foundSlices.Add(readingData.GetSlicesWithCoordsAreaAndDepth(
                 x: topLeftCell.X,
                 y: topLeftCell.Y,
                 z: beginDepth,
-                width: dto.CombineFields,
-                height: dto.CombineFields,
+                width: dto.PyramidingAmount,
+                height: dto.PyramidingAmount,
                 dept: endDepth - beginDepth
             ));
         }
@@ -38,19 +37,16 @@ public class GraphService : IGraphService
             List<float> intensities = new List<float>();
             foreach (var slice in foundSlices)
             {
-                for (int x = 0; x < slice.GetLength(1) - 1; x++)
-                for (int y = 0; y < slice.GetLength(2) - 1; y++)
+                for (int x = 0; x < slice.GetLength(1); x++)
+                for (int y = 0; y < slice.GetLength(2); y++)
                 {
                    intensities.Add(slice[i, x, y]);
                 }
             }
-
-            float sum = intensities.Sum();
-            float count = intensities.Count;
+            
             values.Add( new GraphDTO
             {
-                Cumulative = sum,
-                Average = count > 0 ? sum / count : (float) 0.0
+                Average = intensities.Count > 0 ? intensities.Average() : (float) 0.0
             });
         }
 

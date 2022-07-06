@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import {ITemplate} from "../i-template.view";
 
-// Deze component is gebruikt om de veranderende templates te testen
-// TODO delete test template
+// Deze template is gebruikt om nieuwe components te testen
 @Component({
   selector: 'app-template-test',
   templateUrl: './template-test.component.html',
